@@ -1,0 +1,247 @@
+import pysam as pysam
+from statistics import mean
+from statistics import median
+from matplotlib import pyplot as plt
+import sys
+import cgatcore.experiment as E
+import pandas as pd
+from collections import Counter
+
+def main(argv=None):
+    """script main.
+    parses command line options in sys.argv, unless *argv* is given.
+    """
+
+    if argv is None:
+        argv = sys.argv
+
+    # setup command line parser
+    parser = E.ArgumentParser(description=__doc__)
+
+    parser.add_argument("-b", "--bam", dest="infile_bam", type=str,
+                        help="Supply a path to the bam file that has undergone read assignment with featureCounts")
+    
+    parser.add_argument("-g", "--gtf", dest="gtf_path", type=str,
+                        help="Supply a path to the transcript assembly gtf file")
+
+    parser.add_argument("-o", "--out", dest="outfile_txt", type=str,
+                        help="""Supply a path to the output file. This file will contain 
+                        conversions per pair, accounting for stranding""")
+    
+    parser.add_argument("-om", "--out-meta-dir", dest="meta_dir", type=str,
+                        help="Supply a directory to output metadata into")
+
+    # add common options (-h/--help, ...) and parse command line
+    (args) = E.start(parser, argv=argv)
+
+    bamfile = pysam.AlignmentFile(args.infile_bam)
+    #bamfile = pysam.AlignmentFile("../STAR-default/read_assignments/D2_65uM_EKRN230032564-1A_HGK2CDSX7_L3/D2_65uM_EKRN230032564-1A_HGK2CDSX7_L3.sorted.assigned.bam")
+    meta_dir = args.meta_dir
+    #meta_dir = "../STAR-default/test"
+    
+    gtf_cols = ["chr", "source", "feature", "start", "end", "score", "strand", "frame", "attribute"]
+    gtf_df = pd.read_csv(args.gtf_path, sep="\t", comment="#", header=None, names=gtf_cols)
+    #gtf_df = pd.read_csv("/shared/sudlab1/General/projects/stem_utrons/existing_hPSC_data/HipSci/HIPSCI-REANNOTATE/filtered_genesets.dir/agg-agg-agg.filtered.gtf.gz", sep="\t", comment="#", header=None, names=gtf_cols)
+    #filter the dataframe to only deal with transcripts (as they have stand info)
+    gtf_df = gtf_df[gtf_df["feature"]=="transcript"]
+
+    #define a function so we can parse the gene_id/gene_name from the messy attributes column
+    def attibute_to_dict(attribute_string):
+        attributes = {}
+        for attribute in attribute_string.split(";"):
+            attribute_not_empty = attribute.split()
+            #sometimes attribute is empty therefore splitting it to key, value causes error
+            if attribute_not_empty:
+                key, value = attribute.split(" ", 1)
+                attributes[key] = value.strip("\"")
+        return attributes
+    
+    # convert the attribute column from string to dict
+    gtf_df["attribute"] = gtf_df["attribute"].apply(attibute_to_dict)
+
+    # generate a dict of gene_ids to strands
+    gene_id = gtf_df["attribute"].apply(lambda x: x.get("gene_id"))
+    strands = gtf_df["strand"]
+    strand_dict = dict(zip(gene_id, strands))
+
+    conversion_counts = list()
+
+    def fragment_iterator(read_iterator):
+
+        read_list = list()
+        last_read = None
+
+        for read in read_iterator:
+            if last_read is not None and last_read != read.query_name:
+                yield read_list
+                read_list = list()
+                last_read = read.query_name
+            last_read = read.query_name
+            read_list.append(read)
+
+        yield read_list
+    
+    i = 0
+    i_progress = 0
+
+    status_list_1 = list()
+    status_list_2 = list()
+    status_list_list = list()
+    assigned_count = 0
+
+    for pair in fragment_iterator(bamfile.fetch(until_eof=True)):
+    
+        #if i >= 150: 
+        #    break
+
+        if len(pair)!=2:
+            continue
+
+        read1, read2 = pair
+
+        if read1.is_unmapped or read2.is_unmapped:
+            continue 
+
+        i+=1
+        i_progress+=1
+
+        if i_progress == 100000:
+            E.debug(str(i) + " pairs processed")
+            i_progress = 0
+
+        read1_status = read1.get_tag("XS")
+        read2_status = read2.get_tag("XS")
+
+        ############################
+        ### For metadata outputs ###
+        status_list_1.append(read1_status)
+        status_list_2.append(read2_status)  
+        status_list = list()
+        status_list.append(read1_status)
+        status_list.append(read2_status)
+        status_list_list.append(status_list)
+        ############################
+    
+        if(any(status in ["Assigned", "+", "-"] for status in status_list)):
+            # pass if either is assigned
+            if(all(status in ["Assigned", "+", "-"] for status in status_list)):
+                # pass if both are assigned
+                assignment1 = read1.get_tag("XT")
+                assignment2 = read2.get_tag("XT")
+                strand1 = strand_dict[assignment1]
+                strand2 = strand_dict[assignment2]
+                if(strand1 == strand2):
+                    # pass if both on same strand
+                    strand = strand1
+                else:
+                    # if not on same strand bin the pair
+                    continue
+            else:
+                # pass if only 1 is assigned
+                if(read1_status=="Assigned"):
+                    # if read 1 is the 1 assigned
+                    assignment = read1.get_tag("XT")
+                    strand = strand_dict[assignment]
+                else:
+                    # if read 2 is the 1 assigned]
+                    assignment = read2.get_tag("XT")
+                    strand = strand_dict[assignment]
+
+            # assigned a "forward" and "reverse" read relative to the genome
+            if(read1.is_reverse):
+                reverse_read = read1
+                forward_read = read2
+            else:
+                reverse_read = read2
+                forward_read = read1
+
+            # if we are mapped to a +ve stranded transcript, then count T>C in 
+            # the forward read and A>G in the reverse read. if we are mapped to
+            # a -ve stranded transcript, count T>C in the reverse read and A>G
+            # in the forward read.
+            if strand == "+":
+                # pass if mapped to +ve transcript
+                conversions = 0
+                for base in forward_read.get_aligned_pairs(with_seq=True):
+                    read_pos, genome_pos, genome_seq = base
+                    if(None in base):
+                        continue
+
+                    read_seq = forward_read.query_sequence[read_pos]
+
+                    if read_seq == "C" and genome_seq == "t":
+                        conversions += 1 
+
+                for base in reverse_read.get_aligned_pairs(with_seq=True):
+                    read_pos, genome_pos, genome_seq = base
+                    if(None in base):
+                        continue
+
+                    read_seq = reverse_read.query_sequence[read_pos]
+
+                    if read_seq == "G" and genome_seq == "a":
+                        conversions += 1
+                conversion_counts.append(conversions)        
+            elif strand == "-":
+                # pass if mapped to -ve transcript
+                conversions = 0
+                for base in forward_read.get_aligned_pairs(with_seq=True):
+                    read_pos, genome_pos, genome_seq = base
+                    if(None in base):
+                        continue
+
+                    read_seq = forward_read.query_sequence[read_pos]
+
+                    if read_seq == "G" and genome_seq == "a":
+                        conversions += 1 
+
+                for base in reverse_read.get_aligned_pairs(with_seq=True):
+                    read_pos, genome_pos, genome_seq = base
+                    if(None in base):
+                        continue
+
+                    read_seq = reverse_read.query_sequence[read_pos]
+
+                    if read_seq == "C" and genome_seq == "t":
+                        conversions += 1
+                conversion_counts.append(conversions)   
+            else:
+                # should not be possible - but just in case
+                pass 
+                
+    print(conversion_counts)
+
+    with open(args.outfile_txt, "w") as outfile:
+        for count in conversion_counts:
+            outfile.write(str(count)+"\n")
+        print("written out to " + args.outfile_txt)
+
+    # dealing with metadata
+    for status_list in status_list_list:
+        if(any(status in ["Assigned", "+", "-"] for status in status_list)):
+            assigned_count += 1
+
+    # output a dataframe which has the assignment of each read
+    counter_dict1 = dict(Counter(status_list_1))
+    counter_dict2 = dict(Counter(status_list_2))
+    paired_breakdown = {"Assignment":list(counter_dict1.keys()), "Read 1":list(counter_dict1.values()), "Read 2":list(counter_dict2.values())}
+    paired_breakdown = pd.DataFrame(paired_breakdown)
+    outpath = meta_dir + "/paired_breakdown.tsv"
+    paired_breakdown.to_csv(outpath, sep="\t", index=False)
+    print(paired_breakdown)
+
+    # output a dataframe which has the assignment of each pair
+    outpath_pairs = meta_dir + "/pairs_combined.tsv"
+    assignments = ["Assigned", "Unassigned"]
+    counts = [str(assigned_count), str((i-assigned_count))]
+    pairs_combined = {"Assignments":assignments, "Counts":counts}
+    pairs_combined = pd.DataFrame(pairs_combined)
+    pairs_combined.to_csv(outpath_pairs, sep="\t", index=False)
+
+    # write footer and output benchmark information.
+    E.stop()
+
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))
