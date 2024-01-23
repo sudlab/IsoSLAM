@@ -203,7 +203,7 @@ def pull_3UI_reads(infiles, outfile):
           job_memory="64G")
     
 @follows(index_VCF, mkdir("split_labelled_vs_unlabelled"))
-@transform(featureCountsReadAssignments, 
+@subdivide(featureCountsReadAssignments, 
            regex("read_assignments/(.+)/(.+)_(.+)_(.+)_(.+)_(.+).sorted.assigned.bam"), 
            add_inputs(r"snp_vcf/\2.vcf.gz"),
            [r"split_labelled_vs_unlabelled/\1/\1.labelled.fastq.1.gz",
@@ -266,15 +266,16 @@ def makeSalmonIndex(infile,outfile):
 
 @follows(mkdir("quant_labelled_vs_unlabelled"))
 @collate(split_labelled_vs_unlabelled,
-           regex(".+/(.+)\.unlabelled\.fastq.(.+).gz"),
+           regex(".+/(.+)\.(.+)\.fastq.(.+).gz"),
            add_inputs(makeSalmonIndex),
-           r"quant_labelled_vs_unlabelled/\1/labelled/quant.sf")
+           r"quant_labelled_vs_unlabelled/\1/\2/quant.sf")
 def quant_labelled_vs_unlabelled(infiles, outfile):
     '''Quantify labelled vs unlabelled reads'''
     job_threads=PARAMS["salmon_threads"]
     job_memory=PARAMS["salmon_memory"]
-    fastq_files, salmon_index = infiles
-    fastq1, fastq2 = fastq_files
+    input1, input2 = infiles
+    fastq1, salmon_index = input1
+    fastq2, salmon_index = input2
 
     # limit to 24 hours - if a job get stuck. Kill it rather than waiting forever
     job_options = PARAMS["cluster_options"] + " -l h_rt=24:00:00"

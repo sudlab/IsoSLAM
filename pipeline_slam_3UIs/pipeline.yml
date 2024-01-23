@@ -7,6 +7,18 @@ memory: 1.9G
 #3UTR bed
 utr_bed: ~/misc_scripts/extract-transcript-regions/hg38_ensembl85/bed6/hg38_ensembl85_3utr.bed
 #transcriptome assembly
-transcript_gtf: ~/HipSci/HIPSCI-REANNOTATE/filtered_genesets.dir/agg-agg-agg.filtered.gtf.gz
+transcript_gtf: /users/mbp20jjr/HipSci/HIPSCI-REANNOTATE/filtered_genesets.dir/agg-agg-agg.filtered.gtf.gz
 #utron bed
 utrons_bedfile: ~/HipSci/HIPSCI-REANNOTATE/utron_beds.dir/agg-agg-agg.all_utrons.bed.gz
+
+salmon:
+    # Options for building the salmon index
+    indexoptions: --sparse
+    # Options for quantifying samples
+    quantoptions: --gcBias
+    
+    memory: 7.5G
+    threads: 8
+
+    index_threads: 16
+    index_memory: 4G
