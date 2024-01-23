@@ -1,12 +1,12 @@
 #mapping
-genome_fasta: /shared/sudlab1/General/mirror/genomes/index/hg38_noalt.fa
-star_genome_dir: /shared/sudlab1/General/mirror/genomes/STAR/hg38_noalt_junc85_99.dir
+genome_fasta: ~/mirror/genomes/index/hg38_noalt.fa
+star_genome_dir: ~/mirror/genomes/STAR/hg38_noalt_junc85_99.dir
 star_options: --outFilterMultimapScoreRange 1 --outFilterMultimapNmax 20 --outFilterMismatchNmax 10 --alignIntronMax 500000 --alignMatesGapMax 1000000 --sjdbScore 2 --alignSJDBoverhangMin 1 --genomeLoad NoSharedMemory --outFilterMatchNminOverLread 0.33 --outFilterScoreMinOverLread 0.33 --twopass1readsN -1 --sjdbOverhang 99 --outSAMattributes NH HI NM MD AS --twopassMode Basic
 number_of_threads: 12
 memory: 1.9G
 #3UTR bed
-utr_bed: /shared/sudlab1/General/projects/stem_utrons/misc_scripts/extract-transcript-regions/hg38_ensembl85/bed6/hg38_ensembl85_3utr.bed
+utr_bed: ~/misc_scripts/extract-transcript-regions/hg38_ensembl85/bed6/hg38_ensembl85_3utr.bed
 #transcriptome assembly
-transcript_gtf: /shared/sudlab1/General/projects/stem_utrons/existing_hPSC_data/HipSci/HIPSCI-REANNOTATE/filtered_genesets.dir/agg-agg-agg.filtered.gtf.gz
+transcript_gtf: ~/HipSci/HIPSCI-REANNOTATE/filtered_genesets.dir/agg-agg-agg.filtered.gtf.gz
 #utron bed
-utrons_bedfile: /shared/sudlab1/General/projects/stem_utrons/existing_hPSC_data/HipSci/HIPSCI-REANNOTATE/utron_beds.dir/agg-agg-agg.all_utrons.bed.gz
+utrons_bedfile: ~/HipSci/HIPSCI-REANNOTATE/utron_beds.dir/agg-agg-agg.all_utrons.bed.gz
