@@ -10,6 +10,7 @@ utr_bed: ~/misc_scripts/extract-transcript-regions/hg38_ensembl85/bed6/hg38_ense
 transcript_gtf: /users/mbp20jjr/HipSci/HIPSCI-REANNOTATE/filtered_genesets.dir/agg-agg-agg.filtered.gtf.gz
 #utron bed
 utrons_bedfile: ~/HipSci/HIPSCI-REANNOTATE/utron_beds.dir/agg-agg-agg.all_utrons.bed.gz
+utrons_bed6: ~/HipSci/HIPSCI-REANNOTATE/utron_beds.dir/agg-agg-agg.all_utrons.bed6
 
 salmon:
     # Options for building the salmon index

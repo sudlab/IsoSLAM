@@ -43,9 +43,6 @@ def main(argv=None):
     
     parser.add_argument("-g", "--gtf", dest="gtf_path", type=str,
                         help="Supply a path to the transcript assembly gtf file")
-    
-    parser.add_argument("-bed", dest="utron_bed", type=str,
-                        help="Supply a path to the utron bed file")
 
     parser.add_argument("-o", "--out", dest="outfile_txt", type=str,
                         help="""Supply a path to the output file. This file will contain 
@@ -80,23 +77,6 @@ def main(argv=None):
     vcffile = pysam.VariantFile(args.vcf_path)
     #vcffile = pysam.VariantFile('../STAR-custom/snp_vcf/D0.vcf.gz')
 
-    utron_coords = []
-    
-    
-    utron_coords = defaultdict(list)
-
-    #bed_path = "/shared/sudlab1/General/projects/stem_utrons/existing_hPSC_data/HipSci/HIPSCI-REANNOTATE/utron_beds.dir/agg-agg-agg.all_utrons.bed.gz"
-    
-    with iotools.open_file(args.utron_bed) as bedfile:
-        for line in bedfile:
-            contents = line.strip().split("\t")
-            chromosome, start, end, transcript_id, bedstrand = contents[0], int(contents[1]), int(contents[2]), contents[3], contents[5]
-            bed_tuple = (chromosome, start, end, transcript_id, bedstrand)
-            utron_coords[transcript_id].append(bed_tuple)
-            #utron_coords.append(bed_tuple)
-
-    print(utron_coords)
-
     tx2gene = defaultdict(list)
     strand_dict = defaultdict(str)
 
@@ -121,7 +101,6 @@ def main(argv=None):
 
         yield read_list
     
-    i = 0
     i_progress = 0
     i_total_progress = 0
 
@@ -148,69 +127,8 @@ def main(argv=None):
 
             if i_progress == 10000:
                 E.debug(str(i_total_progress) + " pairs processed")
-                E.debug(str(i) + " 3UI spliced/retained pairs proccessed")
                 i_progress = 0
 
-            read1_start = read1.reference_start
-            #print("read1 start: " + str(read1_start))
-            read1_end = read1.reference_end
-            #print("read1 end: " + str(read1_end))
-            read2_start = read2.reference_start
-            #print("read2 start: " + str(read2_start))
-            read2_end = read2.reference_end
-            #print("read2 end: " + str(read2_end))
-
-            if read1.get_tag("XS") == "Assigned":
-                transcripts_read1 = tx2gene[read1.get_tag("XT")]
-                utrons1 = [utron_coords[tx] for tx in transcripts_read1]
-                utrons1 = sum(utrons1, [])
-            else:
-                utrons1 = list()
-                
-            if read2.get_tag("XS") == "Assigned":
-                transcripts_read2 = tx2gene[read2.get_tag("XT")]
-                utrons2 = [utron_coords[tx] for tx in transcripts_read2]
-                utrons2 = sum(utrons2, [])
-            else:
-                utrons2 = list()
-
-            # Dictionary, keyed on transcript id, of introns coords where the read overlaps
-            # the intron.
-            read1_within_intron = set(transcript_id + "_retained"
-                                    for _, start, end, transcript_id, _ in utrons1
-                                    if (start <= read1_start <= end or 
-                                        start <= read1_end <= end))
-            
-            read2_within_intron = set(transcript_id + "_retained"
-                                    for chromosome, start, end, transcript_id, bedstrand in utrons2
-                                    if start <= read2_start <= end or
-                                        start <= read2_end <= end)
-
-            # Dictionary, keyed on transcript id of introns where the read splices at identical
-            # locations to a utron. 
-            block_starts, block_ends = zip(*read1.get_blocks())
-            read1_spliced_3UI = {transcript_id: (start, end)
-                                for chromosome, start, end, transcript_id, bedstrand in utrons1
-                                if start in block_ends and 
-                                    end in block_starts}
-
-            block_starts, block_ends = zip(*read2.get_blocks())
-            read2_spliced_3UI = {transcript_id: (start, end)
-                                for chromosome, start, end, transcript_id, bedstrand in utrons2
-                                if start in block_ends and 
-                                    end in block_starts}
-
-            # Check one read in the pair has caused the creation of at least one entry.
-            all_dicts = [read1_within_intron,
-                        read2_within_intron,
-                        read1_spliced_3UI,
-                        read2_spliced_3UI]
-            all_empty = all(not contents for contents in all_dicts)
-
-            if all_empty:
-                continue
-
-            i+=1
 
             read1_status = read1.get_tag("XS")
             read2_status = read2.get_tag("XS")

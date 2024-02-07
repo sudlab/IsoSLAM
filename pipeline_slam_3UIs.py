@@ -202,6 +202,26 @@ def pull_3UI_reads(infiles, outfile):
     P.run(statement,
           job_memory="64G")
     
+@follows(index_VCF, mkdir("3UI_counts_and_info"))
+@transform(featureCountsReadAssignments, 
+           regex("read_assignments/(.+)/(.+)_(.+)_(.+)_(.+)_(.+).sorted.assigned.bam"), 
+           add_inputs(r"snp_vcf/\2.vcf.gz"),
+           r"3UI_counts_and_info/\1.tsv")
+def spliced_counts_and_info(infiles, outfile):
+    bamfile, vcffile = infiles
+    annotation = PARAMS["transcript_gtf"]
+    utron_bed = PARAMS["utrons_bed6"]
+    script_path = os.path.dirname(os.path.abspath(__file__)) + "/pipeline_slam_3UIs/3UI_spliced_counts_and_info.py"
+
+    statement = """python %(script_path)s -b %(bamfile)s 
+                                            -g %(annotation)s
+                                            -o %(outfile)s
+                                            -vcf %(vcffile)s 
+                                            -bed %(utrons_bedfile)s -v5"""
+    
+    P.run(statement,
+          job_memory="16G")
+    
 @follows(index_VCF, mkdir("split_labelled_vs_unlabelled"))
 @subdivide(featureCountsReadAssignments, 
            regex("read_assignments/(.+)/(.+)_(.+)_(.+)_(.+)_(.+).sorted.assigned.bam"), 
@@ -214,13 +234,11 @@ def split_labelled_vs_unlabelled(infiles, outfiles):
     bamfile, vcffile = infiles
     lfq1, lfq2, ulfq1, ulfq2 = outfiles
     annotation = PARAMS["transcript_gtf"]
-    utron_bed = PARAMS["utrons_bedfile"]
     script_path = os.path.dirname(os.path.abspath(__file__)) + "/pipeline_slam_3UIs/split_labelled_vs_unlabelled.py"
 
     statement = """python %(script_path)s -b %(bamfile)s 
                                             -g %(annotation)s
-                                            -vcf %(vcffile)s 
-                                            -bed %(utrons_bedfile)s 
+                                            -vcf %(vcffile)s
                                             -lfq1 %(lfq1)s
                                             -lfq2 %(lfq2)s
                                             -ulfq1 %(ulfq1)s
@@ -273,12 +291,25 @@ def quant_labelled_vs_unlabelled(infiles, outfile):
     '''Quantify labelled vs unlabelled reads'''
     job_threads=PARAMS["salmon_threads"]
     job_memory=PARAMS["salmon_memory"]
+    #print("infiles=")
+    #print(infiles)
     input1, input2 = infiles
+    #print("input1 = ")
+    #print(input1)
+    #print("input2 = ")
+    #print(input2)
     fastq1, salmon_index = input1
+    #print("fastq1 =")
+    #print(fastq1)
+    #print("salmon_index = ")
+    #print(salmon_index)
     fastq2, salmon_index = input2
+    #print("fastq2 = ")
+    #print(fastq2)
+    #print("salmon index = ")
+    #print(salmon_index)
 
-    # limit to 24 hours - if a job get stuck. Kill it rather than waiting forever
-    job_options = PARAMS["cluster_options"] + " -l h_rt=24:00:00"
+    job_options = PARAMS["cluster_options"] 
     outdir = os.path.dirname(outfile)
     salmon_options=PARAMS["salmon_quantoptions"]
 
@@ -306,7 +337,8 @@ def quant_labelled_vs_unlabelled(infiles, outfile):
          pull_3UI_reads,
          split_labelled_vs_unlabelled,
          makeSalmonIndex,
-         quant_labelled_vs_unlabelled)
+         quant_labelled_vs_unlabelled,
+         spliced_counts_and_info)
 
 def full():
     pass
