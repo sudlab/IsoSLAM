@@ -127,8 +127,8 @@ def main(argv=None):
             ##    print("length break")
             #    break
 
-            if first_matched >1000:
-                break
+            #if first_matched >1000:
+            #    break
 
             if len(pair)!=2:
                 continue
@@ -265,26 +265,7 @@ def main(argv=None):
                 continue
             else:
                 first_matched += 1
-                #print("\n\n\nAll_dicts:")
-                #print(all_dicts)
-                #print("\nutrons1")
-                #print(utrons1)
-                #print("\nutrons2")
-                #print(utrons2)
-                #print("\nRead1Blocks:")
-                #block_starts, block_ends = zip(*read1.get_blocks())
-                #print(block_starts)
-                #print(block_ends)
-                #print("\nRead2Blocks:")
-                #block_starts, block_ends = zip(*read2.get_blocks())
-                #print(block_starts)
-                #print(block_ends)
-                #print("\nRead1")
-                #print(read1_start)
-                #print(read1_end)
-                #print("\nRead2")
-                #print(read2_start)
-                #print(read2_end)
+
         
             # Create a set of tupples: (tx_id,(start,end))
             # Retained
@@ -380,10 +361,9 @@ def main(argv=None):
                 # len(coverage) will be the # of uniquely covered positions
                 coverage = set()
 
-                # if there is overlap, it could be that a single conversion is 
-                # being picked up as 2 (i.e. by both reads), it should only 
-                # count as one. This doesn't seem to occur once in a test of 
-                # 2 million read pairs...
+                # instead of counting conversions as an int +=1, just add the 
+                # position to a set, and len(set) will be the number of 
+                # unique conversions. ACCOUNTS FOR OVERLAP BETWEEN READ1+2.
                 converted_position = set()
 
                 for base in forward_read.get_aligned_pairs(with_seq=True):
@@ -487,32 +467,6 @@ def main(argv=None):
                 pass 
 
             i_output +=1
-            
-            #if(i_output==2):
-            #    print(i_output)
-            #    print("read1")
-            #    print(read1_start)
-            #    print(read1_end)
-            #    print("read2 start")
-            #    print(read2_start)
-            #    print(read2_end)
-            #    print("read1_blocks")
-            #    print(block_starts1)
-            #    print(block_ends1)
-            #    print("read2_blocks")
-            #    print(block_starts2)
-            #    print(block_ends2)
-                #print("coverage_length")
-                #print(coverage)
-            
-            print("new pair")
-            print(len(converted_position))
-
-            ## We finally need info on how much total sequence is covered by the read pair
-            ## The maximum should be 2x read length. 
-            ## But there will be instances where it is less than this where a shorter fragment
-            ## is sequenced, i.e. the reads will sometimes overlap.
-
 
             # Stream output as a tsv
             # Format: read_uid, transcript_id, start, end, ret/spl, conversions, convertable, coverage
