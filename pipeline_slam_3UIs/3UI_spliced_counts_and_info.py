@@ -185,8 +185,10 @@ def main(argv=None):
 
             for _, start, end, transcript_id, _ in utrons1:
                 # if starts/ends in intron/(s)
-                if ((start <= read1_start <= end or 
-                    start <= read1_end <= end) and
+                # so it is easier to normalize, we will only look at the 3' end 
+                # of the retained intron 
+                if (read1_start < start and 
+                    start < read1_end < end and
                     start not in block_ends1 and
                     end not in block_starts1 and
                     start not in block_ends2 and
@@ -223,8 +225,8 @@ def main(argv=None):
 
             for _, start, end, transcript_id, _ in utrons2:
                 # if starts/ends in intron/(s)
-                if ((start <= read2_start <= end or 
-                    start <= read2_end <= end) and
+                if (read2_start < start and 
+                    start < read2_end < end and
                     start not in block_ends2 and
                     end not in block_starts2 and
                     start not in block_ends1 and
