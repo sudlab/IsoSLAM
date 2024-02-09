@@ -217,7 +217,7 @@ def spliced_counts_and_info(infiles, outfile):
                                             -g %(annotation)s
                                             -o %(outfile)s
                                             -vcf %(vcffile)s 
-                                            -bed %(utrons_bedfile)s -v5"""
+                                            -bed %(utron_bed)s -v5"""
     
     P.run(statement,
           job_memory="16G")
