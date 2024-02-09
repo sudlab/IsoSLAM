@@ -119,7 +119,7 @@ def main(argv=None):
     #with open("test_output.tsv", "wt") as  outfile:
 
         # Add column headers
-        outfile.write("Read_UID\tTranscript_id\tStart\tEnd\tAssignment\tConversions\tConvertable\tCoverage\n")
+        outfile.write("Read_UID\tTranscript_id\tStart\tEnd\tChr\tStrand\tAssignment\tConversions\tConvertable\tCoverage\n")
 
         for pair in fragment_iterator(bamfile.fetch(until_eof=True)):
         
@@ -183,19 +183,17 @@ def main(argv=None):
             # RETAINED
             read1_within_intron = {}
 
-            for _, start, end, transcript_id, _ in utrons1:
+            for chr, start, end, transcript_id, strand in utrons1:
                 # if starts/ends in intron/(s)
-                # so it is easier to normalize, we will only look at the 3' end 
-                # of the retained intron 
-                if (read1_start < start and 
-                    start < read1_end < end and
+                if ((start <= read1_start <= end or 
+                    start <= read1_end <= end) and
                     start not in block_ends1 and
                     end not in block_starts1 and
                     start not in block_ends2 and
                     end not in block_starts2):
                     if transcript_id not in read1_within_intron:
                         read1_within_intron[transcript_id] = []
-                    read1_within_intron[transcript_id].append((start, end))
+                    read1_within_intron[transcript_id].append((start, end, chr, strand))
 
                 # if spans an entire intron 
                 intron_length = end-start
@@ -208,32 +206,32 @@ def main(argv=None):
                     end not in block_starts2):
                     if transcript_id not in read1_within_intron:
                         read1_within_intron[transcript_id] = []
-                    read1_within_intron[transcript_id].append((start, end))
+                    read1_within_intron[transcript_id].append((start, end, chr, strand))
 
         #SPLICED
             read1_spliced_3UI = {}
 
-            for chromosome, start, end, transcript_id, bedstrand in utrons1:
+            for chr, start, end, transcript_id, strand in utrons1:
                 if start in block_ends1 and end in block_starts1:
                     if transcript_id not in read1_spliced_3UI:
                         read1_spliced_3UI[transcript_id] = []
-                    read1_spliced_3UI[transcript_id].append((start, end))
+                    read1_spliced_3UI[transcript_id].append((start, end, chr, strand))
 
             ## READ 2
             # RETAINED
             read2_within_intron = {}
 
-            for _, start, end, transcript_id, _ in utrons2:
+            for chr, start, end, transcript_id, strand in utrons2:
                 # if starts/ends in intron/(s)
-                if (read2_start < start and 
-                    start < read2_end < end and
+                if ((start <= read2_start <=end or 
+                    start <= read2_end <= end) and
                     start not in block_ends2 and
                     end not in block_starts2 and
                     start not in block_ends1 and
                     end not in block_starts1):
                     if transcript_id not in read2_within_intron:
                         read2_within_intron[transcript_id] = []
-                    read2_within_intron[transcript_id].append((start, end))
+                    read2_within_intron[transcript_id].append((start, end, chr, strand))
                 
                 # if spans an entire intron
                 intron_length = end-start
@@ -246,16 +244,16 @@ def main(argv=None):
                     end not in block_starts1):
                     if transcript_id not in read2_within_intron:
                         read2_within_intron[transcript_id] = []
-                    read2_within_intron[transcript_id].append((start, end))
+                    read2_within_intron[transcript_id].append((start, end, chr, strand))
 
             #SPLICED
             read2_spliced_3UI = {}
 
-            for chromosome, start, end, transcript_id, bedstrand in utrons2:
+            for chr, start, end, transcript_id, strand in utrons2:
                 if start in block_ends2 and end in block_starts2:
                     if transcript_id not in read2_spliced_3UI:
                         read2_spliced_3UI[transcript_id] = []
-                    read2_spliced_3UI[transcript_id].append((start, end))
+                    read2_spliced_3UI[transcript_id].append((start, end, chr, strand))
 
             all_dicts = [read1_within_intron,
                         read2_within_intron,
@@ -473,16 +471,16 @@ def main(argv=None):
             # Stream output as a tsv
             # Format: read_uid, transcript_id, start, end, ret/spl, conversions, convertable, coverage
             # A read pair will cover multiple lines if it matches multiple events (but metadata will be same)
-            for transcript_id, start_end in assign_conversions_to_retained:
-                start, end = start_end
+            for transcript_id, position in assign_conversions_to_retained:
+                start, end, chr, strand = position
                 outfile.write(f"{i_output}\t{transcript_id}\t"
-                              f"{start}\t{end}\tRet\t{len(converted_position)}\t"
+                              f"{start}\t{end}\t{chr}\t{strand}\tRet\t{len(converted_position)}\t"
                               f"{len(convertable)}\t{len(coverage)}\n")
                 
-            for transcript_id, start_end in assign_conversions_to_spliced:
-                start, end = start_end
+            for transcript_id, position in assign_conversions_to_spliced:
+                start, end, chr, strand = position
                 outfile.write(f"{i_output}\t{transcript_id}\t"
-                              f"{start}\t{end}\tSpl\t{len(converted_position)}\t"
+                              f"{start}\t{end}\t{chr}\t{strand}\tSpl\t{len(converted_position)}\t"
                               f"{len(convertable)}\t{len(coverage)}\n")
 
     # write footer and output benchmark information.
