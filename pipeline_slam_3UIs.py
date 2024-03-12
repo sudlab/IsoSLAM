@@ -2,6 +2,7 @@
 This pipeline takes in pre-mapped alignments and puts them through slam dunk
 """
 
+from heapq import merge
 import sys
 import os
 import sqlite3
@@ -222,6 +223,24 @@ def spliced_counts_and_info(infiles, outfile):
     P.run(statement,
           job_memory="16G")
     
+@follows(index_VCF, mkdir("gene_level_counts_and_info"))
+@transform(featureCountsReadAssignments, 
+           regex("read_assignments/(.+)/(.+)_(.+)_(.+)_(.+)_(.+).sorted.assigned.bam"), 
+           add_inputs(r"snp_vcf/\2.vcf.gz"),
+           r"gene_level_counts_and_info/\1.tsv")
+def gene_level_counts_and_info(infiles, outfile):
+    bamfile, vcffile = infiles
+    annotation = PARAMS["transcript_gtf"]
+    script_path = os.path.dirname(os.path.abspath(__file__)) + "/pipeline_slam_3UIs/gene_level_counts_and_info.py"
+
+    statement = """python %(script_path)s -b %(bamfile)s 
+                                            -g %(annotation)s
+                                            -o %(outfile)s
+                                            -vcf %(vcffile)s -v5"""
+    
+    P.run(statement,
+          job_memory="16G")
+    
 @follows(index_VCF, mkdir("split_labelled_vs_unlabelled"))
 @subdivide(featureCountsReadAssignments, 
            regex("read_assignments/(.+)/(.+)_(.+)_(.+)_(.+)_(.+).sorted.assigned.bam"), 
@@ -325,6 +344,178 @@ def quant_labelled_vs_unlabelled(infiles, outfile):
 
     P.run(statement)
 
+@follows(mkdir("3UI_counts_and_info/pairs"))
+@collate(spliced_counts_and_info,
+         regex("(.+)/(.+)_.+(hr|4sU).+"),
+       r"\1/pairs/\2_pvalues.tsv")
+def get_pair_pvalues(infiles, outfile):
+    day_regex = os.path.basename(outfile).split("_")[0]
+    input_folder = os.path.dirname(infiles[0])
+    script_path = os.path.dirname(os.path.abspath(__file__)) + "/pipeline_slam_3UIs/get_pair_pvalues.R"
+    statement = "Rscript %(script_path)s %(input_folder)s %(day_regex)s %(outfile)s"
+
+    P.run(statement, job_memory="16G")
+
+### Run half lives after running pvals, then we can omit those where the initial 
+### half life estimate is negative or >24hr. 
+
+@follows(get_pair_pvalues)
+@collate(spliced_counts_and_info, 
+       regex("(.+)/(.+)_.+(hr|4sU).+"),
+       r"\1/pairs/\2_half_lives.tsv")
+def get_pair_half_lives(infiles, outfile):
+    day_regex = os.path.basename(outfile).split("_")[0]
+    input_folder = os.path.dirname(infiles[0])
+    num_bootstraps = 100
+    script_path = os.path.dirname(os.path.abspath(__file__)) + "/pipeline_slam_3UIs/get_pair_halflives.R"
+    statement = "Rscript %(script_path)s %(input_folder)s %(day_regex)s %(num_bootstraps)s %(outfile)s"
+
+    P.run(statement, job_memory="16G")
+
+@follows(mkdir("3UI_counts_and_info/over_time"))
+@collate(spliced_counts_and_info, 
+       regex("(.+)/(.+)_.+(hr|4sU).+"),
+       r"\1/over_time/over_time_pvalues.tsv")
+def get_over_time_pvalues(infiles, outfile):
+    input_folder = os.path.dirname(infiles[0])
+    script_path = os.path.dirname(os.path.abspath(__file__)) + "/pipeline_slam_3UIs/get_over_time_pvalues.R"
+    statement = "Rscript %(script_path)s %(input_folder)s %(outfile)s"
+
+    P.run(statement, job_memory="32G")
+
+@follows(mkdir("3UI_counts_and_info/over_time"))
+@collate(spliced_counts_and_info, 
+       regex("(.+)/(.+)_.+(hr|4sU).+"),
+       r"\1/over_time/interaction_over_time_pvalues.tsv")
+def get_interaction_over_time_pvals(infiles, outfile):
+    input_folder = os.path.dirname(infiles[0])
+    script_path = os.path.dirname(os.path.abspath(__file__)) + "/pipeline_slam_3UIs/get_interaction_over_time_pvals.R"
+    statement = "Rscript %(script_path)s %(input_folder)s %(outfile)s"
+
+    P.run(statement, job_memory="32G")
+
+@follows(mkdir("gene_level_counts_and_info/over_time"))
+@collate(gene_level_counts_and_info, 
+       regex("(.+)/(.+)_.+(hr|4sU).+"),
+       r"\1/over_time/over_time_pvalues.tsv")
+def get_over_time_pvalues_gene_level(infiles, outfile):
+    input_folder = os.path.dirname(infiles[0])
+    script_path = os.path.dirname(os.path.abspath(__file__)) + "/pipeline_slam_3UIs/get_over_time_pvalues_gene_level.R"
+    statement = "Rscript %(script_path)s %(input_folder)s %(outfile)s"
+
+    P.run(statement, job_memory="64G")
+
+@follows(mkdir("dapars"))
+@transform(PARAMS["transcript_gtf"],
+            regex("(.+)/(.+).gtf.gz"),
+            r"dapars/\2.bed12")
+def gene_model_bed12(infile, outfile):
+    statement = """cgat gff2bed 
+                    --bed12-from-transcripts
+                    -I %(infile)s
+                    -S %(outfile)s
+                    -L %(outfile)s.log"""
+    P.run(statement, job_memory="8G")
+
+@transform(gene_model_bed12, regex("(.+)/(.+).bed12"), r"\1/\2.sorted.bed12")
+def sort_bed12(infile, outfile):
+    statement = "sort -k 1,1 %(infile)s > %(outfile)s"
+    P.run(statement)
+
+@follows(mkdir("dapars/sorted_bams"))
+@transform("input_bams.dir/*.bam", regex("(.+)/(.+).bam"), r"dapars/sorted_bams/\2.sorted.bam")
+def pos_sort_bam(infile, outfile):
+    statement = "samtools sort %(infile)s -o %(outfile)s"
+    P.run(statement, job_memory="8G")
+
+@follows(mkdir("dapars/bedGraphs"))
+@transform(pos_sort_bam, regex("(.+)/(.+)/(.+).sorted.bam"), r"dapars/bedGraphs/\3.bedGraph")
+def get_bedGraphs(infile, outfile):
+    genome_file = PARAMS["genome_coords"]
+    statement = "genomeCoverageBed -split -bg -ibam %(infile)s -g %(genome_file)s > %(outfile)s"
+    P.run(statement, job_memory="8G")
+
+@transform(PARAMS["transcript_gtf"],
+           regex("(.+)/(.+).gtf.gz"),
+           r"dapars/\2.tx2gene")
+def get_dapars_tx2gene(infile, outfile):
+    outlines = []
+    for entry in GTF.iterator(IOTools.open_file(infile)):
+        if not entry.feature == "transcript":
+            continue  
+
+        transcript_id = entry.transcript_id
+        if(len(entry.attributes.split(";")) == 5 ):
+            mstrg_gene = entry.attributes.split(";")[0].strip("gene_id \"").strip("\"").strip()
+            ref_gene_id = entry.attributes.split(";")[3].strip("ref_gene_id \"").strip("\"").strip()
+
+        outlines.append((transcript_id, ref_gene_id))
+
+    outlines = list(set(outlines))
+
+    with open(outfile, "wt") as out:
+        for line in outlines:
+            tx, gene = line
+            out.write(f"{tx}\t{gene}\n")
+
+@transform(gene_model_bed12, 
+           regex("(.+)/(.+).bed12"),
+           add_inputs(get_dapars_tx2gene),
+           r"dapars/\2.dapars.anno")
+def dapars_extract_anno(infiles, outfile):
+    bed12, tx2gene = infiles
+    dapars_scripts = "/users/mbp20jjr/dapars/src"
+    statement = """python %(dapars_scripts)s/DaPars_Extract_Anno.py
+                     -b %(bed12)s
+                     -s %(tx2gene)s
+                     -o %(outfile)s"""
+    P.run(statement)
+
+@follows(mkdir("dapars/output"))
+@subdivide("dapars_design.tsv",
+           formatter(),
+           add_inputs(get_bedGraphs, dapars_extract_anno),
+           ["dapars/output/%s_dapars_config.txt" % line.split()[0]
+            for line in IOTools.open_file("dapars_design.tsv")])
+def generate_dapars_config(infiles, outfiles):
+    bedGraphs = infiles[1:-1]
+    anno = infiles[-1]
+    config_base = os.path.dirname(os.path.abspath(__file__)) + "/pipeline_slam_3UIs/dapars_default_config.txt"
+
+    comparisons = [line.split() for line in IOTools.open_file("dapars_design.tsv")]
+
+    import fnmatch
+
+    for name, condition1, condition2 in comparisons:
+        condition1  = "*" + condition1 + "*"
+        condition2 = "*" + condition2 + "*"
+        condition1_files = [f for f in bedGraphs if fnmatch.fnmatch(f, condition1)]
+        condition1_filestring = ','.join(condition1_files)
+        condition2_files = [f for f in bedGraphs if fnmatch.fnmatch(f, condition2)]
+        condition2_filestring = ','.join(condition2_files)
+        name=name
+        name2 = "*" + name + "*"
+        outfile = [o for o in outfiles if fnmatch.fnmatch(o, name2)]
+        with open(outfile[0], "wt") as out:
+            out.write(f"Annotated_3UTR={anno}\n")
+            out.write(f"Group1_Tophat_aligned_Wig={condition1_filestring}\n")
+            out.write(f"Group2_Tophat_aligned_Wig={condition2_filestring}\n")
+            out.write(f"Output_directory=dapars/output/{name}\n")
+            out.write(f"Output_result_file={name}.dapars.output\n")
+
+            default_config = IOTools.open_file(config_base)
+            for line in default_config:
+                out.write(line)
+
+@transform(generate_dapars_config,
+           regex("dapars/output/(.+)_dapars_config.txt"),
+           r"dapars/output/\1/\1.dapars.output")
+def run_dapars_main(infile, outfile):
+    dapars_scripts = "/users/mbp20jjr/dapars/src"
+    statement = "python %(dapars_scripts)s/DaPars_main.py %(infile)s"
+    P.run(statement, job_memory="32G")
+
+
 @follows(plot_conversions_per_read, 
          plot_conversions_per_pair, 
          featureCountsReadAssignments, 
@@ -338,9 +529,26 @@ def quant_labelled_vs_unlabelled(infiles, outfile):
          split_labelled_vs_unlabelled,
          makeSalmonIndex,
          quant_labelled_vs_unlabelled,
-         spliced_counts_and_info)
+         spliced_counts_and_info,
+         gene_level_counts_and_info,
+         get_pair_pvalues,
+         get_pair_half_lives,
+         get_over_time_pvalues,
+         get_over_time_pvalues_gene_level,
+         get_interaction_over_time_pvals
+         )
 
 def full():
+    pass
+
+@follows(gene_model_bed12,
+         sort_bed12,
+         pos_sort_bam,
+         get_bedGraphs,
+         get_dapars_tx2gene,
+         dapars_extract_anno,
+         run_dapars_main)
+def run_dapars():
     pass
 
 ### MISC ###
