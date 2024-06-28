@@ -65,10 +65,11 @@ combined_df = combined_df  %>%
 
 non_captured = combined_df %>% 
   group_by(Transcript_id, Chr, Strand, Start, End, Assignment, Day, Hour, Rep) %>% 
-  summarise(n=n()) %>% 
-  filter(n==1) %>% 
-  inner_join(combined_df) %>%
-  filter(Converted==FALSE)
+  summarise(n=n(),
+            Converted=dplyr::first(Converted)) %>% 
+  filter(n==1) %>%
+  filter(Converted==FALSE) %>%
+  inner_join(combined_df) 
 
 # We have the events where Converted==FALSE account for 100% of the counts
 # Use this to create the corresponding Converted==TRUE where counts=0. Can keep total_counts the same
@@ -401,28 +402,26 @@ get_pval_from_combo_nls <- function(event_to_interogate){
       
       ### FIXED OFFSET ###
       ### This is like plotting 2 lines for each differentiation day based on the average fit for both isoforms
-      ### + a fixed offset (which is derived from the average fold difference between isoforms) across
-      ### all time points. I.e. the difference between the 2 isoforms is always relatively constant (it is
-      ### a fold change, not a fixed number, therefore stays relative to the half-life at that day)
-      ### e.g. if the AVERAGE retained isoform is twice as stable as the spliced isoform then here:
-      ### if: average d0=6hrs, d2 = 3hrs, d16=12hrs
-      ### then: d0_spl=8hrs, d0_ret=4hrs, d2_spl=2hrs, d2_ret=4hrs, d16_spl=8hrs, d16_ret=16hrs
+      ### + a fixed offset (which is derived from the average difference between isoforms) across
+      ### all diff points.
       ####################
       
-      d0_fold_b_diff = coef(d0_ret_fit_weighted)/coef(d0_spl_fit_weighted)
-      d2_fold_b_diff = coef(d2_ret_fit_weighted)/coef(d2_spl_fit_weighted)
-      d16_fold_b_diff = coef(d16_ret_fit_weighted)/coef(d16_spl_fit_weighted)
-      mean_b_diff_ratio = mean(d0_fold_b_diff, d2_fold_b_diff, d16_fold_b_diff)
+      d0_b_diff = coef(d0_ret_fit_weighted)-coef(d0_spl_fit_weighted)
+      d2_b_diff = coef(d2_ret_fit_weighted)-coef(d2_spl_fit_weighted)
+      d16_b_diff = coef(d16_ret_fit_weighted)-coef(d16_spl_fit_weighted)
+      starting_mean_b_diff = mean(d0_b_diff, d2_b_diff, d16_b_diff)
       
-      fixed_offset_fit = nls(value ~ as.numeric(isoform=="ret")*as.numeric(day=="d0")*exp((d0_b*mean_b_diff_ratio) * time) + 
-                               as.numeric(isoform=="spl")*as.numeric(day=="d0")*exp((d0_b/mean_b_diff_ratio) * time) + 
-                               as.numeric(isoform=="ret")*as.numeric(day=="d2")*exp((d2_b*mean_b_diff_ratio) * time) + 
-                               as.numeric(isoform=="spl")*as.numeric(day=="d2")*exp((d2_b/mean_b_diff_ratio) * time) + 
-                               as.numeric(isoform=="ret")*as.numeric(day=="d16")*exp((d16_b*mean_b_diff_ratio) * time) + 
-                               as.numeric(isoform=="spl")*as.numeric(day=="d16")*exp((d16_b/mean_b_diff_ratio) * time),
+      
+      fixed_offset_fit = nls(value ~ as.numeric(isoform=="ret")*as.numeric(day=="d0")*exp((d0_b+mean_b_diff) * time) + 
+                               as.numeric(isoform=="spl")*as.numeric(day=="d0")*exp((d0_b-mean_b_diff) * time) + 
+                               as.numeric(isoform=="ret")*as.numeric(day=="d2")*exp((d2_b+mean_b_diff) * time) + 
+                               as.numeric(isoform=="spl")*as.numeric(day=="d2")*exp((d2_b-mean_b_diff) * time) + 
+                               as.numeric(isoform=="ret")*as.numeric(day=="d16")*exp((d16_b+mean_b_diff) * time) + 
+                               as.numeric(isoform=="spl")*as.numeric(day=="d16")*exp((d16_b-mean_b_diff) * time),
                              start=list(d0_b = coef(d0_fit_weighted),
                                         d2_b = coef(d2_fit_weighted),
-                                        d16_b = coef(d16_fit_weighted)),
+                                        d16_b = coef(d16_fit_weighted),
+                                        mean_b_diff=starting_mean_b_diff),
                              data = actual_data_forced_1,
                              weights = normalized_total_counts)
       
@@ -434,21 +433,20 @@ get_pval_from_combo_nls <- function(event_to_interogate){
       ### If the difference between isoforms is consistent between days, then the anova will be n.s. 
       ###################
       
-      free_offset_fit = nls(value ~ as.numeric(isoform=="ret")*as.numeric(day=="d0")*exp((d0_b*d0_offset) * time) + 
-                            as.numeric(isoform=="spl")*as.numeric(day=="d0")*exp((d0_b/d0_offset) * time) + 
-                            as.numeric(isoform=="ret")*as.numeric(day=="d2")*exp((d2_b*d2_offset) * time) + 
-                            as.numeric(isoform=="spl")*as.numeric(day=="d2")*exp((d2_b/d2_offset) * time) + 
-                            as.numeric(isoform=="ret")*as.numeric(day=="d16")*exp((d16_b*d16_offset) * time) + 
-                            as.numeric(isoform=="spl")*as.numeric(day=="d16")*exp((d16_b/d16_offset) * time),
-                          start=list(d0_b = coef(d0_fit_weighted),
-                                     d0_offset = coef(d0_ret_fit_weighted)/coef(d0_spl_fit_weighted),
-                                     d2_b = coef(d2_fit_weighted),
-                                     d2_offset = coef(d2_ret_fit_weighted)/coef(d2_spl_fit_weighted),
-                                     d16_b = coef(d16_fit_weighted),
-                                     d16_offset = coef(d16_ret_fit_weighted)/coef(d16_spl_fit_weighted)),
-                          data = actual_data_forced_1,
-                          weights = normalized_total_counts)
-
+      free_offset_fit = nls(value ~ as.numeric(isoform=="ret")*as.numeric(day=="d0")*exp((d0_b+d0_offset) * time) + 
+                              as.numeric(isoform=="spl")*as.numeric(day=="d0")*exp((d0_b-d0_offset) * time) + 
+                              as.numeric(isoform=="ret")*as.numeric(day=="d2")*exp((d2_b+d2_offset) * time) + 
+                              as.numeric(isoform=="spl")*as.numeric(day=="d2")*exp((d2_b-d2_offset) * time) + 
+                              as.numeric(isoform=="ret")*as.numeric(day=="d16")*exp((d16_b+d16_offset) * time) + 
+                              as.numeric(isoform=="spl")*as.numeric(day=="d16")*exp((d16_b-d16_offset) * time),
+                            start=list(d0_b = coef(d0_fit_weighted),
+                                       d0_offset = coef(d0_ret_fit_weighted)-coef(d0_spl_fit_weighted),
+                                       d2_b = coef(d2_fit_weighted),
+                                       d2_offset = coef(d2_ret_fit_weighted)-coef(d2_spl_fit_weighted),
+                                       d16_b = coef(d16_fit_weighted),
+                                       d16_offset = coef(d16_ret_fit_weighted)-coef(d16_spl_fit_weighted)),
+                            data = actual_data_forced_1,
+                            weights = normalized_total_counts)
       
       x =anova(fixed_offset_fit, free_offset_fit)
       
