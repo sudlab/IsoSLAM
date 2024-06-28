@@ -223,6 +223,53 @@ def spliced_counts_and_info(infiles, outfile):
     P.run(statement,
           job_memory="16G")
     
+### FOR ALL SPLICED EVENTS ###################################################################################################
+
+@follows(index_VCF, mkdir("all_introns_counts_and_info"))
+@transform(featureCountsReadAssignments, 
+           regex("read_assignments/(.+)/(.+)_(.+)_(.+)_(.+)_(.+).sorted.assigned.bam"), 
+           add_inputs(r"snp_vcf/\2.vcf.gz"),
+           r"all_introns_counts_and_info/\1.tsv")
+def all_introns_counts_and_info(infiles, outfile):
+    bamfile, vcffile = infiles
+    annotation = PARAMS["transcript_gtf"]
+    utron_bed = PARAMS["all_introns_bed6"]
+    script_path = os.path.dirname(os.path.abspath(__file__)) + "/pipeline_slam_3UIs/all_introns_counts_and_info.py"
+
+    statement = """python %(script_path)s -b %(bamfile)s 
+                                            -g %(annotation)s
+                                            -o %(outfile)s
+                                            -vcf %(vcffile)s 
+                                            -bed %(utron_bed)s -v5"""
+    
+    P.run(statement,
+          job_memory="16G")
+    
+@follows(mkdir("all_introns_counts_and_info/summarized"))
+@collate(all_introns_counts_and_info, 
+       regex("(.+)/(.+)_.+(hr|4sU).+"),
+       r"\1/summarized/\2_summarized.tsv")
+def summarize_all_introns_counts(infiles, outfile):
+    input_folder = os.path.dirname(infiles[0])
+    day_regex = os.path.basename(outfile).split("_")[0]
+    script_path = os.path.dirname(os.path.abspath(__file__)) + "/pipeline_slam_3UIs/summarize_counts.R"
+    statement = "Rscript %(script_path)s %(input_folder)s %(day_regex)s %(outfile)s"
+
+    P.run(statement, job_memory="64G")
+
+@follows(mkdir("all_introns_counts_and_info/pairs"))
+@transform(summarize_all_introns_counts,
+         regex("(.+)/summarized/(.+)_summarized.tsv"),
+       r"\1/pairs/\2_pvalues.tsv")
+def get_pair_pvalues_all_events(infiles, outfile):
+    script_path = os.path.dirname(os.path.abspath(__file__)) + "/pipeline_slam_3UIs/get_pair_pvalues_all_events.R"
+    infile = str(infiles)
+    statement = "Rscript %(script_path)s %(infile)s %(outfile)s"
+
+    P.run(statement, job_memory="64G")
+
+#################################################################################################################################
+
 @follows(index_VCF, mkdir("gene_level_counts_and_info"))
 @transform(featureCountsReadAssignments, 
            regex("read_assignments/(.+)/(.+)_(.+)_(.+)_(.+)_(.+).sorted.assigned.bam"), 
@@ -240,6 +287,7 @@ def gene_level_counts_and_info(infiles, outfile):
     
     P.run(statement,
           job_memory="16G")
+    
     
 @follows(index_VCF, mkdir("split_labelled_vs_unlabelled"))
 @subdivide(featureCountsReadAssignments, 
@@ -531,11 +579,14 @@ def run_dapars_main(infile, outfile):
          quant_labelled_vs_unlabelled,
          spliced_counts_and_info,
          gene_level_counts_and_info,
+         all_introns_counts_and_info,
          get_pair_pvalues,
          get_pair_half_lives,
          get_over_time_pvalues,
          get_over_time_pvalues_gene_level,
-         get_interaction_over_time_pvals
+         get_interaction_over_time_pvals,
+         summarize_all_introns_counts,
+         get_pair_pvalues_all_events
          )
 
 def full():
