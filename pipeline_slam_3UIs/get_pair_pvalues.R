@@ -69,10 +69,11 @@ combined_df = combined_df  %>%
 
 non_captured = combined_df %>% 
   group_by(Transcript_id, Chr, Strand, Start, End, Assignment, Hour, Rep) %>% 
-  summarise(n=n()) %>% 
-  filter(n==1) %>% 
-  inner_join(combined_df) %>%
-  filter(Converted==FALSE)
+  summarise(n=n(),
+            Converted=dplyr::first(Converted)) %>% 
+  filter(n==1) %>%
+  filter(Converted==FALSE) %>%
+  inner_join(combined_df) 
 
 # We have the events where Converted==FALSE account for 100% of the counts
 # Use this to create the corresponding Converted==TRUE where counts=0. Can keep total_counts the same
