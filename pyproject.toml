@@ -1,0 +1,250 @@
+[build-system]
+requires = [
+  "setuptools>=45",
+  "setuptools_scm[toml]>=6.2",
+  ]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "isoslam"
+description = "Tools for processing and summarising SLAMSeq experiments."
+readme = "README.md"
+license = {text = "MIT License"}
+requires-python = ">=3.9"
+dynamic = ["version"]
+authors = [
+  {name = "Jack Riley", email = "jjriley1@sheffield.ac.uk"},
+  {name = "Ian Sudbery", email = "i.sudbery@sheffield.ac.uk"},
+  {name = "Neil Shephard", email = "n.shephard@sheffield.ac.uk"},
+]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Natural Language :: English",
+  "Operating System :: OS Independent",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
+  "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+keywords = [
+  "bioinformatics",
+  "rna",
+  "sequence alignment",
+  "slamseq",
+]
+dependencies = [
+  # To come from Conda environment
+]
+
+
+[project.optional-dependencies]
+tests = [
+  "filetype",
+  "pytest",
+  "pytest-cov",
+  "pytest-github-actions-annotate-failures",
+  "pytest-mpl",
+  "pytest-regtest",
+  "pytest-testmon",
+]
+docs = [
+  "Sphinx",
+  "myst_parser",
+  "numpydoc",
+  "pydata_sphinx_theme",
+  "sphinx-autoapi",
+  "sphinx-multiversion",
+  "sphinx_markdown_tables",
+  "sphinx_rtd_theme",
+  "sphinxcontrib-mermaid",
+  "sphinxcontrib-napoleon",
+]
+dev = [
+  "black",
+  "ipython",
+  "pre-commit",
+  "pylint",
+  "pyupgrade",
+  "pytest-durations",
+  "pytest-icdiff",
+  "pytest-xdist",
+]
+pypi = [
+  "build",
+  "setuptools_scm[toml]",
+  "wheel",
+]
+
+[project.urls]
+Source = "https://github.com/sudlab/IsoSLAM"
+Bug_Tracker =  "https://github.com/sudlab/IsoSLAM/issues"
+Documentation = "https://sudlab.github.io/IsoSLAM"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["isoslam"]
+exclude = ["tests"]
+namespaces = false
+
+[tool.setuptools.package-data]
+topostats = ["*.yaml"]
+
+[tool.setuptools_scm]
+write_to = "isoslam/_version.py"
+
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = ["--cov", "--mpl", "-ra", "--strict-config", "--strict-markers"]
+log_level = "INFO"
+log_cli = true
+log_cli_level = "INFO"
+testpaths = [
+    "tests",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+    "ignore::UserWarning"
+]
+xfail_strict = true
+
+[tool.coverage.run]
+source = ["isoslam"]
+omit = [
+  "isoslam/_version.py",
+  "*tests*",
+  "**/__init__*",
+]
+
+[tool.black]
+line-length = 120
+target-version = ['py38']
+exclude = '''
+
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.venv
+  )/
+)
+'''
+
+[tool.ruff]
+exclude = [
+  "*.ipynb",
+  ".bzr",
+  ".direnv",
+  ".eggs",
+  ".git",
+  ".hg",
+  ".mypy_cache",
+  ".nox",
+  ".pants.d",
+  ".pytype",
+  ".ruff_cache",
+  ".svn",
+  ".tox",
+  ".venv",
+  "__pycache__",
+  "__pypackages__",
+  "_build",
+  "buck-out",
+  "build",
+  "dist",
+  "docs/conf.py",
+]
+# per-file-ignores = []
+line-length = 120
+target-version = "py310"
+lint.select = [
+  "A", # flake8-builtins
+  "B", # flake8-bugbear
+  "C", #
+  "D", # pydocstyle
+  "E", # pycodestyle error
+  "F",
+  "I", # isort
+  "NPY", # numpy
+  "PT", # flake8-pytest-style
+  "PTH", # flake8-use-pathlib
+  "R",
+  "S", #flake8-bandit
+  "W", # pycodestyle warning
+  "U",
+  "UP", # pyupgrade
+]
+lint.ignore = [
+  "B905",
+  "E501",
+  "S101",
+  "S403",
+]
+# Allow autofix for all enabled rules (when `--fix`) is provided.
+lint.fixable = [
+  "A", # flake8-builtins
+  "B", # flake8-bugbear
+  "C", #
+  "D", # pydocstyle
+  "E", # pycodestyle error
+  "F",
+  "I", # isort
+  "NPY", # numpy
+  "PT", # flake8-pytest-style
+  "PTH", # flake8-use-pathlib
+  "R",
+  "S", #flake8-bandit
+  "W", # pycodestyle warning
+  "U",
+  "UP", # pyupgrade
+]
+lint.unfixable = []
+
+# Numpy2 deprecation checks
+lint.extend-select = ["NPY201"]
+preview = false
+
+[tool.ruff.lint.flake8-quotes]
+docstring-quotes = "double"
+
+[tool.ruff.lint.isort]
+case-sensitive = true
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = true
+
+[tool.codespell]
+skip = '*.bed*,*.gtf,*.fasta,*.fas,*.fa,*.fna,*.ffn,*.faa,*.mpfa,*.frn'
+count = ''
+quiet-level = 3
+
+[tool.numpydoc_validation]
+checks = [
+  "all", # Perform all check except those listed below
+  "ES01",
+  "EX01",
+  "PR10", # Conflicts with black formatting
+  "SA01",
+]
+exclude = [  # don't report on objects that match any of these regex
+    "\\.undocumented_method$",
+    "\\.__repr__$",
+    "^test_",
+    "^conftest",
+    "^conf$",
+]
+override_SS05 = [  # override SS05 to allow docstrings starting with these words
+    "^Process ",
+    "^Assess ",
+    "^Access ",
+]
