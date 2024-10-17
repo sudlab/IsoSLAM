@@ -24,6 +24,8 @@ body:
           required: true
         - label: Include the configuration file.
           required: true
+        - label: To Reproduce
+          required: true
         - label: Copy of the output.
           required: true
         - label: The exact command that failed. This is what you typed at the command line, including any options.
@@ -69,11 +71,8 @@ body:
       label: IsoSLAM Version
       description: What version of our software are you running? You can find this out using `pip show isoslam`.
       options:
-        - 2.0.0
-        - 2.1.0
-        - 2.1.1
-        - 2.1.2
-        - Git main branch
+        - "0.0.1"
+        - "Git main branch"
       default: 3
     validations:
       required: true
