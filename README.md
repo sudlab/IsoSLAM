@@ -1,6 +1,7 @@
 # IsoSLAM
 
 <div align="center">
+  
 <!-- [![PyPI version](https://badge.fury.io/py/isoslam.svg)](https://badge.fury.io/py/isoslam) -->
 <!-- ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/isoslam) -->
 [![Code style: Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
