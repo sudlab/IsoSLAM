@@ -3,8 +3,7 @@
 <div align="center">
 <!-- [![PyPI version](https://badge.fury.io/py/isoslam.svg)](https://badge.fury.io/py/isoslam) -->
 <!-- ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/isoslam) -->
-[![Code style:
-Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Code style: Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Code style: flake8](https://img.shields.io/badge/code%20style-flake8-456789.svg)](https://github.com/psf/flake8)
 <!-- [![codecov](https://codecov.io/gh/sudlab/IsoSLAM/branch/dev/graph/badge.svg)](https://codecov.io/gh/sudlab/IsoSLAM) -->
