@@ -1,0 +1,33 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: IsoSLAM
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Jack
+    family-names: Riley
+    email: jjriley1@sheffield.ac.uk
+    affiliation: The University of Sheffield
+    orcid: 'https://orcid.org/0000-0002-0311-7787'
+  - given-names: Ian
+    family-names: Sudbery
+    email: i.sudbery@sheffield.ac.uk
+    affiliation: The University of Sheffield
+    orcid: 'https://orcid.org/0000-0002-5035-0190'
+  - given-names: Neil
+    family-names: Shephard
+    email: n.shephard@sheffield.ac.uk
+    affiliation: The University of Sheffield
+    orcid: 'https://orcid.org/0000-0001-8301-6857'
+repository-code: 'https://github.com/sudlab/IsoSLAM'
+url: 'https://sudlab.github.io/IsoSLAM'
+abstract: Software for processing SLAMSeq RNA Kinetics data.
+keywords:
+  - SLAMSeq
+  - RNA kinetics
+  - sequence alignment
+license: MIT
