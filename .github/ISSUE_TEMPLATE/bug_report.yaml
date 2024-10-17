@@ -73,7 +73,7 @@ body:
       options:
         - "0.0.1"
         - "Git main branch"
-      default: 3
+      default: 1
     validations:
       required: true
   - type: dropdown
@@ -101,7 +101,7 @@ body:
         - MacOS Intel (pre-2021)
         - MacOS M1/M2 (post-2021)
         - GNU/Linux
-      default: 4
+      default: 3
     validations:
       required: true
   - type: textarea
