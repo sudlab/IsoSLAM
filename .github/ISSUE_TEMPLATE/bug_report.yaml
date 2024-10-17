@@ -1,7 +1,7 @@
 name: Bug report
 description: Create a report to help us improve
 title: "[bug]: "
-labels: "bug"
+labels: ["bug"]
 projects: ["sudlab/1"]
 assignees:
   - ""
@@ -44,8 +44,7 @@ body:
     attributes:
       label: Copy of the output
       description: |
-        Please copy and paste the output from your terminal below. At a minimum this should include the bottom section
-    showing where the error arose and the subsequent output.
+        Please copy and paste the output from your terminal below. At a minimum this should include the bottom section showing where the error arose and the subsequent output.
     validations:
       required: true
   - type: textarea
@@ -85,10 +84,10 @@ body:
       description: |
         What version of Python are you running? If unsure type `python --version`.
       options:
-        - 3.9
-        - 3.10
-        - 3.11
-        - 3.12
+        - "3.9"
+        - "3.10"
+        - "3.11"
+        - "3.12"
       default: 3
     validations:
       required: true
