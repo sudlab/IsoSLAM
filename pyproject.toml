@@ -36,7 +36,12 @@ keywords = [
   "slamseq",
 ]
 dependencies = [
-  # To come from Conda environment
+  "cgat",
+  "heapq",
+  "matplotlib",
+  "pandas",
+  "pysam",
+  "ruffus",
 ]
 
 
