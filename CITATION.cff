@@ -12,19 +12,19 @@ authors:
     family-names: Riley
     email: jjriley1@sheffield.ac.uk
     affiliation: The University of Sheffield
-    orcid: 'https://orcid.org/0000-0002-0311-7787'
+    orcid: "https://orcid.org/0000-0002-0311-7787"
   - given-names: Ian
     family-names: Sudbery
     email: i.sudbery@sheffield.ac.uk
     affiliation: The University of Sheffield
-    orcid: 'https://orcid.org/0000-0002-5035-0190'
+    orcid: "https://orcid.org/0000-0002-5035-0190"
   - given-names: Neil
     family-names: Shephard
     email: n.shephard@sheffield.ac.uk
     affiliation: The University of Sheffield
-    orcid: 'https://orcid.org/0000-0001-8301-6857'
-repository-code: 'https://github.com/sudlab/IsoSLAM'
-url: 'https://sudlab.github.io/IsoSLAM'
+    orcid: "https://orcid.org/0000-0001-8301-6857"
+repository-code: "https://github.com/sudlab/IsoSLAM"
+url: "https://sudlab.github.io/IsoSLAM"
 abstract: Software for processing SLAMSeq RNA Kinetics data.
 keywords:
   - SLAMSeq
