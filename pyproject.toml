@@ -36,9 +36,13 @@ keywords = [
   "slamseq",
 ]
 dependencies = [
-  "cgat",
-  "heapq",
+  #"cgatcore",
+  #"cgat-apps@git+https://github.com/cgat-developers/cgat-apps",
+  #"cgat-flow@git+https://github.com/cgat-developers/cgat-flow",
+  #"cgat-report",
+  #"heapq",
   "matplotlib",
+  "numpy",
   "pandas",
   "pysam",
   "ruffus",
@@ -164,7 +168,7 @@ exclude = [
   "buck-out",
   "build",
   "dist",
-  "docs/conf.py",
+  "docs/source/conf.py",
 ]
 # per-file-ignores = []
 line-length = 120
