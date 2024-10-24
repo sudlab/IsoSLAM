@@ -39,6 +39,7 @@ dependencies = [
   "cgat",
   "heapq",
   "matplotlib",
+  "numpy",
   "pandas",
   "pysam",
   "ruffus",
@@ -164,7 +165,7 @@ exclude = [
   "buck-out",
   "build",
   "dist",
-  "docs/conf.py",
+  "docs/source/conf.py",
 ]
 # per-file-ignores = []
 line-length = 120
