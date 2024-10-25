@@ -8,6 +8,7 @@
 [![Code style: Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Code style: flake8](https://img.shields.io/badge/code%20style-flake8-456789.svg)](https://github.com/psf/flake8)
+[![fair-software.eu](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8B%20%20%E2%97%8F%20%20%E2%97%8B-orange)](https://fair-software.eu)
 
 <!-- [![codecov](https://codecov.io/gh/sudlab/IsoSLAM/branch/dev/graph/badge.svg)]
 (https://codecov.io/gh/sudlab/IsoSLAM) -->
@@ -57,7 +58,7 @@ If you have bugs or feature requests please [create an issue][isoslam_issue], th
 [bugs][isoslam_bug] and making [feature requests][isoslam_feature].
 
 If you wish to contribute fixes or features yourself you can find detailed information in the
-[contributing](CONTRIBUTING.md) document.
+[contributing](docs/src/CONTRIBUTING.md) document (which is rendered on the [website][contributing]).
 
 ## Licence
 
@@ -65,8 +66,10 @@ If you wish to contribute fixes or features yourself you can find detailed infor
 
 ## Citation
 
-Please use the [Citation File Format](https://citation-file-format.github.io/) which is available in this repository.
+Please use the [Citation File Format](https://citation-file-format.github.io/) which is available in this repository. A
+BibTex or APA formatted citation can be easily accessed from the "_Cite this repository_" link on the right hand side.
 
+[contributing]: https://sudlab.github.io/IsoSLAM/main/contributing.html
 [isoslam_issue]: https://github.com/sudlab/IsoSLAM/issues/new/choose
 [isoslam_bug]: https://github.com/sudlab/IsoSLAM/issues/new?assignees=&labels=bug&projects=&template=bug_report.yaml&title=%5BBug%5D%3A+
 [isoslam_feature]: https://github.com/sudlab/IsoSLAM/issues/new?assignees=&labels=enhancement&projects=&template=feature_request.yaml&title=%5Bfeature%5D+%3A+
