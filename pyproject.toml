@@ -168,7 +168,7 @@ exclude = [
   "buck-out",
   "build",
   "dist",
-  "docs/source/conf.py",
+  "docs/conf.py",
 ]
 # per-file-ignores = []
 line-length = 120
