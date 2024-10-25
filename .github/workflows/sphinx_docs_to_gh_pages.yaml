@@ -29,6 +29,8 @@ jobs:
         # Uncomment if only tagged releases are to have documentation built
         # if: startsWith(github.ref, 'refs/tags')
         uses: ns-rse/action-sphinx-docs-to-gh-pages@main
+        run: |
+          pwd
         with:
           # When testing set this branch to your branch, when working switch to main. It WILL fail if not
           # defined as it defaults to 'main'.
@@ -38,9 +40,9 @@ jobs:
           sphinx-apidoc-opts: "--separate -o . ../"
           sphinx-opts: ""
           multiversion: true
-          multiversionopts: ""
+          multiversionopts: "-c docs/source/conf.py docs/source build"
 
       - name: Setup tmate session
         if: ${{ failure() }}
         uses: mxschmitt/action-tmate@v3
-        timeout-minutes: 5
+        timeout-minutes: 15
