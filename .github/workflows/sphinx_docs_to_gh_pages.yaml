@@ -29,8 +29,6 @@ jobs:
         # Uncomment if only tagged releases are to have documentation built
         # if: startsWith(github.ref, 'refs/tags')
         uses: ns-rse/action-sphinx-docs-to-gh-pages@main
-        run: |
-          pwd
         with:
           # When testing set this branch to your branch, when working switch to main. It WILL fail if not
           # defined as it defaults to 'main'.
