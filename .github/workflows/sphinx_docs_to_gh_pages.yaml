@@ -41,6 +41,6 @@ jobs:
           multiversionopts: "source ../build"
 
       - name: Setup tmate session
-        if: ${{ failure() }}
+        # if: ${{ failure() }}
         uses: mxschmitt/action-tmate@v3
         timeout-minutes: 15
