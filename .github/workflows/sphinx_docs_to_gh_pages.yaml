@@ -38,7 +38,7 @@ jobs:
           sphinx-apidoc-opts: "--separate -o . ../"
           sphinx-opts: ""
           multiversion: true
-          multiversionopts: "source ../build"
+          multiversionopts: "source build"
 
       - name: Setup tmate session
         # if: ${{ failure() }}
