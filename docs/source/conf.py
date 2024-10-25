@@ -208,14 +208,14 @@ autoapi_dirs = ["../"]
 
 # sphinx-multiversion https://holzhaus.github.io/sphinx-multiversion/master/configuration.html
 smv_tag_whitelist = r"^v\d+.*$"  # Tags beginning with v#
-# smv_branch_whitelist = r"^(main)$"  # main branch
+smv_branch_whitelist = r"^(main)$"  # main branch
 # If testing changes locally comment out the above and use the smv_branch_whitelist below instead. Replace the branch
 # name you are working on ("ns-rse/14-sphinx-docs" in the example below) with the branch you are working on and run...
 #
 # cd docs
 # sphinx-multiversion . _build/html
 #
-smv_branch_whitelist = r"^(main|ns-rse/14-sphinx-docs)$"  # main branch
+# smv_branch_whitelist = r"^(ns-rse/14-sphinx-docs)$"  # main branch
 smv_released_pattern = r"^tags/.*$"  # Tags only
 # smv_released_pattern = r"^(/.*)|(main).*$"  # Tags and HEAD of main
 smv_outputdir_format = "{ref.name}"
