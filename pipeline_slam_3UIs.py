@@ -1,5 +1,6 @@
 """
 This pipeline takes in pre-mapped alignments and puts them through slam dunk
+test to check how branch switching works
 """
 
 from heapq import merge
