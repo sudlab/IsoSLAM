@@ -1,17 +1,16 @@
 """
-retrive_3UI_reads.py
+all_introns_counts_and_info.py
 ====================
-
-This script......
-
-
-
-Help:
-
-Run script by 
+Takes in the sorted and feature assigned `.bam` file from previous steps and passes them to a
+python script that uses pysam (python wrapper for htslib). This script iterates over the `.bam` 
+file pair-by-pair (representing the sequencing insert), determines whether the read-pair shows
+evidence of intron splicing/retention and assigns these to specific events by referencing the
+`.gtf` and `.bed` files, and XT tag from featureCountsReadAssignments. Next, the script uses the
+XS tag from featureCountsReadAssignment to assign each read in the pair as the forward or reverse
+read, relative to the direction of transcription. Finally, it looks for T>C in FW read, A>G in RV
+read, checks these are not present in the SNP VCF file, and outputs metadata on each read-pair
+about it's event assignment, number of conversions, coverage etc. 
 """
-
-
 
 import pysam as pysam
 from statistics import mean
