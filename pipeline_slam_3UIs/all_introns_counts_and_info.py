@@ -13,18 +13,11 @@ about it's event assignment, number of conversions, coverage etc.
 """
 
 import pysam as pysam
-from statistics import mean
-from statistics import median
-from matplotlib import pyplot as plt
 import sys
 import cgatcore.experiment as E
 import cgatcore.iotools as iotools
-import pandas as pd
 import cgat.GTF as GTF
 from collections import defaultdict
-from collections import Counter
-import gzip
-import io
 
 def main(argv=None):
     """script main.
