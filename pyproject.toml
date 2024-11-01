@@ -36,16 +36,15 @@ keywords = [
   "slamseq",
 ]
 dependencies = [
-  #"cgatcore",
-  #"cgat-apps@git+https://github.com/cgat-developers/cgat-apps",
-  #"cgat-flow@git+https://github.com/cgat-developers/cgat-flow",
-  #"cgat-report",
-  #"heapq",
+  "apsw",
+  "cgatcore",
+  "gevent",
   "matplotlib",
   "numpy",
   "pandas",
   "pysam",
   "ruffus",
+  "sqlalchemy",
 ]
 
 
