@@ -1,4 +1,3 @@
-
 genome_fasta: files_for_regression_testing/hg38_noalt_filtered.fa
 transcript_gtf: files_for_regression_testing/test_wash1.gtf
 all_introns_bed6: files_for_regression_testing/test_coding_introns.bed
