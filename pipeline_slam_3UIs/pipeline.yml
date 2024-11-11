@@ -1,28 +1,4 @@
-#mapping
-genome_fasta: ~/mirror/genomes/index/hg38_noalt.fa
-star_genome_dir: ~/mirror/genomes/STAR/hg38_noalt_junc85_99.dir
-genome_coords: ~/mirror/genomes/hg_38_sizes.genome
-star_options: --outFilterMultimapScoreRange 1 --outFilterMultimapNmax 20 --outFilterMismatchNmax 10 --alignIntronMax 500000 --alignMatesGapMax 1000000 --sjdbScore 2 --alignSJDBoverhangMin 1 --genomeLoad NoSharedMemory --outFilterMatchNminOverLread 0.33 --outFilterScoreMinOverLread 0.33 --twopass1readsN -1 --sjdbOverhang 99 --outSAMattributes NH HI NM MD AS --twopassMode Basic
-number_of_threads: 12
-memory: 1.9G
-#3UTR bed
-utr_bed: ~/misc_scripts/extract-transcript-regions/hg38_ensembl85/bed6/hg38_ensembl85_3utr.bed
-#transcriptome assembly
-transcript_gtf: /users/mbp20jjr/HipSci/HIPSCI-REANNOTATE/filtered_genesets.dir/agg-agg-agg.filtered.gtf.gz
-#utron bed
-utrons_bedfile: ~/HipSci/HIPSCI-REANNOTATE/utron_beds.dir/agg-agg-agg.all_utrons.bed.gz
-utrons_bed6: ~/HipSci/HIPSCI-REANNOTATE/utron_beds.dir/agg-agg-agg.all_utrons.bed6
-#bed file with all coding introns
-all_introns_bed6: ~/misc_scripts/extract_transcript-regions/hg38_ensembl85/bed6/hg38_ensembl85_codingintrons.bed
 
-salmon:
-    # Options for building the salmon index
-    indexoptions: --sparse
-    # Options for quantifying samples
-    quantoptions: --gcBias
-    
-    memory: 7.5G
-    threads: 8
-
-    index_threads: 16
-    index_memory: 4G
+genome_fasta: files_for_regression_testing/hg38_noalt_filtered.fa
+transcript_gtf: files_for_regression_testing/test_wash1.gtf
+all_introns_bed6: files_for_regression_testing/test_coding_introns.bed
