@@ -7,9 +7,8 @@ of 4sU-linked nucleotide conversions (T>C or A>G), exclusing SNPs.
 import os
 import sys
 
-from cgatcore import pipeline as P
-
 import ruffus
+from cgatcore import pipeline as P
 
 # Read in pipeline.yml
 PARAMS = P.get_parameters(
@@ -119,10 +118,7 @@ def all_introns_counts_and_info(infiles, outfile):
     bamfile, vcffile = infiles
     annotation = PARAMS["transcript_gtf"]
     utron_bed = PARAMS["all_introns_bed6"]
-    script_path = (
-        os.path.dirname(os.path.abspath(__file__))
-        + "/pipeline_slam_3UIs/all_introns_counts_and_info.py"
-    )
+    script_path = os.path.dirname(os.path.abspath(__file__)) + "/pipeline_slam_3UIs/all_introns_counts_and_info.py"
 
     statement = (
         f"python {script_path} -b {bamfile} "
@@ -147,10 +143,7 @@ def summarize_all_introns_counts(infiles, outfile):
     """
     input_folder = os.path.dirname(infiles[0])
     day_regex = os.path.basename(outfile).split("_")[0]
-    script_path = (
-        os.path.dirname(os.path.abspath(__file__))
-        + "/pipeline_slam_3UIs/summarize_counts.R"
-    )
+    script_path = os.path.dirname(os.path.abspath(__file__)) + "/pipeline_slam_3UIs/summarize_counts.R"
     statement = f"Rscript {script_path} {input_folder} {day_regex} {outfile}"
 
     P.run(statement, job_memory="64G")
