@@ -10,9 +10,11 @@ config:
       - div
       - br
 
-# Globs
 globs:
   - "**/*.md"
+
+ignores:
+  - "tmp/**/*.md"
 
 # Fix any fixable errors
 fix: true
