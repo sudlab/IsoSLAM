@@ -45,7 +45,7 @@ jobs:
         run: |
           pytest --cov=isoslam --cov-report=xml --mpl -x
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
 
       - name: Setup tmate session
         if: ${{ failure() }}
