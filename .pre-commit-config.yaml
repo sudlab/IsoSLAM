@@ -83,6 +83,14 @@ repos:
       - id: python-check-blanket-noqa
       - id: python-check-blanket-type-ignore
       - id: python-check-mock-methods
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.13.0
+    hooks:
+      - id: mypy
+        files: isoslam
+        args: ["--ignore-without-code", "--redundant-expr", "--truthy-bool"]
+
   - repo: local
     hooks:
       - id: pylint
