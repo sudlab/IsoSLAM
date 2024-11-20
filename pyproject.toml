@@ -73,6 +73,7 @@ docs = [
 dev = [
   "black",
   "ipython",
+  "mypy",
   "pre-commit",
   "pylint",
   "pyupgrade",
@@ -255,3 +256,17 @@ override_SS05 = [  # override SS05 to allow docstrings starting with these words
     "^Assess ",
     "^Access ",
 ]
+
+[tool.mypy]
+files = [
+  "isoslam",
+  "tests"
+]
+python_version = "3.9"
+strict = true
+enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+warn_unreachable = true
+
+[[tool.mypy.overrides]]
+module = [ "numpy.*", ]
+ignore_missing_imports = true
