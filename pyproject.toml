@@ -133,7 +133,7 @@ omit = [
 
 [tool.black]
 line-length = 120
-target-version = ['py38']
+target-version = ['py39']
 exclude = '''
 
 (
@@ -171,7 +171,6 @@ exclude = [
 ]
 # per-file-ignores = []
 line-length = 120
-target-version = "py310"
 lint.select = [
   "A", # flake8-builtins
   "B", # flake8-bugbear
