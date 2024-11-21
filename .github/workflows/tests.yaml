@@ -40,6 +40,7 @@ jobs:
           pip install --upgrade virtualenv
           pip install --upgrade pip setuptools
           virtualenv --upgrade-embed-wheels
+          pip install numpy
           pip install -e .[tests]
       - name: Test with pytest
         run: |
