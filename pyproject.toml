@@ -37,7 +37,7 @@ keywords = [
 ]
 dependencies = [
   "apsw",
-  "cgatcore",
+  "cgat",
   "gevent",
   "matplotlib",
   "numpy",
