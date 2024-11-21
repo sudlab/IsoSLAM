@@ -37,13 +37,14 @@ keywords = [
 ]
 dependencies = [
   "apsw",
+  "cgat",
   "cgatcore",
   "gevent",
   "matplotlib",
   "numpy",
   "pandas",
   "pysam",
-  "ruffus",
+  # "ruffus",
   "sqlalchemy",
 ]
 
@@ -55,8 +56,8 @@ tests = [
   "pytest-cov",
   "pytest-github-actions-annotate-failures",
   "pytest-mpl",
-  "pytest-regtest",
   "pytest-testmon",
+  "syrupy",
 ]
 docs = [
   "Sphinx",
