@@ -38,12 +38,13 @@ keywords = [
 dependencies = [
   "apsw",
   "cgat",
+  "cgatcore",
   "gevent",
   "matplotlib",
   "numpy",
   "pandas",
   "pysam",
-  "ruffus",
+  # "ruffus",
   "sqlalchemy",
 ]
 
