@@ -18,6 +18,7 @@ from collections import defaultdict
 import cgat.GTF as GTF
 import cgatcore.experiment as E
 import cgatcore.iotools as iotools
+import pandas as pd
 import pysam as pysam
 
 
@@ -119,6 +120,7 @@ def main(argv=None):
         outfile.write(
             "Read_UID\tTranscript_id\tStart\tEnd\tChr\tStrand\tAssignment\tConversions\tConvertable\tCoverage\n"
         )
+        results = pd.DataFrame()
 
         for pair in fragment_iterator(bamfile.fetch(until_eof=True)):
             # if i_total_progress >= 2000000:
@@ -476,6 +478,7 @@ def main(argv=None):
             # Stream output as a tsv
             # Format: read_uid, transcript_id, start, end, ret/spl, conversions, convertable, coverage
             # A read pair will cover multiple lines if it matches multiple events (but metadata will be same)
+            # ns-rse : Add in building Pandas dataframe so the function can return something that is testable
             for transcript_id, position in assign_conversions_to_retained:
                 start, end, chr, strand = position
                 outfile.write(
@@ -483,6 +486,23 @@ def main(argv=None):
                     f"{start}\t{end}\t{chr}\t{strand}\tRet\t{len(converted_position)}\t"
                     f"{len(convertable)}\t{len(coverage)}\n"
                 )
+                row = pd.DataFrame(
+                    [
+                        {
+                            "Read_UID": i_output,
+                            "Transcript_id": transcript_id,
+                            "Start": start,
+                            "End": end,
+                            "Chr": chr,
+                            "Strand": strand,
+                            "Assignment": "Ret",
+                            "Conversions": len(converted_position),
+                            "Convertable": len(convertable),
+                            "Coverage": len(coverage),
+                        }
+                    ]
+                )
+                results = pd.concat([results, row])
 
             for transcript_id, position in assign_conversions_to_spliced:
                 start, end, chr, strand = position
@@ -491,7 +511,25 @@ def main(argv=None):
                     f"{start}\t{end}\t{chr}\t{strand}\tSpl\t{len(converted_position)}\t"
                     f"{len(convertable)}\t{len(coverage)}\n"
                 )
+                row = pd.DataFrame(
+                    [
+                        {
+                            "Read_UID": i_output,
+                            "Transcript_id": transcript_id,
+                            "Start": start,
+                            "End": end,
+                            "Chr": chr,
+                            "Strand": strand,
+                            "Assignment": "Spl",
+                            "Conversions": len(converted_position),
+                            "Convertable": len(convertable),
+                            "Coverage": len(coverage),
+                        }
+                    ]
+                )
+                results = pd.concat([results, row])
 
+    return results
     # write footer and output benchmark information.
     # E.stop()
 

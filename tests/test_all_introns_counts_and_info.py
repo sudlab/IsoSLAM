@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 
+# import syrupy
 from isoslam import all_introns_counts_and_info
 
 BASE_DIR = Path.cwd()
@@ -25,7 +26,7 @@ BAM_DIR = RESOURCES / "bam"
         ),
     ],
 )
-def test_main(file_path: Path, snapshot, tmp_path) -> None:
+def test_main(file_path: Path, tmp_path: Path, regtest) -> None:
     """Regression test to check that main() function returns the expected data structure."""
     args = argparse.Namespace(
         infile_bam=str(file_path),
@@ -34,5 +35,7 @@ def test_main(file_path: Path, snapshot, tmp_path) -> None:
         vcf_path=list(VCF_DIR.glob("*.vcf.gz"))[0],
         outfile_tsv=str(tmp_path / "test.tsv"),
     )
-    all_introns_counts_and_info.main(argv=args)
-    assert True
+    results = all_introns_counts_and_info.main(argv=args)
+    # Ideally would like to use syrupy to test snapshots but pd.DataFrame() are not yet supported
+    # https://github.com/syrupy-project/syrupy/issues/887
+    print(results.to_string(float_format="{:.4e}".format), file=regtest)
