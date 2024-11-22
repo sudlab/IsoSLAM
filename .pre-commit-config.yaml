@@ -89,7 +89,7 @@ repos:
     hooks:
       - id: mypy
         files: isoslam
-        args: ["--ignore-without-code", "--redundant-expr", "--truthy-bool"]
+        args: []
 
   - repo: https://github.com/abravalheri/validate-pyproject
     rev: v0.23
