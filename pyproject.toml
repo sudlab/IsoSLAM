@@ -10,7 +10,7 @@ name = "isoslam"
 description = "Tools for processing and summarising SLAMSeq experiments."
 readme = "README.md"
 license = {text = "MIT License"}
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dynamic = ["version"]
 authors = [
   {name = "Jack Riley", email = "jjriley1@sheffield.ac.uk"},
@@ -19,7 +19,6 @@ authors = [
 ]
 classifiers = [
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
@@ -268,7 +267,7 @@ files = [
   "isoslam",
   "tests"
 ]
-python_version = "3.9"
+python_version = "3.10"
 strict = true
 enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
 warn_unreachable = true
@@ -279,3 +278,6 @@ exclude = [
 [[tool.mypy.overrides]]
 module = [ "numpy.*", ]
 ignore_missing_imports = true
+
+[project.scripts]
+isoslam = "isoslam.processing:entry_point"
