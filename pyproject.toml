@@ -40,6 +40,7 @@ dependencies = [
   "cgat",
   "cgatcore",
   "gevent",
+  "loguru",
   "matplotlib",
   "numpy",
   "pandas",
@@ -80,6 +81,7 @@ dev = [
   "pyupgrade",
   "pytest-durations",
   "pytest-icdiff",
+  "pytest-testmon",
   "pytest-xdist",
 ]
 pypi = [
@@ -129,6 +131,7 @@ xfail_strict = true
 source = ["isoslam"]
 omit = [
   "isoslam/_version.py",
+  "isoslam/all_introns_counts_and_info.py",
   "*tests*",
   "**/__init__*",
 ]
@@ -170,6 +173,7 @@ exclude = [
   "build",
   "dist",
   "docs/source/conf.py",
+  "isoslam/all_introns_counts_and_info.py",
 ]
 # per-file-ignores = []
 line-length = 120
@@ -251,6 +255,7 @@ exclude = [  # don't report on objects that match any of these regex
     "^test_",
     "^conftest",
     "^conf$",
+    "isoslam/all_introns_counts_and_info.py",
 ]
 override_SS05 = [  # override SS05 to allow docstrings starting with these words
     "^Process ",
@@ -267,6 +272,9 @@ python_version = "3.9"
 strict = true
 enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
 warn_unreachable = true
+exclude = [
+  "isoslam/all_introns_counts_and_info.py",
+]
 
 [[tool.mypy.overrides]]
 module = [ "numpy.*", ]
