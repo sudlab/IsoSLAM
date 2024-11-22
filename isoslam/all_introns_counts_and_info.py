@@ -489,16 +489,16 @@ def main(argv=None):
                 row = pd.DataFrame(
                     [
                         {
-                            "Read_UID": i_output,
-                            "Transcript_id": transcript_id,
-                            "Start": start,
-                            "End": end,
-                            "Chr": chr,
-                            "Strand": strand,
-                            "Assignment": "Ret",
-                            "Conversions": len(converted_position),
-                            "Convertible": len(convertible),
-                            "Coverage": len(coverage),
+                            "read_uid": i_output,
+                            "transcript_id": transcript_id,
+                            "start": start,
+                            "end": end,
+                            "chr": chr,
+                            "strand": strand,
+                            "assignment": "Ret",
+                            "conversions": len(converted_position),
+                            "convertible": len(convertible),
+                            "coverage": len(coverage),
                         }
                     ]
                 )
@@ -514,22 +514,22 @@ def main(argv=None):
                 row = pd.DataFrame(
                     [
                         {
-                            "Read_UID": i_output,
-                            "Transcript_id": transcript_id,
-                            "Start": start,
-                            "End": end,
-                            "Chr": chr,
-                            "Strand": strand,
-                            "Assignment": "Spl",
-                            "Conversions": len(converted_position),
-                            "Convertible": len(convertible),
-                            "Coverage": len(coverage),
+                            "read_uid": i_output,
+                            "transcript_id": transcript_id,
+                            "start": start,
+                            "end": end,
+                            "chr": chr,
+                            "strand": strand,
+                            "assignment": "Spl",
+                            "conversions": len(converted_position),
+                            "convertible": len(convertible),
+                            "coverage": len(coverage),
                         }
                     ]
                 )
                 results = pd.concat([results, row])
 
-    return results
+    return results.sort_values(by=["read_uid", "transcript_id", "chr", "start", "end"])
     # write footer and output benchmark information.
     # E.stop()
 
