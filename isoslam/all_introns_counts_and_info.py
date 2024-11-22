@@ -118,7 +118,7 @@ def main(argv=None):
     with open(argv_as_dictionary["outfile_tsv"], "w") as outfile:
         # Add column headers
         outfile.write(
-            "Read_UID\tTranscript_id\tStart\tEnd\tChr\tStrand\tAssignment\tConversions\tConvertable\tCoverage\n"
+            "Read_UID\tTranscript_id\tStart\tEnd\tChr\tStrand\tAssignment\tConversions\tConvertible\tCoverage\n"
         )
         results = pd.DataFrame()
 
@@ -143,7 +143,7 @@ def main(argv=None):
 
             if i_progress == 10000:
                 # E.debug(str(i_total_progress) + " pairs processed")
-                # E.debug(str(i) + "spliced/retained pairs proccessed")
+                # E.debug(str(i) + "spliced/retained pairs processed")
                 i_progress = 0
 
             read1_start = read1.reference_start
@@ -268,7 +268,7 @@ def main(argv=None):
                 continue
             first_matched += 1
 
-            # Create a set of tupples: (tx_id,(start,end))
+            # Create a set of tuples: (tx_id,(start,end))
             # Retained
             assign_conversions_to_retained = []
 
@@ -355,7 +355,7 @@ def main(argv=None):
             # in the forward read.
             if strand == "+":
                 # pass if mapped to +ve transcript
-                convertable = set()
+                convertible = set()
                 # create a set (list that only allows unique values to be added)
                 # we will add the genome_pos at each point for both reads
                 # len(coverage) will be the # of uniquely covered positions
@@ -376,7 +376,7 @@ def main(argv=None):
                     read_seq = forward_read.query_sequence[read_pos]
 
                     if genome_seq.upper() == "T":
-                        convertable.add(genome_pos)
+                        convertible.add(genome_pos)
 
                     if read_seq == "C" and genome_seq == "t":
                         variants_at_position = list(
@@ -400,7 +400,7 @@ def main(argv=None):
                     read_seq = reverse_read.query_sequence[read_pos]
 
                     if genome_seq.upper() == "A":
-                        convertable.add(genome_pos)
+                        convertible.add(genome_pos)
 
                     if read_seq == "G" and genome_seq == "a":
                         variants_at_position = list(
@@ -417,7 +417,7 @@ def main(argv=None):
 
             elif strand == "-":
                 # pass if mapped to -ve transcript
-                convertable = set()
+                convertible = set()
                 coverage = set()
                 converted_position = set()
                 for base in forward_read.get_aligned_pairs(with_seq=True):
@@ -430,7 +430,7 @@ def main(argv=None):
                     read_seq = forward_read.query_sequence[read_pos]
 
                     if genome_seq.upper() == "A":
-                        convertable.add(genome_pos)
+                        convertible.add(genome_pos)
 
                     if read_seq == "G" and genome_seq == "a":
                         variants_at_position = list(
@@ -455,7 +455,7 @@ def main(argv=None):
                     read_seq = reverse_read.query_sequence[read_pos]
 
                     if genome_seq.upper() == "T":
-                        convertable.add(genome_pos)
+                        convertible.add(genome_pos)
 
                     if read_seq == "C" and genome_seq == "t":
                         variants_at_position = list(
@@ -476,7 +476,7 @@ def main(argv=None):
             i_output += 1
 
             # Stream output as a tsv
-            # Format: read_uid, transcript_id, start, end, ret/spl, conversions, convertable, coverage
+            # Format: read_uid, transcript_id, start, end, ret/spl, conversions, convertible, coverage
             # A read pair will cover multiple lines if it matches multiple events (but metadata will be same)
             # ns-rse : Add in building Pandas dataframe so the function can return something that is testable
             for transcript_id, position in assign_conversions_to_retained:
@@ -484,7 +484,7 @@ def main(argv=None):
                 outfile.write(
                     f"{i_output}\t{transcript_id}\t"
                     f"{start}\t{end}\t{chr}\t{strand}\tRet\t{len(converted_position)}\t"
-                    f"{len(convertable)}\t{len(coverage)}\n"
+                    f"{len(convertible)}\t{len(coverage)}\n"
                 )
                 row = pd.DataFrame(
                     [
@@ -497,7 +497,7 @@ def main(argv=None):
                             "Strand": strand,
                             "Assignment": "Ret",
                             "Conversions": len(converted_position),
-                            "Convertable": len(convertable),
+                            "Convertible": len(convertible),
                             "Coverage": len(coverage),
                         }
                     ]
@@ -509,7 +509,7 @@ def main(argv=None):
                 outfile.write(
                     f"{i_output}\t{transcript_id}\t"
                     f"{start}\t{end}\t{chr}\t{strand}\tSpl\t{len(converted_position)}\t"
-                    f"{len(convertable)}\t{len(coverage)}\n"
+                    f"{len(convertible)}\t{len(coverage)}\n"
                 )
                 row = pd.DataFrame(
                     [
@@ -522,7 +522,7 @@ def main(argv=None):
                             "Strand": strand,
                             "Assignment": "Spl",
                             "Conversions": len(converted_position),
-                            "Convertable": len(convertable),
+                            "Convertible": len(convertible),
                             "Coverage": len(coverage),
                         }
                     ]
