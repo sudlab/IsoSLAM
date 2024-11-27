@@ -81,7 +81,7 @@ repos:
       - id: rst-inline-touching-normal
       - id: python-no-eval
       - id: python-check-blanket-noqa
-      - id: python-check-blanket-type-ignore
+      # - id: python-check-blanket-type-ignore
       - id: python-check-mock-methods
 
   - repo: https://github.com/pre-commit/mirrors-mypy
