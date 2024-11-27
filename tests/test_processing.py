@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from isoslam import processing
+from isoslam import io, processing
 
 
 @pytest.mark.parametrize(
@@ -90,6 +90,21 @@ def test_entry_point_help(option: str, help_message: str, capsys: pytest.Capture
                 "vcf_file": Path("data/vcf/some.vcf.gz"),
             },
             id="dummy config and output, process with all files",
+        ),
+        pytest.param(
+            [
+                "create-config",
+                "--filename",
+                "test_config.yaml",
+                "--output-dir",
+                "custom_configs",
+            ],
+            io.create_config,
+            {
+                "filename": Path("test_config.yaml"),
+                "output_dir": Path("custom_configs"),
+            },
+            id="create config file",
         ),
     ],
 )

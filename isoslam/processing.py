@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 # from isoslam import __version__
+from isoslam import io
 
 
 def create_parser() -> arg.ArgumentParser:
@@ -110,7 +111,7 @@ def create_parser() -> arg.ArgumentParser:
         default="./",
         help="Path to where the YAML file should be saved (default './' the current directory).",
     )
-    # create_config_parser.set_defaults(func=create_config)
+    create_config_parser.set_defaults(func=io.create_config)
 
     # Additional parsers for future functionality
     # summarize_counts_parser = subparsers.add_parser(
@@ -128,7 +129,7 @@ def create_parser() -> arg.ArgumentParser:
     return parser
 
 
-def process(args: arg.Namespace | None) -> None:
+def process(args: arg.Namespace | None) -> None:  # pylint: disable=unused-argument
     """
     Process a set of files.
 
@@ -142,6 +143,7 @@ def process(args: arg.Namespace | None) -> None:
     None
         Function does not return anything.
     """
+    # config = io.read_yaml() if args.config is None else io.read_yaml(args.config) # type: ignore[call-arg,union-attr]
     return
 
 
@@ -168,7 +170,6 @@ def entry_point(manually_provided_args: list[Any] | None = None, testing: bool =
     args = parser.parse_args() if manually_provided_args is None else parser.parse_args(manually_provided_args)
 
     # If no module has been specified print help and exit
-    print(f"{args.program=}")
     if not args.program:
         parser.print_help()
         sys.exit()

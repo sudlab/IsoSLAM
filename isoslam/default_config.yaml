@@ -1,0 +1,9 @@
+# Default configuration file for running IsoSlam
+log_level: "warning"
+output_dir: output
+bam_file: data/bam/.bam
+gtf_file: data/gtf/
+bed_file: data/bed/
+vcf_file: data/vcf/
+summary: false
+plot: false
