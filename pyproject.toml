@@ -272,7 +272,7 @@ exclude = [
 ]
 
 [[tool.mypy.overrides]]
-module = [ "numpy.*", ]
+module = [ "numpy.*", "loguru", "ruamel.yaml"]
 ignore_missing_imports = true
 
 [project.scripts]
