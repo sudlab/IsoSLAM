@@ -24,7 +24,13 @@ jobs:
           python-version: 3.11
       - name: Installing the Documentation requirements
         run: |
-          pip3 install .[docs]
+          # Install build dependencies for now (see
+          # https://github.com/cgat-developers/cgat-apps/issues/134#issuecomment-2503431974)
+          pip install numpy
+          pip install Cython
+          pip install pysam
+          pip install wheel
+          pip3 install --no-build-isolation .[docs]
       - name: Running Sphinx to gh-pages Action
         # Uncomment if only tagged releases are to have documentation built
         # if: startsWith(github.ref, 'refs/tags')

@@ -40,10 +40,14 @@ jobs:
           pip install --upgrade virtualenv
           pip install --upgrade pip setuptools
           virtualenv --upgrade-embed-wheels
+          # Install build dependencies for now (see
+          # https://github.com/cgat-developers/cgat-apps/issues/134#issuecomment-2503431974)
           pip install numpy
-          pip show numpy
-          pip install cgatcore
-          pip install cgat
+          pip install Cython
+          pip install pysam
+          pip install wheel
+          pip install --no-build-isolation cgatcore
+          pip install --no-build-isolation cgat
           pip install -e .[tests]
       - name: Test with pytest
         run: |
