@@ -91,11 +91,14 @@ repos:
         files: isoslam
         args: []
 
-  - repo: https://github.com/abravalheri/validate-pyproject
-    rev: v0.23
-    hooks:
-      - id: validate-pyproject
-        additional_dependencies: ["validate-pyproject-schema-store[all]"]
+  # @ns-rse (2024-11-27) Currently fails due to `fastjsonschema` not covering `tool.ruff.lint` see
+  # https://github.com/abravalheri/validate-pyproject/issues/180
+  # Disabling for now
+  # - repo: https://github.com/abravalheri/validate-pyproject
+  #   rev: v0.23
+  #   hooks:
+  #     - id: validate-pyproject
+  #       additional_dependencies: ["validate-pyproject-schema-store[all]"]
 
   - repo: local
     hooks:

@@ -179,18 +179,16 @@ line-length = 120
 lint.select = [
   "A", # flake8-builtins
   "B", # flake8-bugbear
-  "C", #
   "D", # pydocstyle
   "E", # pycodestyle error
-  "F",
+  "F", # pyflakes
   "I", # isort
   "NPY", # numpy
   "PT", # flake8-pytest-style
   "PTH", # flake8-use-pathlib
-  "R",
+  "R", # refactor (pylint)
   "S", #flake8-bandit
   "W", # pycodestyle warning
-  "U",
   "UP", # pyupgrade
 ]
 lint.ignore = [
@@ -203,19 +201,17 @@ lint.ignore = [
 lint.fixable = [
   "A", # flake8-builtins
   "B", # flake8-bugbear
-  "C", #
   "D", # pydocstyle
   "E", # pycodestyle error
-  "F",
+  "F", # pyflakes
   "I", # isort
   "NPY", # numpy
   "PT", # flake8-pytest-style
   "PTH", # flake8-use-pathlib
-  "R",
+  "R", # refactor (pylint)
   "S", #flake8-bandit
   "W", # pycodestyle warning
-  "U",
-  "UP", # pyupgrade
+ "UP", # pyupgrade
 ]
 lint.unfixable = []
 
