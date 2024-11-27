@@ -55,6 +55,8 @@ def create_parser() -> arg.ArgumentParser:
     subparsers = parser.add_subparsers(title="program", description="Available programs listed below:", dest="program")
 
     # Create sub-parsers for different stages
+
+    # Process processes all files
     process_parser = subparsers.add_parser(
         "process",
         description="Process all files and run all summary plotting and statistics.",
@@ -83,6 +85,33 @@ def create_parser() -> arg.ArgumentParser:
         "-v", "--vcf-file", dest="vcf_file", type=Path, required=False, help="Path to '.vcf.gz' file."
     )
     process_parser.set_defaults(func=process)
+
+    # Create configuration sub-parser
+    create_config_parser = subparsers.add_parser(
+        "create-config",
+        description="Create a configuration file using the defaults.",
+        help="Create a configuration file using the defaults.",
+    )
+    create_config_parser.add_argument(
+        "-f",
+        "--filename",
+        dest="filename",
+        type=Path,
+        required=False,
+        default="config.yaml",
+        help="Name of YAML file to save configuration to (default 'config.yaml').",
+    )
+    create_config_parser.add_argument(
+        "-o",
+        "--output-dir",
+        dest="output_dir",
+        type=Path,
+        required=False,
+        default="./",
+        help="Path to where the YAML file should be saved (default './' the current directory).",
+    )
+    # create_config_parser.set_defaults(func=create_config)
+
     # Additional parsers for future functionality
     # summarize_counts_parser = subparsers.add_parser(
     #     "summarize",
