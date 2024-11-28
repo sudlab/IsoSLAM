@@ -1,12 +1,17 @@
 """Test the io.py module."""
 
 import argparse
+from collections.abc import Callable
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
+import pysam
 import pytest
 
 from isoslam import io
+
+# pylint: disable=protected-access
 
 BASE_DIR = Path.cwd()
 RESOURCES = BASE_DIR / "tests" / "resources"
@@ -62,8 +67,8 @@ def test_read_yaml() -> None:
     assert sample_config == CONFIG
 
 
-def test_create_config(tmp_path: Path) -> None:
-    """Test creation of configuration file from default."""
+# def test_create_config(tmp_path: Path) -> None:
+#     """Test creation of configuration file from default."""
 
 
 @pytest.mark.parametrize(
@@ -118,25 +123,185 @@ def test_write_yaml(tmp_path: Path) -> None:
     assert outfile.is_file()
 
 
-def test_load_bam() -> None:
+@pytest.mark.parametrize(
+    ("file_path", "object_type", "description", "compression"),
+    [
+        pytest.param(
+            RESOURCES / "bam" / "d0_0hr1_filtered_remapped_sorted.bam",
+            pysam.libcalignmentfile.AlignmentFile,
+            "BAM version 1 compressed sequence data",
+            "BGZF",
+            id="file 0hr1 as Path",
+        ),
+        pytest.param(
+            "tests/resources/bam/d0_0hr1_filtered_remapped_sorted.bam",
+            pysam.libcalignmentfile.AlignmentFile,
+            "BAM version 1 compressed sequence data",
+            "BGZF",
+            id="file 0hr1 as str",
+        ),
+        pytest.param(
+            RESOURCES / "bam" / "d0_no4sU_filtered_remapped_sorted.bam",
+            pysam.libcalignmentfile.AlignmentFile,
+            "BAM version 1 compressed sequence data",
+            "BGZF",
+            id="file no4sU as Path",
+        ),
+        pytest.param(
+            "tests/resources/bam/d0_no4sU_filtered_remapped_sorted.bam",
+            pysam.libcalignmentfile.AlignmentFile,
+            "BAM version 1 compressed sequence data",
+            "BGZF",
+            id="file no4sU as str",
+        ),
+    ],
+)
+def test_load_bam(
+    file_path: str | Path,
+    object_type: pysam.libcalignmentfile.AlignmentFile,
+    description: str,
+    compression: str,
+) -> None:
     """Test loading of bam file."""
-    # bam = io.load_bam()
-    pass
+    bam_file = io._load_bam(file_path)
+    assert isinstance(bam_file, object_type)
+    assert bam_file.description == description
+    assert bam_file.compression == compression
 
 
-def test_load_bed() -> None:
+@pytest.mark.skip
+@pytest.mark.parametrize(
+    ("file_path", "object_type"),
+    [
+        pytest.param(RESOURCES / "bed" / "test_coding_introns.bed", str, id="bed file as Path"),
+        pytest.param("tests/resources/bed/test_coding_introns.bed", str, id="bed file as str"),
+    ],
+)
+def test_load_bed(file_path: str | Path, object_type: str) -> None:
     """Test loading of bed file."""
-    # bed = io.load_bam()
-    pass
+    bed_file = io._load_bam(file_path)
+    assert isinstance(bed_file, object_type)
 
 
-def test_load_gtf() -> None:
+@pytest.mark.parametrize(
+    ("file_path", "object_type"),
+    [
+        pytest.param(
+            RESOURCES / "gtf" / "test_wash1.gtf", pysam.libctabix.tabix_generic_iterator, id="gtf file as Path"
+        ),
+        pytest.param(
+            "tests/resources/gtf/test_wash1.gtf", pysam.libctabix.tabix_generic_iterator, id="gtf file as str"
+        ),
+    ],
+)
+def test_load_gtf(file_path: str | Path, object_type: str) -> None:
     """Test loading of gtf file."""
-    # gtf = io.load_bed()
-    pass
+    gtf_file = io._load_gtf(file_path)
+    assert isinstance(gtf_file, object_type)
 
 
-def test_load_vcf() -> None:
+@pytest.mark.xfail(reason="File not in correct format.")
+@pytest.mark.parametrize(
+    ("file_path", "object_type", "compression", "is_remote"),
+    [
+        pytest.param(
+            RESOURCES / "vcf" / "d0.vcf.gz.tbi", pysam.libcbcf.VariantFile, "BGZF", False, id="d0 tbi as Path"
+        ),
+        pytest.param("tests/resources/vcf/d0.vcf.gz.tbi", pysam.libcbcf.VariantFile, "BGZF", False, id="d0 tbi as str"),
+    ],
+)
+def test_load_tbi(
+    file_path: str | Path, object_type: pysam.libcbcf.VariantFile, compression: str, is_remote: bool
+) -> None:
+    """Test loading of tbi file."""
+    tbi_file = io._load_tbi(file_path)
+    assert isinstance(tbi_file, object_type)
+    assert tbi_file.compression == compression
+    assert tbi_file.is_remote == is_remote
+
+
+@pytest.mark.parametrize(
+    ("file_path", "object_type", "compression", "is_remote"),
+    [
+        pytest.param(RESOURCES / "vcf" / "d0.vcf.gz", pysam.libcbcf.VariantFile, "BGZF", False, id="d0 as Path"),
+        pytest.param("tests/resources/vcf/d0.vcf.gz", pysam.libcbcf.VariantFile, "BGZF", False, id="d0 as str"),
+    ],
+)
+def test_load_vcf(
+    file_path: str | Path, object_type: pysam.libcbcf.VariantFile, compression: str, is_remote: bool
+) -> None:
     """Test loading of vcf file."""
-    # vcf = io.load_vcf()
-    pass
+    vcf_file = io._load_vcf(file_path)
+    assert isinstance(vcf_file, object_type)
+    assert vcf_file.compression == compression
+    assert vcf_file.is_remote == is_remote
+
+
+@pytest.mark.parametrize(
+    ("file_ext", "function"),
+    [
+        pytest.param(".bam", io._load_bam, id="bam extension"),
+        pytest.param(".bed", io._load_bed, id="bed extension"),
+        pytest.param(".gtf", io._load_gtf, id="gtf extension"),
+        pytest.param(".vcf", io._load_vcf, id="vcf extension"),
+        pytest.param(".vcf.gz", io._load_vcf, id="vcf.gz extension"),
+    ],
+)
+def test_get_loader(file_ext: str, function: Callable) -> None:
+    """Test io._get_loader returns the correct function."""
+    assert io._get_loader(file_ext) == function
+
+
+@pytest.mark.parametrize(
+    ("file_ext"),
+    [
+        pytest.param(".csv", id="csv extension"),
+        pytest.param(".txt", id="txt extension"),
+        pytest.param(".tar.gz", id="tar.gz extension"),
+    ],
+)
+def test_get_loader_value_error(file_ext: str) -> None:
+    """Test io._get_loader() raises ValueError with incorrect file extension."""
+    with pytest.raises(ValueError):  # noqa: PT011
+        io._get_loader(file_ext)
+
+
+@pytest.mark.parametrize(
+    ("file_path", "object_type"),
+    [
+        pytest.param(
+            RESOURCES / "bam" / "d0_0hr1_filtered_remapped_sorted.bam",
+            pysam.libcalignmentfile.AlignmentFile,
+            id="bam file 0hr1 as Path",
+        ),
+        pytest.param(
+            "tests/resources/bam/d0_0hr1_filtered_remapped_sorted.bam",
+            pysam.libcalignmentfile.AlignmentFile,
+            id="bam file 0hr1 as str",
+        ),
+        pytest.param(
+            RESOURCES / "bam" / "d0_no4sU_filtered_remapped_sorted.bam",
+            pysam.libcalignmentfile.AlignmentFile,
+            id="bam file no4sU as Path",
+        ),
+        pytest.param(
+            "tests/resources/bam/d0_no4sU_filtered_remapped_sorted.bam",
+            pysam.libcalignmentfile.AlignmentFile,
+            id="bam file no4sU as str",
+        ),
+        # pytest.param(RESOURCES / "bed" / "test_coding_introns.bed", id="bed file as Path"),
+        # pytest.param("tests/resources/bed/test_coding_introns.bed", id="bed file as str"),
+        pytest.param(
+            RESOURCES / "gtf" / "test_wash1.gtf", pysam.libctabix.tabix_generic_iterator, id="gtf file as Path"
+        ),
+        pytest.param(
+            "tests/resources/gtf/test_wash1.gtf", pysam.libctabix.tabix_generic_iterator, id="gtf file as str"
+        ),
+        pytest.param(RESOURCES / "vcf" / "d0.vcf.gz", pysam.libcbcf.VariantFile, id="d0 as Path"),
+        pytest.param("tests/resources/vcf/d0.vcf.gz", pysam.libcbcf.VariantFile, id="d0 as str"),
+    ],
+)
+def test_load_file(file_path: str | Path, object_type: Any) -> None:
+    """Test loading of files."""
+    file = io.load_file(file_path)
+    assert isinstance(file, object_type)

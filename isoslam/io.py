@@ -1,14 +1,16 @@
 """Module for reading files."""
 
 import argparse
+from collections.abc import Callable
 from datetime import datetime
 from importlib import resources
 from pathlib import Path
+from typing import Any
+
+import pysam
 
 # from cgatcore import iotools
 from loguru import logger
-
-# import pysam
 from ruamel.yaml import YAML, YAMLError
 
 CONFIG_DOCUMENTATION_REFERENCE = """# For more information on configuration and how to use it see:
@@ -157,21 +159,141 @@ def create_config(args: argparse.Namespace | None = None) -> None:
     logger.info(CONFIG_DOCUMENTATION_REFERENCE)
 
 
-def load_bam() -> None:
-    """Load '.bam' file."""
-    return
+def load_file(file_path: str | Path) -> Any:
+    """
+    Load files.
+
+    Parameters
+    ----------
+    file_path : str | Path
+        Path to file to load.
+
+    Returns
+    -------
+    Any
+        Returns the loaded file as an object.
+    """
+    file_suffix = Path(file_path).suffix
+    if file_suffix == ".gz":
+        file_suffix = "".join(Path(file_path).suffixes)
+    loader = _get_loader(file_suffix)
+    return loader(file_path)
 
 
-def load_bed() -> None:
+def _get_loader(file_ext: str = "bam") -> Callable:  # type: ignore[type-arg]
+    """
+    Creator component which determines which file loader to use.
+
+    Parameters
+    ----------
+    file_ext : str
+        File extension of file to be loaded.
+
+    Returns
+    -------
+    function
+        Returns the function appropriate for the required file type to be loaded.
+
+    Raises
+    ------
+    ValueError
+        Unsupported file extension results in ValueError.
+    """
+    if file_ext == ".bam":
+        return _load_bam
+    if file_ext == ".bed":
+        return _load_bed
+    if file_ext == ".gtf":
+        return _load_gtf
+    if file_ext == ".tbi":
+        return _load_tbi
+    if file_ext == ".vcf":
+        return _load_vcf
+    if file_ext == ".vcf.gz":
+        return _load_vcf
+    raise ValueError(file_ext)
+
+
+def _load_bam(bam_file: str | Path) -> pysam.libcalignmentfile.AlignmentFile:
+    """
+    Load '.bam' file.
+
+    Parameters
+    ----------
+    bam_file : str | Path
+        Path, as string or pathlib Path, to a '.bam' file that is to be loaded.
+
+    Returns
+    -------
+    pysam.libcalignmentfile.AlignmentFile
+        Loads the specified alignment file.
+    """
+    try:
+        return pysam.AlignmentFile(bam_file)
+    except FileNotFoundError as e:
+        raise e
+
+
+def _load_bed() -> None:
     """Load '.bed' file."""
     return
 
 
-def load_gtf() -> None:
-    """Load '.bed' file."""
-    return
+def _load_gtf(gtf_file: str | Path) -> pysam.libctabix.tabix_generic_iterator:
+    """
+    Load '.gtf' file and return as an iterable.
+
+    Parameters
+    ----------
+    gtf_file : str | Path
+        Path, as string or pathlib Path, to a '.gtf' file that is to be loaded.
+
+    Returns
+    -------
+    pysam.libctabix.tabix_generic_iterator
+        Iterator of GTF file.
+    """
+    try:
+        return pysam.tabix_iterator(Path(gtf_file).open(encoding="utf8"), parser=pysam.asGTF())
+    except FileNotFoundError as e:
+        raise e
 
 
-def load_vcf() -> None:
-    """Load '.vcf' file."""
-    return
+def _load_vcf(vcf_file: str | Path) -> pysam.libcbcf.VariantFile:
+    """
+    Load '.vcf' file.
+
+    Parameters
+    ----------
+    vcf_file : str | Path
+        Path, as string or pathlib Path, to a '.vcf' file that is to be loaded.
+
+    Returns
+    -------
+    pysam.libcbcf.VariantFile
+        Loads the specified VCF file.
+    """
+    try:
+        return pysam.VariantFile(vcf_file)
+    except FileNotFoundError as e:
+        raise e
+
+
+def _load_tbi(tbi_file: str | Path) -> pysam.libcbcf.VariantFile:
+    """
+    Load '.tbi' file.
+
+    Parameters
+    ----------
+    tbi_file : str | Path
+        Path, as string or pathlib Path, to a '.tbi' file that is to be loaded.
+
+    Returns
+    -------
+    pysam.libcbcf.VariantFile
+        Loads the specified TBI file.
+    """
+    try:
+        return pysam.VariantFile(tbi_file)
+    except FileNotFoundError as e:
+        raise e
