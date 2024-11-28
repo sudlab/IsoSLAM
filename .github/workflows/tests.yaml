@@ -47,7 +47,7 @@ jobs:
           pip install pysam
           pip install wheel
           pip install --no-build-isolation cgatcore
-          pip install --no-build-isolation git+https://github.com/cgat-developers/cgat-apps@v0.7.4
+          pip install --no-build-isolation git+https://github.com/cgat-developers/cgat-apps@AC-modifybuild
           pip install --no-build-isolation -e .[tests]
       - name: Test with pytest
         run: |
