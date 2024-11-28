@@ -11,6 +11,8 @@ import pytest
 
 from isoslam import io
 
+# pylint: disable=protected-access
+
 BASE_DIR = Path.cwd()
 RESOURCES = BASE_DIR / "tests" / "resources"
 
@@ -65,8 +67,8 @@ def test_read_yaml() -> None:
     assert sample_config == CONFIG
 
 
-def test_create_config(tmp_path: Path) -> None:
-    """Test creation of configuration file from default."""
+# def test_create_config(tmp_path: Path) -> None:
+#     """Test creation of configuration file from default."""
 
 
 @pytest.mark.parametrize(
@@ -177,22 +179,45 @@ def test_load_bam(
 )
 def test_load_bed(file_path: str | Path, object_type: str) -> None:
     """Test loading of bed file."""
-    bed_file = io._load_bam()
+    bed_file = io._load_bam(file_path)
     assert isinstance(bed_file, object_type)
 
 
-@pytest.mark.skip
 @pytest.mark.parametrize(
     ("file_path", "object_type"),
     [
-        pytest.param(RESOURCES / "gtf" / "test_wash1.gtf", str, id="gtf file as Path"),
-        pytest.param("tests/resources/gtf/test_wash1.gtf", str, id="gtf file as str"),
+        pytest.param(
+            RESOURCES / "gtf" / "test_wash1.gtf", pysam.libctabix.tabix_generic_iterator, id="gtf file as Path"
+        ),
+        pytest.param(
+            "tests/resources/gtf/test_wash1.gtf", pysam.libctabix.tabix_generic_iterator, id="gtf file as str"
+        ),
     ],
 )
 def test_load_gtf(file_path: str | Path, object_type: str) -> None:
     """Test loading of gtf file."""
-    gtf_file = io._load_bed()
+    gtf_file = io._load_gtf(file_path)
     assert isinstance(gtf_file, object_type)
+
+
+@pytest.mark.xfail(reason="File not in correct format.")
+@pytest.mark.parametrize(
+    ("file_path", "object_type", "compression", "is_remote"),
+    [
+        pytest.param(
+            RESOURCES / "vcf" / "d0.vcf.gz.tbi", pysam.libcbcf.VariantFile, "BGZF", False, id="d0 tbi as Path"
+        ),
+        pytest.param("tests/resources/vcf/d0.vcf.gz.tbi", pysam.libcbcf.VariantFile, "BGZF", False, id="d0 tbi as str"),
+    ],
+)
+def test_load_tbi(
+    file_path: str | Path, object_type: pysam.libcbcf.VariantFile, compression: str, is_remote: bool
+) -> None:
+    """Test loading of tbi file."""
+    tbi_file = io._load_tbi(file_path)
+    assert isinstance(tbi_file, object_type)
+    assert tbi_file.compression == compression
+    assert tbi_file.is_remote == is_remote
 
 
 @pytest.mark.parametrize(
@@ -266,8 +291,12 @@ def test_get_loader_value_error(file_ext: str) -> None:
         ),
         # pytest.param(RESOURCES / "bed" / "test_coding_introns.bed", id="bed file as Path"),
         # pytest.param("tests/resources/bed/test_coding_introns.bed", id="bed file as str"),
-        # pytest.param(RESOURCES / "gtf" / "test_wash1.gtf", id="gtf file as Path"),
-        # pytest.param("tests/resources/gtf/test_wash1.gtf", id="gtf file as str"),
+        pytest.param(
+            RESOURCES / "gtf" / "test_wash1.gtf", pysam.libctabix.tabix_generic_iterator, id="gtf file as Path"
+        ),
+        pytest.param(
+            "tests/resources/gtf/test_wash1.gtf", pysam.libctabix.tabix_generic_iterator, id="gtf file as str"
+        ),
         pytest.param(RESOURCES / "vcf" / "d0.vcf.gz", pysam.libcbcf.VariantFile, id="d0 as Path"),
         pytest.param("tests/resources/vcf/d0.vcf.gz", pysam.libcbcf.VariantFile, id="d0 as str"),
     ],

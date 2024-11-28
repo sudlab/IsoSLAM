@@ -205,6 +205,8 @@ def _get_loader(file_ext: str = "bam") -> Callable:  # type: ignore[type-arg]
         return _load_bed
     if file_ext == ".gtf":
         return _load_gtf
+    if file_ext == ".tbi":
+        return _load_tbi
     if file_ext == ".vcf":
         return _load_vcf
     if file_ext == ".vcf.gz":
@@ -237,9 +239,24 @@ def _load_bed() -> None:
     return
 
 
-def _load_gtf() -> None:
-    """Load '.bed' file."""
-    return
+def _load_gtf(gtf_file: str | Path) -> pysam.libctabix.tabix_generic_iterator:
+    """
+    Load '.gtf' file and return as an iterable.
+
+    Parameters
+    ----------
+    gtf_file : str | Path
+        Path, as string or pathlib Path, to a '.gtf' file that is to be loaded.
+
+    Returns
+    -------
+    pysam.libctabix.tabix_generic_iterator
+        Iterator of GTF file.
+    """
+    try:
+        return pysam.tabix_iterator(Path(gtf_file).open(encoding="utf8"), parser=pysam.asGTF())
+    except FileNotFoundError as e:
+        raise e
 
 
 def _load_vcf(vcf_file: str | Path) -> pysam.libcbcf.VariantFile:
@@ -258,5 +275,25 @@ def _load_vcf(vcf_file: str | Path) -> pysam.libcbcf.VariantFile:
     """
     try:
         return pysam.VariantFile(vcf_file)
+    except FileNotFoundError as e:
+        raise e
+
+
+def _load_tbi(tbi_file: str | Path) -> pysam.libcbcf.VariantFile:
+    """
+    Load '.tbi' file.
+
+    Parameters
+    ----------
+    tbi_file : str | Path
+        Path, as string or pathlib Path, to a '.tbi' file that is to be loaded.
+
+    Returns
+    -------
+    pysam.libcbcf.VariantFile
+        Loads the specified TBI file.
+    """
+    try:
+        return pysam.VariantFile(tbi_file)
     except FileNotFoundError as e:
         raise e
