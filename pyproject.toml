@@ -174,6 +174,9 @@ exclude = [
   "dist",
   "docs/source/conf.py",
   "isoslam/all_introns_counts_and_info.py",
+  "isoslam/pipeline_slam_3UIs.py",
+  "isoslam/pipeline_slam_3UIs/*.py",
+  "tests/__init__.py"
 ]
 # per-file-ignores = []
 line-length = 120
@@ -233,7 +236,7 @@ convention = "numpy"
 fixture-parentheses = true
 
 [tool.codespell]
-skip = '*.bed*,*.gtf,*.fasta,*.fas,*.fa,*.fna,*.ffn,*.faa,*.mpfa,*.frn'
+skip = '*.bed*,*.gtf,*.fasta,*.fas,*.fa,*.fna,*.ffn,*.faa,*.mpfa,*.frn,*pipeline_slam_3UIs.py,*all_introns_counts_and_info.py'
 count = ''
 quiet-level = 3
 
@@ -245,13 +248,15 @@ checks = [
   "PR10", # Conflicts with black formatting
   "SA01",
 ]
-exclude = [  # don't report on objects that match any of these regex
-    "\\.undocumented_method$",
-    "\\.__repr__$",
-    "^test_",
-    "^conftest",
-    "^conf$",
-    "isoslam/all_introns_counts_and_info.py",
+exclude = [  # don't report on objects that match any of these regex (use single quotes for regex in toml)
+    '\\.undocumented_method$',
+    '\\.__repr__$',
+    '^test_',
+    '^conftest',
+    '^conf$',
+    '^__init__',
+    '^all_introns_counts_and_info',
+    '^pipeline_slam_3UIs',
 ]
 override_SS05 = [  # override SS05 to allow docstrings starting with these words
     "^Process ",
@@ -269,7 +274,8 @@ strict = true
 enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
 warn_unreachable = true
 exclude = [
-  "isoslam/all_introns_counts_and_info.py",
+  '^all_introns_counts_and_info\.py$',
+  '^pipeline_slam_3UIs\.py$',
 ]
 
 [[tool.mypy.overrides]]
