@@ -5,8 +5,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-# from isoslam import __version__
-from isoslam import io
+from isoslam import __version__, io
 
 
 def create_parser() -> arg.ArgumentParser:
@@ -24,8 +23,10 @@ def create_parser() -> arg.ArgumentParser:
         description="Run various programs related to IsoSLAM. Add the name of the program you wish to run."
     )
     parser.add_argument(
+        "-v",
         "--version",
-        # version=f"Installed version of IsoSlam : {__version__}",
+        action="version",
+        version=f"Installed version of IsoSlam : {__version__}",
         help="Report the installed version of IsoSLAM.",
     )
     parser.add_argument(
