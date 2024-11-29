@@ -4,6 +4,8 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
+from loguru import logger
+
 from isoslam import io
 
 
@@ -35,6 +37,7 @@ def extract_transcripts(bed_file: str | Path) -> dict[Any, list[tuple[Any, int, 
                 contents[5],
             )
         )
+    logger.info(f"Extracted features from : {bed_file}")
     return coordinates
 
 
@@ -60,4 +63,5 @@ def extract_strand_transcript(gtf_file: str | Path) -> tuple[defaultdict[Any, An
             continue
         strand[entry.gene_id] = entry.strand
         transcript[entry.gene_id].append(entry.transcript_id)
+    logger.info(f"Extracted features from : {gtf_file}")
     return (strand, transcript)

@@ -58,7 +58,5 @@ def test_extract_strand_transcript(
 ) -> None:
     """Test extraction of strand and transcript from gtf file using extract_strand_transcript()."""
     strand, transcript = isoslam.extract_strand_transcript(gtf_file)
-    print(f"{strand=}")
-    print(f"{transcript}")
     assert strand == expected_strand
     assert transcript == expected_transcript
