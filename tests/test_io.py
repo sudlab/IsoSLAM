@@ -3,8 +3,9 @@
 import argparse
 from collections.abc import Callable
 from datetime import datetime
+from io import TextIOWrapper
 from pathlib import Path
-from typing import Any
+from typing import Any, TextIO
 
 import pysam
 import pytest
@@ -44,7 +45,7 @@ def test_str_to_path(tmp_path: Path) -> None:
 
 
 def test_path_to_str(tmp_path: Path) -> None:
-    """Test that Path objects are converted to strings."""
+    """Test that Path objects in dictionaries are converted to strings."""
     CONFIG_PATH = {
         "this": "is",
         "a": "test",
@@ -169,17 +170,16 @@ def test_load_bam(
     assert bam_file.compression == compression
 
 
-@pytest.mark.skip
 @pytest.mark.parametrize(
     ("file_path", "object_type"),
     [
-        pytest.param(RESOURCES / "bed" / "test_coding_introns.bed", str, id="bed file as Path"),
-        pytest.param("tests/resources/bed/test_coding_introns.bed", str, id="bed file as str"),
+        pytest.param(RESOURCES / "bed" / "test_coding_introns.bed", TextIOWrapper, id="bed file as Path"),
+        pytest.param("tests/resources/bed/test_coding_introns.bed", TextIOWrapper, id="bed file as str"),
     ],
 )
-def test_load_bed(file_path: str | Path, object_type: str) -> None:
+def test_load_bed(file_path: str | Path, object_type: TextIO) -> None:
     """Test loading of bed file."""
-    bed_file = io._load_bam(file_path)
+    bed_file = io._load_bed(file_path)
     assert isinstance(bed_file, object_type)
 
 

@@ -1,11 +1,12 @@
 """Module for reading files."""
 
 import argparse
+import gzip
 from collections.abc import Callable
 from datetime import datetime
 from importlib import resources
 from pathlib import Path
-from typing import Any
+from typing import Any, TextIO
 
 import pysam
 
@@ -201,15 +202,13 @@ def _get_loader(file_ext: str = "bam") -> Callable:  # type: ignore[type-arg]
     """
     if file_ext == ".bam":
         return _load_bam
-    if file_ext == ".bed":
+    if file_ext == ".bed" or file_ext == ".bed.gz":
         return _load_bed
     if file_ext == ".gtf":
         return _load_gtf
     if file_ext == ".tbi":
         return _load_tbi
-    if file_ext == ".vcf":
-        return _load_vcf
-    if file_ext == ".vcf.gz":
+    if file_ext == ".vcf" or file_ext == ".vcf.gz":
         return _load_vcf
     raise ValueError(file_ext)
 
@@ -234,9 +233,26 @@ def _load_bam(bam_file: str | Path) -> pysam.libcalignmentfile.AlignmentFile:
         raise e
 
 
-def _load_bed() -> None:
-    """Load '.bed' file."""
-    return
+def _load_bed(bed_file: str | Path) -> TextIO:
+    """
+    Open '.bed' file for reading, supports gzip compressed formats.
+
+    Parameters
+    ----------
+    bed_file : str | Path
+        Path, as string or pathlib Path, to a '.bed' or '.bed.gz' file that is to be loaded.
+
+    Returns
+    -------
+    TextIO
+        Returns a connection to an open file object.
+    """
+    try:
+        if Path(bed_file).suffix == ".gz":
+            return gzip.open(bed_file, "rt", encoding="utf-8")
+        return Path(bed_file).open(mode="r", encoding="utf-8")
+    except OSError as e:
+        raise e
 
 
 def _load_gtf(gtf_file: str | Path) -> pysam.libctabix.tabix_generic_iterator:
