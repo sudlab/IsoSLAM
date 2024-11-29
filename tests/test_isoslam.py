@@ -40,3 +40,25 @@ def test_isoslam_extract_transcripts(
 ) -> None:
     """Test extraction of tanscript data from bed file using extract_transcripts()."""
     assert isoslam.extract_transcripts(bed_file) == expected_transcript
+
+
+@pytest.mark.parametrize(
+    ("gtf_file", "expected_strand", "expected_transcript"),
+    [
+        pytest.param(  # type: ignore[misc]
+            RESOURCES / "gtf" / "test_wash1.gtf",
+            {"MSTRG.63147": "-"},
+            {"MSTRG.63147": ["ENST00000442898"]},
+            id="gtf file as Path",
+        ),
+    ],
+)
+def test_extract_strand_transcript(
+    gtf_file: str | Path, expected_strand: dict[Any, Any], expected_transcript: dict[Any, Any]
+) -> None:
+    """Test extraction of strand and transcript from gtf file using extract_strand_transcript()."""
+    strand, transcript = isoslam.extract_strand_transcript(gtf_file)
+    print(f"{strand=}")
+    print(f"{transcript}")
+    assert strand == expected_strand
+    assert transcript == expected_transcript
