@@ -274,7 +274,8 @@ strict = true
 enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
 warn_unreachable = true
 exclude = [
-  "isoslam/all_introns_counts_and_info.py",
+  '^all_introns_counts_and_info\.py$',
+  '^pipeline_slam_3UIs\.py$',
 ]
 
 [[tool.mypy.overrides]]
