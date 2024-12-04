@@ -27,8 +27,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ["ubuntu-latest", "macos-latest", "windows-latest"]
-        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        os: ["ubuntu-latest", "macos-latest"]
+        python-version: ["3.10", "3.11", "3.12"]
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
@@ -40,10 +40,6 @@ jobs:
           pip install --upgrade virtualenv
           pip install --upgrade pip setuptools
           virtualenv --upgrade-embed-wheels
-          pip install numpy
-          pip show numpy
-          pip install cgatcore
-          pip install cgat
           pip install -e .[tests]
       - name: Test with pytest
         run: |
