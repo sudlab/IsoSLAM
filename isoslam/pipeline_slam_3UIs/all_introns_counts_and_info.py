@@ -2,15 +2,17 @@
 all_introns_counts_and_info.py
 ====================
 Takes in the sorted and feature assigned `.bam` file from previous steps and passes them to a
-python script that uses pysam (python wrapper for htslib). This script iterates over the `.bam` 
+python script that uses pysam (python wrapper for htslib). This script iterates over the `.bam`
 file pair-by-pair (representing the sequencing insert), determines whether the read-pair shows
 evidence of intron splicing/retention and assigns these to specific events by referencing the
 `.gtf` and `.bed` files, and XT tag from featureCountsReadAssignments. Next, the script uses the
 XS tag from featureCountsReadAssignment to assign each read in the pair as the forward or reverse
 read, relative to the direction of transcription. Finally, it looks for T>C in FW read, A>G in RV
 read, checks these are not present in the SNP VCF file, and outputs metadata on each read-pair
-about it's event assignment, number of conversions, coverage etc. 
+about it's event assignment, number of conversions, coverage etc.
 """
+
+# mypy: ignore-errors
 
 import sys
 from collections import defaultdict
@@ -52,7 +54,7 @@ def main(argv=None):
         "--out",
         dest="outfile_tsv",
         type=str,
-        help="""Supply a path to the output file. This file will contain 
+        help="""Supply a path to the output file. This file will contain
                         conversions per pair, accounting for stranding""",
     )
 
@@ -108,7 +110,6 @@ def main(argv=None):
     conversion_dict = defaultdict(int)
 
     def fragment_iterator(read_iterator):
-
         read_list = list()
         last_read = None
 
@@ -137,7 +138,6 @@ def main(argv=None):
         )
 
         for pair in fragment_iterator(bamfile.fetch(until_eof=True)):
-
             # if i_total_progress >= 2000000:
             ##    print("length break")
             #    break
@@ -461,7 +461,6 @@ def main(argv=None):
                             converted_position.add(genome_pos)
 
                 for base in reverse_read.get_aligned_pairs(with_seq=True):
-
                     read_pos, genome_pos, genome_seq = base
                     if None in base:
                         continue

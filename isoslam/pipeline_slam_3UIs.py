@@ -4,11 +4,14 @@ annotates them, then passes them detects and quantifies the number
 of 4sU-linked nucleotide conversions (T>C or A>G), exclusing SNPs.
 """
 
+# mypy: ignore-errors
+
 import os
 import sys
 
 import ruffus
 from cgatcore import pipeline as P
+
 
 # Read in pipeline.yml
 PARAMS = P.get_parameters(

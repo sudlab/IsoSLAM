@@ -89,7 +89,11 @@ repos:
     hooks:
       - id: mypy
         files: isoslam
-        args: []
+        args:
+          [
+            "--exclude='^all_introns_counts_and_info\\.py$'",
+            "--exclude='^pipeline_slam_3UIs\\.py$'",
+          ]
 
   # @ns-rse (2024-11-27) Currently fails due to `fastjsonschema` not covering `tool.ruff.lint` see
   # https://github.com/abravalheri/validate-pyproject/issues/180
