@@ -12,6 +12,8 @@ read, checks these are not present in the SNP VCF file, and outputs metadata on 
 about it's event assignment, number of conversions, coverage etc.
 """
 
+# mypy: ignore-errors
+
 from argparse import ArgumentParser
 import sys
 
