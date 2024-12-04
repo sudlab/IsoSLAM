@@ -21,6 +21,8 @@ import cgatcore.iotools as iotools
 import pandas as pd
 import pysam as pysam
 
+from isoslam import isoslam, io
+
 
 def main(argv=None):
     """Script main.
@@ -60,40 +62,14 @@ def main(argv=None):
     parser.add_argument("-vcf", "--vcf", dest="vcf_path", type=str, help="""Supply a path to the VCF.gz file""")
 
     argv_as_dictionary = vars(argv)
-    bamfile = pysam.AlignmentFile(argv_as_dictionary["infile_bam"])
-    vcffile = pysam.VariantFile(argv_as_dictionary["vcf_path"])
-    utron_coords = defaultdict(list)
-    z = 0
 
-    with iotools.open_file(argv_as_dictionary["utron_bed"]) as bedfile:
-        # with iotools.open_file(bed_path) as bedfile:
-        for line in bedfile:
-            if z < 5:
-                print(line)
-                z += 1
-            contents = line.strip().split("\t")
-            chromosome, start, end, transcript_id, bedstrand = (
-                contents[0],
-                int(contents[1]),
-                int(contents[2]),
-                contents[3].strip("_intron"),
-                contents[5],
-            )
-            bed_tuple = (chromosome, start, end, transcript_id, bedstrand)
-            utron_coords[transcript_id].append(bed_tuple)
-            # utron_coords.append(bed_tuple)
-
-    tx2gene = defaultdict(list)
-    strand_dict = defaultdict(str)
-
-    for entry in GTF.iterator(iotools.open_file(argv_as_dictionary["gtf_path"])):
-        if not entry.feature == "transcript":
-            continue
-        strand_dict[entry.gene_id] = entry.strand
-        tx2gene[entry.gene_id].append(entry.transcript_id)
-
-    conversion_counts = list()
-    conversion_dict = defaultdict(int)
+    # Load files...
+    bamfile = io.load_file(argv_as_dictionary["infile_bam"])
+    vcffile = io.load_file(argv_as_dictionary["vcf_path"])
+    # .bed file
+    utron_coords = isoslam.extract_transcripts(argv_as_dictionary["utron_bed"])
+    # .gtf file
+    strand_dict, tx2gene = isoslam.extract_strand_transcript(argv_as_dictionary["gtf_path"])
 
     def fragment_iterator(read_iterator):
         read_list = list()
