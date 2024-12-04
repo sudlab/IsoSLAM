@@ -36,8 +36,6 @@ keywords = [
 ]
 dependencies = [
   "apsw",
-  # "cgat",
-  # "cgatcore",
   "gevent",
   "loguru",
   "matplotlib",
@@ -45,7 +43,6 @@ dependencies = [
   "pandas",
   "pysam",
   "ruamel.yaml",
-  # "ruffus",
   "sqlalchemy",
 ]
 
@@ -57,6 +54,7 @@ tests = [
   "pytest-cov",
   "pytest-github-actions-annotate-failures",
   "pytest-mpl",
+  "pytest-regtest",
   "pytest-testmon",
   "syrupy",
 ]

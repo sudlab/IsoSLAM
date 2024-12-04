@@ -12,14 +12,10 @@ read, checks these are not present in the SNP VCF file, and outputs metadata on 
 about it's event assignment, number of conversions, coverage etc.
 """
 
+from argparse import ArgumentParser
 import sys
-from collections import defaultdict
 
-import cgat.GTF as GTF
-import cgatcore.experiment as E
-import cgatcore.iotools as iotools
 import pandas as pd
-import pysam as pysam
 
 from isoslam import isoslam, io
 
@@ -31,9 +27,7 @@ def main(argv=None):
     if argv is None:
         argv = sys.argv
 
-    # setup command line parser
-    parser = E.ArgumentParser(description=__doc__)
-
+    parser = ArgumentParser(description=__doc__)
     parser.add_argument(
         "-b",
         "--bam",
@@ -41,15 +35,12 @@ def main(argv=None):
         type=str,
         help="Supply a path to the bam file that has undergone read assignment with featureCounts",
     )
-
     parser.add_argument(
         "-g", "--gtf", dest="gtf_path", type=str, help="Supply a path to the transcript assembly gtf file"
     )
-
     parser.add_argument(
         "-bed", dest="utron_bed", type=str, help="Supply a path to the utron bed file. Must be bed6 format"
     )
-
     parser.add_argument(
         "-o",
         "--out",
@@ -58,7 +49,6 @@ def main(argv=None):
         help="""Supply a path to the output file. This file will contain
                         conversions per pair, accounting for stranding""",
     )
-
     parser.add_argument("-vcf", "--vcf", dest="vcf_path", type=str, help="""Supply a path to the VCF.gz file""")
 
     argv_as_dictionary = vars(argv)
@@ -118,8 +108,6 @@ def main(argv=None):
             i_progress += 1
 
             if i_progress == 10000:
-                # E.debug(str(i_total_progress) + " pairs processed")
-                # E.debug(str(i) + "spliced/retained pairs processed")
                 i_progress = 0
 
             read1_start = read1.reference_start
@@ -506,8 +494,6 @@ def main(argv=None):
                 results = pd.concat([results, row])
 
     return results.sort_values(by=["read_uid", "transcript_id", "chr", "start", "end"])
-    # write footer and output benchmark information.
-    # E.stop()
 
 
 if __name__ == "__main__":
