@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any
 
 from loguru import logger
+from pysam import AlignedSegment
 
 from isoslam import io
 
@@ -53,8 +54,8 @@ def extract_strand_transcript(gtf_file: str | Path) -> tuple[defaultdict[Any, An
     Returns
     -------
     tuple[dict[str, tuple[str]], dict[str, tuple[str]]]
-        Two dictionaries are returned, one of the ``strand`` the other of the ``transcript_id`` both using the ``gene_id`` as
-        the key.
+        Two dictionaries are returned, one of the ``strand`` the other of the ``transcript_id`` both using the
+        ``gene_id`` as the key.
     """
     strand = defaultdict(str)
     transcript = defaultdict(list)
@@ -65,3 +66,83 @@ def extract_strand_transcript(gtf_file: str | Path) -> tuple[defaultdict[Any, An
         transcript[entry.gene_id].append(entry.transcript_id)
     logger.info(f"Extracted features from : {gtf_file}")
     return (strand, transcript)
+
+
+def extract_features_from_read(read: AlignedSegment) -> dict[str, int | str | None | tuple[int, int]]:
+    """
+    Extract start, end and length from an aligned segment read.
+
+    Parameters
+    ----------
+    read : AlignedSegment
+        An aligned segment read from ``pysam``.
+
+    Returns
+    -------
+    dict[str, Any]
+        Dictionary of ``start``, ``end`` and ``length`` of the segment.
+    """
+    block_start, block_end = zip(*read.get_blocks())
+    try:
+        status = read.get_tag("XS")
+    except KeyError:
+        status = None
+    try:
+        transcript = read.get_tag("XT")
+    except KeyError:
+        transcript = None
+    return {
+        "start": read.reference_start,
+        "end": read.reference_end,
+        "length": read.reference_length,
+        "status": status,
+        "transcript": transcript,
+        "block_start": block_start,
+        "block_end": block_end,
+    }
+
+
+def extract_features_from_pair(pair: list[AlignedSegment]) -> dict[str, dict[str, Any]]:
+    """
+    Extract features from a pair of reads.
+
+    Parameters
+    ----------
+    pair : list[AlignedSegment]
+        A list of two aligned segments from ``pysam``.
+
+    Returns
+    -------
+    dic[str, dict[str, Any]]
+        Returns a nested dictionaries of the ``start``, ``end`` and ``length`` of each read.
+    """
+    return {
+        "read1": extract_features_from_read(pair[0]),
+        "read2": extract_features_from_read(pair[1]),
+    }
+
+
+# def extract_utron(read: AlignedSegment, transcript_to_gene: Any, tag: str = "XS") -> list | None:
+#     """
+#     Extract and sum the utrons based on tag.
+
+#     ACTION : This function needs better documentation, my guess is that its extracting the transcripts to genes and
+#     then getting some related information (what I'm not sure) from the .bed file and adding these up.
+
+#     Parameters
+#     ----------
+#     read : AlignedSegement
+#         An aligned segment read.
+#     transcript_to_gene : TextIO
+#         Transcript to gene from a ``.bed`` file.
+#     tag : str
+#         Type of tag to extract.
+
+#     Returns
+#     -------
+#     list | None
+#         List of the length of assigned regions.
+#     """
+#     if read.get_tag(tag) == "Assigned":
+#         return sum(bed_file[transcript] for transcript in tx2gene[read.get_tag("XT")])
+#     return None
