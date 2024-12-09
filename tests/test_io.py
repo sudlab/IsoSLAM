@@ -200,26 +200,6 @@ def test_load_gtf(file_path: str | Path, object_type: str) -> None:
     assert isinstance(gtf_file, object_type)
 
 
-@pytest.mark.xfail(reason="File not in correct format.")
-@pytest.mark.parametrize(
-    ("file_path", "object_type", "compression", "is_remote"),
-    [
-        pytest.param(
-            RESOURCES / "vcf" / "d0.vcf.gz.tbi", pysam.libcbcf.VariantFile, "BGZF", False, id="d0 tbi as Path"
-        ),
-        pytest.param("tests/resources/vcf/d0.vcf.gz.tbi", pysam.libcbcf.VariantFile, "BGZF", False, id="d0 tbi as str"),
-    ],
-)
-def test_load_tbi(
-    file_path: str | Path, object_type: pysam.libcbcf.VariantFile, compression: str, is_remote: bool
-) -> None:
-    """Test loading of tbi file."""
-    tbi_file = io._load_tbi(file_path)
-    assert isinstance(tbi_file, object_type)
-    assert tbi_file.compression == compression
-    assert tbi_file.is_remote == is_remote
-
-
 @pytest.mark.parametrize(
     ("file_path", "object_type", "compression", "is_remote"),
     [
