@@ -14,15 +14,15 @@ GTF_DIR = RESOURCES / "gtf"
 BED_DIR = RESOURCES / "bed"
 VCF_DIR = RESOURCES / "vcf"
 BAM_DIR = RESOURCES / "bam"
-
+BAM_SORTED_ASSIGNED_DIR = BAM_DIR / "sorted_assigned"
 
 # pylint: disable=redefined-outer-name
 
 
 @pytest.fixture()
-def bam_file() -> AlignmentFile:
+def bam_file1() -> AlignmentFile:
     """Load a bam file."""
-    return io.load_file(BAM_DIR / "d0_no4sU_filtered_remapped_sorted.bam")
+    return io.load_file(BAM_SORTED_ASSIGNED_DIR / "d0_no4sU_filtered_remapped_sorted.sorted.assigned.bam")
 
 
 @pytest.fixture()

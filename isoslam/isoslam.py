@@ -1,6 +1,7 @@
 """IsoSLAM module."""
 
 from collections import defaultdict
+from collections.abc import Generator
 from pathlib import Path
 from typing import Any
 
@@ -66,6 +67,37 @@ def extract_strand_transcript(gtf_file: str | Path) -> tuple[defaultdict[Any, An
         transcript[entry.gene_id].append(entry.transcript_id)
     logger.info(f"Extracted features from : {gtf_file}")
     return (strand, transcript)
+
+
+def extract_segment_pairs(bam_file: str | Path) -> Generator[AlignedSegment]:
+    """
+    Extract pairs of AlignedSegments from a ``.bam`` file.
+
+    When there are two adjacent ``AlignedSegments`` with the same ``query_name`` only the first is paired, subsequent
+    segments are dropped.
+
+    Parameters
+    ----------
+    bam_file : str | Path
+        Path to a ``.bam`` file.
+
+    Yields
+    ------
+    Generator
+        Itterable of paired segments.
+    """
+    previous_read: str | None = None
+    pair: list[AlignedSegment] = []
+    for read in io.load_file(bam_file):
+        # Return pairs of reads, i.e. not on first pass, nor if query_name matches the previous read
+        if previous_read is not None and previous_read != read.query_name:
+            yield pair
+            pair = []
+            previous_read = read.query_name
+        previous_read = read.query_name
+        pair.append(read)
+    # Don't forget to return the last pair!
+    yield pair
 
 
 def extract_features_from_read(read: AlignedSegment) -> dict[str, int | str | None | tuple[int, int]]:
