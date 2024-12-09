@@ -20,10 +20,10 @@ BAM_DIR = RESOURCES / "bam"
 @pytest.mark.parametrize(
     ("file_path"),
     [
-        pytest.param(BAM_DIR / "sorted_assigned" / "d0_0hr1_filtered_remapped_sorted.sorted.assigned.bam", id="file 1"),
         pytest.param(
-            BAM_DIR / "sorted_assigned" / "d0_no4sU_filtered_remapped_sorted.sorted.assigned.bam", id="file 2"
+            BAM_DIR / "sorted_assigned" / "d0_no4sU_filtered_remapped_sorted.sorted.assigned.bam", id="file 1"
         ),
+        pytest.param(BAM_DIR / "sorted_assigned" / "d0_0hr1_filtered_remapped_sorted.sorted.assigned.bam", id="file 2"),
     ],
 )
 def test_main(file_path: Path, tmp_path: Path, regtest) -> None:
