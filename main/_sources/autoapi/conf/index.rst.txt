@@ -1,0 +1,157 @@
+conf
+====
+
+.. py:module:: conf
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   conf.autodoc_mock_imports
+   conf.project
+   conf.copyright
+   conf.author
+   conf.release
+   conf.version
+   conf.extensions
+   conf.templates_path
+   conf.html_sidebars
+   conf.source_suffix
+   conf.master_doc
+   conf.language
+   conf.exclude_patterns
+   conf.pygments_style
+   conf.myst_heading_anchors
+   conf.html_theme
+   conf.html_static_path
+   conf.html_css_files
+   conf.htmlhelp_basename
+   conf.latex_elements
+   conf.latex_documents
+   conf.man_pages
+   conf.texinfo_documents
+   conf.epub_title
+   conf.epub_exclude_files
+   conf.numpydoc_class_members_toctree
+   conf.autoapi_dirs
+   conf.smv_tag_whitelist
+   conf.smv_branch_whitelist
+   conf.smv_released_pattern
+   conf.smv_outputdir_format
+
+
+Module Contents
+---------------
+
+.. py:data:: autodoc_mock_imports
+   :value: ['numpy', 'pandas', 'matplotlib', 'seaborn', 'scipy', 'skimage']
+
+
+.. py:data:: project
+   :value: 'IsoSLAM'
+
+
+.. py:data:: copyright
+   :value: '2024, IsoSLAM authors'
+
+
+.. py:data:: author
+   :value: 'IsoSLAM authors'
+
+
+.. py:data:: release
+
+.. py:data:: version
+   :value: ''
+
+
+.. py:data:: extensions
+   :value: ['autoapi.extension', 'sphinx.ext.autodoc', 'sphinx.ext.viewcode', 'sphinx.ext.githubpages',...
+
+
+.. py:data:: templates_path
+   :value: ['_templates']
+
+
+.. py:data:: html_sidebars
+
+.. py:data:: source_suffix
+
+.. py:data:: master_doc
+   :value: 'index'
+
+
+.. py:data:: language
+   :value: 'en'
+
+
+.. py:data:: exclude_patterns
+   :value: ['_build', 'Thumbs.db', '.DS_Store']
+
+
+.. py:data:: pygments_style
+   :value: None
+
+
+.. py:data:: myst_heading_anchors
+   :value: 3
+
+
+.. py:data:: html_theme
+   :value: 'pydata_sphinx_theme'
+
+
+.. py:data:: html_static_path
+   :value: ['_static']
+
+
+.. py:data:: html_css_files
+   :value: ['custom.css']
+
+
+.. py:data:: htmlhelp_basename
+   :value: 'IsoSLAMdoc'
+
+
+.. py:data:: latex_elements
+
+.. py:data:: latex_documents
+
+.. py:data:: man_pages
+
+.. py:data:: texinfo_documents
+
+.. py:data:: epub_title
+   :value: 'IsoSLAM'
+
+
+.. py:data:: epub_exclude_files
+   :value: ['search.html']
+
+
+.. py:data:: numpydoc_class_members_toctree
+   :value: False
+
+
+.. py:data:: autoapi_dirs
+   :value: ['../']
+
+
+.. py:data:: smv_tag_whitelist
+   :value: '^v\\d+.*$'
+
+
+.. py:data:: smv_branch_whitelist
+   :value: '^(main)$'
+
+
+.. py:data:: smv_released_pattern
+   :value: '^tags/.*$'
+
+
+.. py:data:: smv_outputdir_format
+   :value: '{ref.name}'
+
+
