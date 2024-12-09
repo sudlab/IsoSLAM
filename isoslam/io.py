@@ -162,7 +162,21 @@ def create_config(args: argparse.Namespace | None = None) -> None:
 
 def load_file(file_path: str | Path) -> Any:
     """
-    Load files.
+    Load files of different types.
+
+    Supports the following file types...
+
+    +----------+--------------------------------------------------------------------------+
+    | File     | Description                                                              |
+    +==========+==========================================================================+
+    | ``.bam`` | The sequence data that is to be analysed.                                |
+    +----------+--------------------------------------------------------------------------+
+    | ``.bed`` | The locations of introns/splice junctions.                               |
+    +----------+--------------------------------------------------------------------------+
+    | ``.gtf`` | Transcript structures from which the ``.bed`` file is derived.           |
+    +----------+--------------------------------------------------------------------------+
+    | ``.vcf`` | Locations of known sequences difference from the reference sequence.     |
+    +----------+--------------------------------------------------------------------------+
 
     Parameters
     ----------
@@ -206,8 +220,6 @@ def _get_loader(file_ext: str = "bam") -> Callable:  # type: ignore[type-arg]
         return _load_bed
     if file_ext == ".gtf":
         return _load_gtf
-    if file_ext == ".tbi":
-        return _load_tbi
     if file_ext == ".vcf" or file_ext == ".vcf.gz":
         return _load_vcf
     raise ValueError(file_ext)
@@ -215,7 +227,9 @@ def _get_loader(file_ext: str = "bam") -> Callable:  # type: ignore[type-arg]
 
 def _load_bam(bam_file: str | Path) -> pysam.libcalignmentfile.AlignmentFile:
     """
-    Load '.bam' file.
+    Load ``.bam`` file.
+
+    ``.bam`` files are the sequence data that is to be analysed.
 
     Parameters
     ----------
@@ -235,7 +249,9 @@ def _load_bam(bam_file: str | Path) -> pysam.libcalignmentfile.AlignmentFile:
 
 def _load_bed(bed_file: str | Path) -> TextIO:
     """
-    Open '.bed' file for reading, supports gzip compressed formats.
+    Open ``.bed`` file for reading, supports gzip compressed formats.
+
+    ``.bed`` files contain the locations of introns/splice junctions.
 
     Parameters
     ----------
@@ -257,7 +273,9 @@ def _load_bed(bed_file: str | Path) -> TextIO:
 
 def _load_gtf(gtf_file: str | Path) -> pysam.libctabix.tabix_generic_iterator:
     """
-    Load '.gtf' file and return as an iterable.
+    Load ``.gtf`` file and return as an iterable.
+
+    ``.gtf`` files contain the transcript structures from which the ``.bed`` file is derived.
 
     Parameters
     ----------
@@ -277,7 +295,13 @@ def _load_gtf(gtf_file: str | Path) -> pysam.libctabix.tabix_generic_iterator:
 
 def _load_vcf(vcf_file: str | Path) -> pysam.libcbcf.VariantFile:
     """
-    Load '.vcf' file.
+    Load ``.vcf`` file.
+
+    ``.vcf`` files contain the locations of known sequences difference from the reference sequence. Any ``T > C``
+    (e.g. SNPs) conversions that match to the location of known seuqence variations will be removed. These can be
+    obtained from a reference collection of variation data (such as `dbSNP
+    <https://www.ncbi.nlm.nih.gov/projects/SNP/get_html.cgi?whichHtml=overview>`_) or derived directly from the RNAseq
+    reads.
 
     Parameters
     ----------
@@ -291,25 +315,5 @@ def _load_vcf(vcf_file: str | Path) -> pysam.libcbcf.VariantFile:
     """
     try:
         return pysam.VariantFile(vcf_file)
-    except FileNotFoundError as e:
-        raise e
-
-
-def _load_tbi(tbi_file: str | Path) -> pysam.libcbcf.VariantFile:
-    """
-    Load '.tbi' file.
-
-    Parameters
-    ----------
-    tbi_file : str | Path
-        Path, as string or pathlib Path, to a '.tbi' file that is to be loaded.
-
-    Returns
-    -------
-    pysam.libcbcf.VariantFile
-        Loads the specified TBI file.
-    """
-    try:
-        return pysam.VariantFile(tbi_file)
     except FileNotFoundError as e:
         raise e
