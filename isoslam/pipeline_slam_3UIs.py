@@ -55,12 +55,12 @@ def feature_count_read_assignments(infile, outfile):
     outdir = os.path.dirname(outfile)
     rename_outfile = outfile.replace(".assigned.bam", "")
     statement = (
-        "featureCounts"
+        "featureCounts "
         "-p "
         f"-a {annotation} "
         f"-o {outdir}/counts.txt "
         "-T 2 "
-        "-R BAM"
+        "-R BAM "
         f"{infile} &&"
         "mv %(rename_outfile)s.bam.featureCounts.bam %(outfile)s"
     )

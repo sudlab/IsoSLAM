@@ -56,6 +56,16 @@ graph TD;
 
 ```
 
+## IsoSLAM
+
+A number of pre-processing steps are undertaken prior to IsoSLAM work being done. The following is work in progress as
+the code is refactored.
+
+1. Iterate over `.bam` file and pair segments. If two or more `AlignedSegments` with the same `query_name` are found
+   then `n > 1` segments are dropped.
+2. Pairs of segments (individual `AlignedSegments`) are then assessed and if they are `Assigned` the `start`, `end`,
+   `length`, `status` (i.e. `Assigned`), `transcript_id`, `block_start` and `block_end` are extracted.
+
 ## Updating
 
 The above diagram is written in [Mermaid][mermaid]. You can view the source code in the IsoSLAM repository and
