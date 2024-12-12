@@ -28,6 +28,26 @@ from isoslam import utils
             },
             id="Change value of c",
         ),
+        pytest.param(
+            {
+                "a": 1,
+                "b": 2,
+                "c": "something",
+                "base_dir": "here",
+                "output_dir": "there",
+                "nested_dictionary": {"e": 1},
+            },
+            {"e": 1000000},
+            {
+                "a": 1,
+                "b": 2,
+                "c": "something",
+                "base_dir": Path("here"),
+                "output_dir": Path("there"),
+                "nested_dictionary": {"e": 1000000},
+            },
+            id="Change nested value e",
+        ),
     ],
 )
 def test_update_config(sample_config: dict, new_values: dict, expected_config: dict) -> None:

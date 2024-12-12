@@ -1,6 +1,7 @@
 """Fixtures for pytest."""
 
 from pathlib import Path
+from typing import Any
 
 import pytest
 from pysam import AlignedSegment, AlignmentFile
@@ -35,6 +36,12 @@ def bam_file2() -> AlignmentFile:
 def bam_unaligned_file1() -> AlignmentFile:
     """Load an unsorted and unassigned ``.bam`` file (ignore the filename!)."""
     return io.load_file(BAM_DIR / "d0_no4sU_filtered_remapped_sorted.bam")
+
+
+@pytest.fixture()
+def default_config() -> dict[str:Any]:
+    """Load the default configuration."""
+    return io.load_and_update_config(args=None)
 
 
 @pytest.fixture()

@@ -5,5 +5,20 @@ bam_file: data/bam/.bam
 gtf_file: data/gtf/
 bed_file: data/bed/
 vcf_file: data/vcf/
-summary: false
+summary_counts:
+  file_pattern: "**/*.tsv"
+  separator: "\t"
+  groupby:
+    - Transcript_id
+    - Chr
+    - Strand
+    - Start
+    - End
+    - Assignment
+    - Conversions
+    - filename
+  output:
+    outfile: summary_counts.tsv
+    sep: "\t"
+    index: false
 plot: false
