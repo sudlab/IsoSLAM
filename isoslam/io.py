@@ -49,7 +49,7 @@ def _str_to_path(path: str | Path) -> Path:
     return Path().cwd() if path == "./" else Path(path).expanduser()
 
 
-def _path_to_str(config: dict) -> dict:  # type: ignore[type-arg]
+def _path_to_str(config: dict[str, Any]) -> dict[str, Any]:
     """
     Recursively traverse a dictionary and convert any Path() objects to strings for writing to YAML.
 
@@ -71,7 +71,7 @@ def _path_to_str(config: dict) -> dict:  # type: ignore[type-arg]
     return config
 
 
-def read_yaml(filename: str | Path) -> dict | None:  # type: ignore[type-arg]
+def read_yaml(filename: str | Path | None = None) -> dict[str, Any] | None:
     """
     Read a YAML file.
 
@@ -85,7 +85,9 @@ def read_yaml(filename: str | Path) -> dict | None:  # type: ignore[type-arg]
     Dict
         Dictionary of the file.
     """
-    with Path(filename).open(encoding="utf-8") as f:
+    if filename is None:
+        filename = resources.files(__package__) / "default_config.yaml"  # type: ignore[assignment]
+    with Path(filename).open(encoding="utf-8") as f:  # type: ignore[arg-type]
         try:
             yaml_file = YAML(typ="safe")
             return yaml_file.load(f)  # type: ignore[no-any-return]
