@@ -7,6 +7,7 @@ from io import TextIOWrapper
 from pathlib import Path
 from typing import Any, TextIO
 
+import pandas as pd
 import pysam
 import pytest
 
@@ -285,3 +286,47 @@ def test_load_file(file_path: str | Path, object_type: Any) -> None:
     """Test loading of files."""
     file = io.load_file(file_path)
     assert isinstance(file, object_type)
+
+
+@pytest.mark.parametrize(
+    ("pattern", "expected"),
+    [
+        pytest.param(
+            "tests/**/*.tsv",
+            {
+                Path(RESOURCES / "tsv" / "d0_0hr1_filtered_remapped_sorted.tsv"),
+                Path(RESOURCES / "tsv" / "d0_no4sU_filtered_remapped_sorted.tsv"),
+            },
+            id="tsv files",
+        ),
+        pytest.param(
+            "tests/**/*.gtf",
+            {
+                Path(RESOURCES / "gtf", "test_wash1.gtf"),
+            },
+            id="gtf files",
+        ),
+    ],
+)
+def test_find_files(pattern: str, expected: list[Path]) -> None:
+    """Test finding of files."""
+    files_found = set(io._find_files(pattern))
+    assert files_found == expected
+
+
+@pytest.mark.parametrize(
+    ("pattern", "expected"),
+    [
+        pytest.param(
+            "tests/**/*.tsv",
+            {"d0_0hr1_filtered_remapped_sorted", "d0_no4sU_filtered_remapped_sorted"},
+            id="tsv files",
+        )
+    ],
+)
+def test_load_files(pattern: str, expected: dict[str, pd.DataFrame]) -> None:
+    """Test loading of files."""
+    files_found = io.load_files(pattern)
+    assert set(files_found.keys()) == expected
+    for _, dataframe in files_found.items():
+        assert isinstance(dataframe, pd.DataFrame)

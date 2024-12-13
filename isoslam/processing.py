@@ -5,7 +5,9 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from isoslam import __version__, io
+from loguru import logger
+
+from isoslam import __version__, io, logging, summary
 
 
 def create_parser() -> arg.ArgumentParser:
@@ -36,6 +38,14 @@ def create_parser() -> arg.ArgumentParser:
         type=Path,
         required=False,
         help="Path to a YAML configuration file.",
+    )
+    parser.add_argument(
+        "-b",
+        "--base-dir",
+        dest="base_dir",
+        type=Path,
+        required=False,
+        help="Base directory to run isoslam on.",
     )
     parser.add_argument(
         "-o",
@@ -114,6 +124,38 @@ def create_parser() -> arg.ArgumentParser:
     )
     create_config_parser.set_defaults(func=io.create_config)
 
+    # Summarise counts sub-parser
+    summary_counts_parser = subparsers.add_parser(
+        "summary-counts",
+        description="Summarise the counts.",
+        help="Summarise the counts.",
+    )
+    summary_counts_parser.add_argument(
+        "--file-pattern",
+        dest="file_pattern",
+        type=str,
+        required=False,
+        default="*_summarized.tsv",
+        help="Regular expression for summarized files to process.",
+    )
+    summary_counts_parser.add_argument(
+        "--outfile",
+        dest="outfile",
+        type=Path,
+        required=False,
+        default="summary_counts.tsv",
+        help="Output filename to save results to, will be nested under 'output_dir'.",
+    )
+    summary_counts_parser.add_argument(
+        "--separator",
+        dest="sep",
+        type=str,
+        required=False,
+        default="\t",
+        help="Field separator to use in output file, default is '\t' but other values (e.g. ',' are allowed).",
+    )
+    summary_counts_parser.set_defaults(func=summarise_counts)
+
     # Additional parsers for future functionality
     # summarize_counts_parser = subparsers.add_parser(
     #     "summarize",
@@ -146,6 +188,39 @@ def process(args: arg.Namespace | None) -> None:  # pylint: disable=unused-argum
     """
     # config = io.read_yaml() if args.config is None else io.read_yaml(args.config) # type: ignore[call-arg,union-attr]
     return
+
+
+def summarise_counts(args: arg.Namespace | None) -> None:
+    """
+    Take a set of output files and summarise the number of conversions.
+
+    Counts are made within file, chromosome, transcript, start, end, assignment and whether there is one or more
+    conversion observed.
+
+    Parameters
+    ----------
+    args : arg.Namespace | None
+        Arguments function was invoked with.
+
+    Returns
+    -------
+    None
+        Function does not return anything.
+    """
+    # Load the configuration file (default or user) and update with supplied flags
+    config = io.load_and_update_config(args)
+    logger.remove()
+    if vars(args)["log_level"] is not None:
+        logging.setup(level=vars(args)["log_level"])
+    else:
+        logging.setup(level=config["log_level"])
+    summary_counts_config = config["summary_counts"]
+    output_config = summary_counts_config.pop("output")
+    output_config["output_dir"] = config["output_dir"]
+    summary_counts = summary.summary_counts(**summary_counts_config)
+    summary_counts.sort_values(by=["Chr", "Transcript_id", "Start"], inplace=True)
+    io.data_frame_to_file(summary_counts, **output_config)
+    logger.info(f"Summary counts file written to : {output_config['output_dir']}/{output_config['outfile']}")
 
 
 def entry_point(manually_provided_args: list[Any] | None = None, testing: bool = False) -> None | arg.Namespace:

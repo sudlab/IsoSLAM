@@ -278,7 +278,13 @@ exclude = [
 ]
 
 [[tool.mypy.overrides]]
-module = [ "numpy.*", "loguru", "ruamel.yaml", "pysam"]
+module = [
+  "loguru",
+  "numpy.*",
+  "pandas",
+  "pysam",
+  "ruamel.yaml",
+]
 ignore_missing_imports = true
 
 [project.scripts]

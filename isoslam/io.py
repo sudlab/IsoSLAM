@@ -2,17 +2,18 @@
 
 import argparse
 import gzip
-from collections.abc import Callable
+from collections.abc import Callable, Generator
 from datetime import datetime
 from importlib import resources
 from pathlib import Path
 from typing import Any, TextIO
 
+import pandas as pd
 import pysam
-
-# from cgatcore import iotools
 from loguru import logger
 from ruamel.yaml import YAML, YAMLError
+
+from isoslam import utils
 
 CONFIG_DOCUMENTATION_REFERENCE = """# For more information on configuration and how to use it see:
 # https://sudlab.github.io/IsoSLAM\n"""
@@ -49,7 +50,7 @@ def _str_to_path(path: str | Path) -> Path:
     return Path().cwd() if path == "./" else Path(path).expanduser()
 
 
-def _path_to_str(config: dict) -> dict:  # type: ignore[type-arg]
+def _path_to_str(config: dict[str, Any]) -> dict[str, Any]:
     """
     Recursively traverse a dictionary and convert any Path() objects to strings for writing to YAML.
 
@@ -71,7 +72,7 @@ def _path_to_str(config: dict) -> dict:  # type: ignore[type-arg]
     return config
 
 
-def read_yaml(filename: str | Path) -> dict | None:  # type: ignore[type-arg]
+def read_yaml(filename: str | Path | None = None) -> dict[str, Any] | None:
     """
     Read a YAML file.
 
@@ -85,7 +86,9 @@ def read_yaml(filename: str | Path) -> dict | None:  # type: ignore[type-arg]
     Dict
         Dictionary of the file.
     """
-    with Path(filename).open(encoding="utf-8") as f:
+    if filename is None:
+        filename = resources.files(__package__) / "default_config.yaml"  # type: ignore[assignment]
+    with Path(filename).open(encoding="utf-8") as f:  # type: ignore[arg-type]
         try:
             yaml_file = YAML(typ="safe")
             return yaml_file.load(f)  # type: ignore[no-any-return]
@@ -130,6 +133,29 @@ def write_yaml(
             yaml.dump(config, f)
         except YAMLError as exception:
             logger.error(exception)
+
+
+def load_and_update_config(args: argparse.Namespace | None) -> dict[str, Any]:
+    """
+    Load a configuration file to dictionary and update entries with user supplied arguments.
+
+    If ''args'' does not contain any value for ''args.config_file'' the default configuration
+    (''isoslam/default_config.yaml'') is loaded, otherwise the user specified configuration is loaded.
+
+    Once the configuration is loaded any user specified options update the dictionary.
+
+    Parameters
+    ----------
+    args : argparse.Namespace
+        Arguments supplied by user.
+
+    Returns
+    -------
+    dict[str: Any]
+        Dictionary of configuration optionsupdated with user specified options.
+    """
+    config = read_yaml() if vars(args)["config_file"] is None else read_yaml(vars(args)["config_file"])
+    return utils.update_config(config, vars(args))  # type: ignore[arg-type]
 
 
 def create_config(args: argparse.Namespace | None = None) -> None:
@@ -216,11 +242,11 @@ def _get_loader(file_ext: str = "bam") -> Callable:  # type: ignore[type-arg]
     """
     if file_ext == ".bam":
         return _load_bam
-    if file_ext == ".bed" or file_ext == ".bed.gz":
+    if file_ext in (".bed", ".bed.gz"):
         return _load_bed
     if file_ext == ".gtf":
         return _load_gtf
-    if file_ext == ".vcf" or file_ext == ".vcf.gz":
+    if file_ext in (".vcf", ".vcf.gz"):
         return _load_vcf
     raise ValueError(file_ext)
 
@@ -317,3 +343,68 @@ def _load_vcf(vcf_file: str | Path) -> pysam.libcbcf.VariantFile:
         return pysam.VariantFile(vcf_file)
     except FileNotFoundError as e:
         raise e
+
+
+def _find_files(pattern: str = "**/*.tsv") -> Generator:  # type: ignore[type-arg]
+    """
+    Find files that match the given pattern.
+
+    Parameters
+    ----------
+    pattern : str
+        Pattern (regular expression) of files to search for.
+
+    Returns
+    -------
+    Generator[_P, None, None]
+        A generator of files found that match the given pattern.
+    """
+    pwd = Path.cwd()
+    return pwd.rglob(pattern)
+
+
+def load_files(pattern: str = "**/*.tsv", sep: str = "\t") -> dict[str, pd.DataFrame]:
+    """
+    Read a set of files into a list of Pandas DataFrames.
+
+    Parameters
+    ----------
+    pattern : str
+        File name pattern to search for.
+    sep : str
+        Separator/delimiter used in files.
+
+    Returns
+    -------
+    list[pd.DataFrame]
+        A list of Pandas DataFrames of each file found.
+    """
+    return {x.stem: pd.read_csv(x, sep=sep) for x in _find_files(pattern)}
+
+
+def data_frame_to_file(
+    data: pd.DataFrame,
+    output_dir: str | Path = "./output/",
+    outfile: str = "summary_counts.csv",
+    sep: str = "\t",
+    **kwargs: dict[Any, Any],
+) -> None:
+    """
+    Write a Pandas DataFrame to disk.
+
+    Parameters
+    ----------
+    data : pd.DataFrame
+        Pandas DataFrame to write to disk.
+    output_dir : str | Path
+        Location to write the output to, default is ''./output''.capitalize.
+    outfile : str
+        Filename to write data to.
+    sep : str
+        Separator to use in output file.
+    **kwargs
+        Dictionary of keyword arguments to pass to ''pandas.DataFrame.to_csv()''.
+    """
+    outdir_file = Path(output_dir) / f"{outfile}"
+    data.to_csv(outdir_file, sep=sep, **kwargs)
+    logger.debug(f"File written to : {outdir_file}")

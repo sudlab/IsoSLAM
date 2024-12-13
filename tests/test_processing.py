@@ -115,3 +115,29 @@ def test_entry_point_sub_parsers(options: str, expected_function: Callable, expe
     returned_args_dict = vars(returned_args)
     for argument, value in expected_args.items():
         assert returned_args_dict[argument] == value
+
+
+@pytest.mark.parametrize(
+    ("file_pattern", "separator", "outfile"),
+    [
+        pytest.param("tests/**/*.tsv", "\t", "test.tsv", id="Tab-delimited output."),
+        pytest.param("tests/**/*.tsv", ",", "test.csv", id="CSV-delimited output."),
+    ],
+)
+def test_summary_counts(file_pattern: str, separator: str, outfile: str, tmp_path: Path) -> None:
+    """Test the summary_counts entry point."""
+    processing.entry_point(
+        manually_provided_args=[
+            "--output-dir",
+            str(tmp_path),
+            "summary-counts",
+            "--file-pattern",
+            file_pattern,
+            "--outfile",
+            outfile,
+            "--separator",
+            separator,
+        ]
+    )
+    output = tmp_path / outfile
+    assert output.is_file()
