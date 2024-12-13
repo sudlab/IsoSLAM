@@ -1,0 +1,686 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Installation &#8212; IsoSLAM 0.1.dev195+ge91a61c documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="_static/jquery.js?v=5d32c60e"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="_static/documentation_options.js?v=b0d7e3ff"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'installation';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Usage" href="usage.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">IsoSLAM 0.1.dev195+ge91a61c documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="introduction.html">
+    Introduction
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="usage.html">
+    Usage
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="contributing.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="workflow.html">
+    Workflow
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="autoapi/index.html">
+    API Reference
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="introduction.html">
+    Introduction
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="usage.html">
+    Usage
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="contributing.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="workflow.html">
+    Workflow
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="autoapi/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<h3>Versions</h3>
+<ul>
+  <li><a href="installation.html">main</a></li>
+</ul>
+</div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Installation</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h1>
+<p>Ideally you should install IsoSLAM under a Python Virtual Environment. Details of how to work with and use these is
+beyond the scope of this documentation but some advice can be found in the
+<a class="reference internal" href="#contributing#virtual-environments"><span class="xref myst">contributing</span></a> section.</p>
+<section id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading">#</a></h2>
+<p>There are a number of external dependencies required for running IsoSLAM.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">samtools</span></code> / <code class="docutils literal notranslate"><span class="pre">bcftools</span></code> are both required and can be downloaded from <a class="reference external" href="https://www.htslib.org/">htslib</a></p></li>
+<li><p><a class="reference external" href="https://github.com/dkoboldt/varscan">VarScan</a> (<a class="reference external" href="https://dkoboldt.github.io/varscan/">documentation</a>)</p></li>
+<li><p><a class="reference external" href="https://github.com/ShiLab-Bioinformatics/subread">subread</a> (<a class="reference external" href="https://subread.sourceforge.net/">documentation</a>)</p></li>
+</ul>
+<section id="indirect-dependencies">
+<h3>Indirect Dependencies<a class="headerlink" href="#indirect-dependencies" title="Link to this heading">#</a></h3>
+<p>The pipeline for running the various steps in processing data rely on the <a class="reference external" href="https://cgat-developers.github.io/cgat-core/">cgat</a> tools. These have two external
+dependencies themselves and if you wish to use such a pipeline will have to install these.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://bedtools.readthedocs.io/en/latest/">bedtools</a></p></li>
+<li><p><a class="reference external" href="https://github.com/ucscGenomeBrowser/kent">wigToBigWig</a> - the <a class="reference external" href="https://github.com/ucscGenomeBrowser/kent-core">minimal tools</a> may suffice.</p></li>
+</ul>
+</section>
+<section id="gnu-linux">
+<h3>GNU/Linux<a class="headerlink" href="#gnu-linux" title="Link to this heading">#</a></h3>
+<section id="arch-linux">
+<h4>Arch Linux<a class="headerlink" href="#arch-linux" title="Link to this heading">#</a></h4>
+<p>If you use <a class="reference external" href="https://archlinux.org/">Arch Linux</a> the packages are available in the <a class="reference external" href="https://aur.archlinux.org/">Arch Linux User Repository (AUR)</a></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>~/aur<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>~/aur
+git<span class="w"> </span>clone<span class="w"> </span>https://aur.archlinux.org/htslib.git
+git<span class="w"> </span>clone<span class="w"> </span>https://aur.archlinux.org/samtools.git
+git<span class="w"> </span>clone<span class="w"> </span>https://aur.archlinux.org/bcftools.git
+git<span class="w"> </span>clone<span class="w"> </span>https://aur.archlinux.org/subread.git
+git<span class="w"> </span>clone<span class="w"> </span>https://aur.archlinux.org/bedtools.git
+<span class="nb">cd</span><span class="w"> </span>htslib
+makepkg<span class="w"> </span>-sri
+<span class="nb">cd</span><span class="w"> </span>../bcftools
+makepkg<span class="w"> </span>-sri
+<span class="nb">cd</span><span class="w"> </span>../samtools
+makepkg<span class="w"> </span>-sri
+<span class="nb">cd</span><span class="w"> </span>../subread
+makepkg<span class="w"> </span>-sri
+<span class="nb">cd</span><span class="w"> </span>../bedtools
+makepkg<span class="w"> </span>-sri
+</pre></div>
+</div>
+<p><a class="reference external" href="https://github.com/dkoboldt/varscan">varscan</a> is written in Java, you need to download the <a class="reference external" href="https://github.com/dkoboldt/varscan/releases">latest release</a></p>
+<p>You can make a wrapper to run this, assuming you have saved the file to <code class="docutils literal notranslate"><span class="pre">~/.local/jar/VarScan.v2.4.6.jar</span></code> (adjust for
+the version you have downloaded), you can create the following short script and make it executable, placing it in your
+<code class="docutils literal notranslate"><span class="pre">$PATH</span></code> (the example below uses <code class="docutils literal notranslate"><span class="pre">~/.local/bin/</span></code>)</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+java<span class="w"> </span>-jar<span class="w"> </span>~/.local<span class="s2">&quot;</span>
+</pre></div>
+</div>
+<p>Make the file executable and you can then run <code class="docutils literal notranslate"><span class="pre">varscan</span></code></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>chmod<span class="w"> </span><span class="m">755</span><span class="w"> </span>~/.local/bin/varscan
+varscan
+VarScan<span class="w"> </span>v2.4.6
+
+***NON-COMMERCIAL<span class="w"> </span>VERSION***
+
+USAGE:<span class="w"> </span>java<span class="w"> </span>-jar<span class="w"> </span>VarScan.jar<span class="w"> </span><span class="o">[</span>COMMAND<span class="o">]</span><span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+
+COMMANDS:
+<span class="w"> </span>pileup2snp<span class="w">  </span>Identify<span class="w"> </span>SNPs<span class="w"> </span>from<span class="w"> </span>a<span class="w"> </span>pileup<span class="w"> </span>file
+<span class="w"> </span>pileup2indel<span class="w">  </span>Identify<span class="w"> </span>indels<span class="w"> </span>a<span class="w"> </span>pileup<span class="w"> </span>file
+<span class="w"> </span>pileup2cns<span class="w">  </span>Call<span class="w"> </span>consensus<span class="w"> </span>and<span class="w"> </span>variants<span class="w"> </span>from<span class="w"> </span>a<span class="w"> </span>pileup<span class="w"> </span>file
+<span class="w"> </span>mpileup2snp<span class="w">  </span>Identify<span class="w"> </span>SNPs<span class="w"> </span>from<span class="w"> </span>an<span class="w"> </span>mpileup<span class="w"> </span>file
+<span class="w"> </span>mpileup2indel<span class="w">  </span>Identify<span class="w"> </span>indels<span class="w"> </span>an<span class="w"> </span>mpileup<span class="w"> </span>file
+<span class="w"> </span>mpileup2cns<span class="w">  </span>Call<span class="w"> </span>consensus<span class="w"> </span>and<span class="w"> </span>variants<span class="w"> </span>from<span class="w"> </span>an<span class="w"> </span>mpileup<span class="w"> </span>file
+
+<span class="w"> </span>somatic<span class="w">   </span>Call<span class="w"> </span>germline/somatic<span class="w"> </span>variants<span class="w"> </span>from<span class="w"> </span>tumor-normal<span class="w"> </span>pileups
+<span class="w"> </span>mpileup2somatic<span class="w">  </span>Call<span class="w"> </span>germline/somatic<span class="w"> </span>variants<span class="w"> </span><span class="k">in</span><span class="w"> </span>multi-tumor-normal<span class="w"> </span>mpileup<span class="w"> </span><span class="o">(</span>beta<span class="w"> </span>feature<span class="w"> </span><span class="k">in</span><span class="w"> </span>v2.4.5<span class="o">)</span>
+<span class="w"> </span>copynumber<span class="w">  </span>Determine<span class="w"> </span>relative<span class="w"> </span>tumor<span class="w"> </span>copy<span class="w"> </span>number<span class="w"> </span>from<span class="w"> </span>tumor-normal<span class="w"> </span>pileups
+<span class="w"> </span>readcounts<span class="w">  </span>Obtain<span class="w"> </span><span class="nb">read</span><span class="w"> </span>counts<span class="w"> </span><span class="k">for</span><span class="w"> </span>a<span class="w"> </span>list<span class="w"> </span>of<span class="w"> </span>variants<span class="w"> </span>from<span class="w"> </span>a<span class="w"> </span>pileup<span class="w"> </span>file
+
+<span class="w"> </span>filter<span class="w">   </span>Filter<span class="w"> </span>SNPs<span class="w"> </span>by<span class="w"> </span>coverage,<span class="w"> </span>frequency,<span class="w"> </span>p-value,<span class="w"> </span>etc.
+<span class="w"> </span>somaticFilter<span class="w">  </span>Filter<span class="w"> </span>somatic<span class="w"> </span>variants<span class="w"> </span><span class="k">for</span><span class="w"> </span>clusters/indels
+<span class="w"> </span>fpfilter<span class="w">  </span>Apply<span class="w"> </span>the<span class="w"> </span>false-positive<span class="w"> </span>filter
+
+<span class="w"> </span>processSomatic<span class="w">  </span>Isolate<span class="w"> </span>Germline/LOH/Somatic<span class="w"> </span>calls<span class="w"> </span>from<span class="w"> </span>output
+<span class="w"> </span>copyCaller<span class="w">  </span>GC-adjust<span class="w"> </span>and<span class="w"> </span>process<span class="w"> </span>copy<span class="w"> </span>number<span class="w"> </span>changes<span class="w"> </span>from<span class="w"> </span>VarScan<span class="w"> </span>copynumber<span class="w"> </span>output
+<span class="w"> </span>compare<span class="w">   </span>Compare<span class="w"> </span>two<span class="w"> </span>lists<span class="w"> </span>of<span class="w"> </span>positions/variants
+<span class="w"> </span>limit<span class="w">   </span>Restrict<span class="w"> </span>pileup/snps/indels<span class="w"> </span>to<span class="w"> </span>ROI<span class="w"> </span>positions
+</pre></div>
+</div>
+</section>
+<section id="gentoo">
+<h4>Gentoo<a class="headerlink" href="#gentoo" title="Link to this heading">#</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">samtools</span></code> and <code class="docutils literal notranslate"><span class="pre">bcftools</span></code> are available in Portage, to install.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>emerge<span class="w"> </span>--sync<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>emerge<span class="w"> </span>-av<span class="w"> </span>samtools<span class="w"> </span>bcftools<span class="w"> </span>bedtools<span class="w"> </span>ucsc-genome-browser
+</pre></div>
+</div>
+<p><strong>to write</strong> - how to install</p>
+</section>
+<section id="ubuntu-debian">
+<h4>Ubuntu/Debian<a class="headerlink" href="#ubuntu-debian" title="Link to this heading">#</a></h4>
+<p>All three packages are available for Debian based repositories.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>update
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>samtools<span class="w"> </span>bcftools<span class="w"> </span>bedtools
+</pre></div>
+</div>
+</section>
+<section id="ucsc-genome-browser">
+<h4>UCSC Genome Browser<a class="headerlink" href="#ucsc-genome-browser" title="Link to this heading">#</a></h4>
+<p>This needs installing from source across all distributions. The <a class="reference external" href="https://github.com/ucscGenomeBrowser/kent-core">minimal</a> should suffice.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:ucscGenomeBrowser/kent-core.git
+<span class="nb">cd</span><span class="w"> </span>kent-core
+sudo<span class="w"> </span>make
+</pre></div>
+</div>
+</section>
+<section id="source-install">
+<h4>Source Install<a class="headerlink" href="#source-install" title="Link to this heading">#</a></h4>
+<p>The releases pages includes instructions on how to build the package from source, but note that you will then have to
+manually update the packages when new releases are made.</p>
+</section>
+</section>
+<section id="windows">
+<h3>Windows<a class="headerlink" href="#windows" title="Link to this heading">#</a></h3>
+<p><strong>To write</strong> at some point.</p>
+</section>
+<section id="osx">
+<h3>OSX<a class="headerlink" href="#osx" title="Link to this heading">#</a></h3>
+<p><strong>To write</strong> at some point.</p>
+</section>
+</section>
+<section id="conda">
+<h2>Conda<a class="headerlink" href="#conda" title="Link to this heading">#</a></h2>
+<p>If you don’t have the ability to install these programmes at the system level an alternative is to use a Conda
+environment.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>isoslam<span class="w"> </span><span class="nv">python</span><span class="o">==</span><span class="m">3</span>.12
+conda<span class="w"> </span>activate<span class="w"> </span>isoslam
+conda<span class="w"> </span>install<span class="w"> </span>mamba
+mamba<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>-c<span class="w"> </span>bioconda<span class="w"> </span>cgat-apps
+mamba<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>-c<span class="w"> </span>bioconda<span class="w"> </span>samtools<span class="w"> </span>bcftools
+mamba<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>-c<span class="w"> </span>bioconda<span class="w"> </span>subread
+mamba<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>-c<span class="w"> </span>bioconda<span class="w"> </span>varscan
+</pre></div>
+</div>
+</section>
+<section id="github">
+<h2>GitHub<a class="headerlink" href="#github" title="Link to this heading">#</a></h2>
+<p>There are two methods of installing IsoSLAM from its <a class="reference external" href="https://github.com/sudlab/IsoSLAM">GitHub repository</a>.</p>
+<section id="cloning">
+<h3>Cloning<a class="headerlink" href="#cloning" title="Link to this heading">#</a></h3>
+<p>You can clone the repository and install from the clone.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:sudlab/IsoSLAM.git
+<span class="nb">cd</span><span class="w"> </span>IsoSLAM
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+</pre></div>
+</div>
+<p>By using the <code class="docutils literal notranslate"><span class="pre">-e</span></code> (editable) flag it means you can switch branches.</p>
+</section>
+<section id="pip-from-github">
+<h3><code class="docutils literal notranslate"><span class="pre">pip</span></code> from GitHub<a class="headerlink" href="#pip-from-github" title="Link to this heading">#</a></h3>
+<p>The package installer for Python <a class="reference external" href="https://pip.pypa.io/en/stable/">pip</a> can be used to install packages directly from their version control
+homepage.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>git+ssh://git@github.com/IsoSLAM
+</pre></div>
+</div>
+<p>If you want to install a specific branch or commit you can do so.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>git+ssh://git@github.com/IsoSLAM@&lt;branch-name&gt;
+pip<span class="w"> </span>install<span class="w"> </span>git+ssh://git@github.com/IsoSLAM@&lt;commit-hash&gt;
+</pre></div>
+</div>
+</section>
+</section>
+<section id="pypi">
+<h2>PyPI<a class="headerlink" href="#pypi" title="Link to this heading">#</a></h2>
+<p>We intend to publish IsoSLAM to the <a class="reference external" href="https://pypi.org/">Python Package Index (PyPI)</a>. When available you will be able to install with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>IsoSLAM
+</pre></div>
+</div>
+<p><strong>NB</strong> IsoSLAM is <strong>NOT</strong> currently available on PyPI.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="introduction.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Introduction</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="usage.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Usage</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dependencies">Dependencies</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#indirect-dependencies">Indirect Dependencies</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gnu-linux">GNU/Linux</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#arch-linux">Arch Linux</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#gentoo">Gentoo</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ubuntu-debian">Ubuntu/Debian</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ucsc-genome-browser">UCSC Genome Browser</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#source-install">Source Install</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#windows">Windows</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#osx">OSX</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conda">Conda</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#github">GitHub</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cloning">Cloning</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pip-from-github"><code class="docutils literal notranslate"><span class="pre">pip</span></code> from GitHub</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pypi">PyPI</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="_sources/installation.md.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2024, IsoSLAM authors.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
