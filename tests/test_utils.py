@@ -30,11 +30,11 @@ from isoslam import utils
         ),
     ],
 )
-def test_update_config(
-    sample_config: dict, new_values: dict, expected_config: dict, caplog: pytest.LogCaptureFixture
-) -> None:
+def test_update_config(sample_config: dict, new_values: dict, expected_config: dict) -> None:
     """Test updating configuration."""
     updated_config = utils.update_config(sample_config, new_values)
 
     assert isinstance(updated_config, dict)
     assert updated_config == expected_config
+    assert isinstance(updated_config["base_dir"], Path)
+    assert isinstance(updated_config["output_dir"], Path)
