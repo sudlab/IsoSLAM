@@ -11,6 +11,10 @@
         <link rel="canonical" href="https://sudlab.github.io/IsoSLAM/api/processing/">
       
       
+        <link rel="prev" href="../logging/">
+      
+      
+        <link rel="next" href="../summary/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -356,18 +360,340 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
   
   <span class="md-ellipsis">
     API
   </span>
   
 
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            API
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../io/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    IO
+  </span>
+  
+
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../isoslam/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Isoslam
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../logging/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Logging
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Processing
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Processing
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#isoslam.processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      processing
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#isoslam.processing.create_parser" class="md-nav__link">
+    <span class="md-ellipsis">
+      create_parser
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="create_parser">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.processing.create_parser--returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#isoslam.processing.entry_point" class="md-nav__link">
+    <span class="md-ellipsis">
+      entry_point
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="entry_point">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.processing.entry_point--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.processing.entry_point--returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#isoslam.processing.process" class="md-nav__link">
+    <span class="md-ellipsis">
+      process
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="process">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.processing.process--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.processing.process--returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#isoslam.processing.summarise_counts" class="md-nav__link">
+    <span class="md-ellipsis">
+      summarise_counts
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="summarise_counts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.processing.summarise_counts--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.processing.summarise_counts--returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../summary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Summary
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../utils/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Utils
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -414,6 +740,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="create_parser">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.processing.create_parser--returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -422,6 +763,30 @@
       entry_point
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="entry_point">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.processing.entry_point--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.processing.entry_point--returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -432,6 +797,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="process">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.processing.process--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.processing.process--returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -440,6 +829,30 @@
       summarise_counts
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="summarise_counts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.processing.summarise_counts--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.processing.summarise_counts--returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -503,29 +916,9 @@
 
         <p>Create a parser for reading options.</p>
 <p>Parser is created with multiple sub-parsers for eading options to run <code>isoslam</code>.</p>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="argparse.ArgumentParser">ArgumentParser</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Argument parser.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+<h4 id="isoslam.processing.create_parser--returns">Returns</h4>
+<p>arg.ArgumentParser
+    Argument parser.</p>
 
             <details class="quote">
               <summary>Source code in <code>isoslam/processing.py</code></summary>
@@ -868,76 +1261,14 @@
         <p>Entry point for all IsoSLAM programs.</p>
 <p>Main entry point for running 'isoslam' which allows the different processing, plotting and testing modules to be
 run.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>manually_provided_args</code>
-            </td>
-            <td>
-                  <code>None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Manually provided arguments.</p>
-              </div>
-            </td>
-            <td>
-                  <code>None</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>testing</code>
-            </td>
-            <td>
-                  <code>bool</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Whether testing is being carried out.</p>
-              </div>
-            </td>
-            <td>
-                  <code>False</code>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code>None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Function does not return anything.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+<h4 id="isoslam.processing.entry_point--parameters">Parameters</h4>
+<p>manually_provided_args : None
+    Manually provided arguments.
+testing : bool
+    Whether testing is being carried out.</p>
+<h4 id="isoslam.processing.entry_point--returns">Returns</h4>
+<p>None
+    Function does not return anything.</p>
 
             <details class="quote">
               <summary>Source code in <code>isoslam/processing.py</code></summary>
@@ -1026,60 +1357,12 @@ run.</p>
     <div class="doc doc-contents ">
 
         <p>Process a set of files.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>args</code>
-            </td>
-            <td>
-                  <code><span title="argparse.Namespace">Namespace</span> | None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Arguments function was invoked with.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code>None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Function does not return anything.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+<h4 id="isoslam.processing.process--parameters">Parameters</h4>
+<p>args : arg.Namespace | None
+    Arguments function was invoked with.</p>
+<h4 id="isoslam.processing.process--returns">Returns</h4>
+<p>None
+    Function does not return anything.</p>
 
             <details class="quote">
               <summary>Source code in <code>isoslam/processing.py</code></summary>
@@ -1134,60 +1417,12 @@ run.</p>
         <p>Take a set of output files and summarise the number of conversions.</p>
 <p>Counts are made within file, chromosome, transcript, start, end, assignment and whether there is one or more
 conversion observed.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>args</code>
-            </td>
-            <td>
-                  <code><span title="argparse.Namespace">Namespace</span> | None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Arguments function was invoked with.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code>None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Function does not return anything.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+<h4 id="isoslam.processing.summarise_counts--parameters">Parameters</h4>
+<p>args : arg.Namespace | None
+    Arguments function was invoked with.</p>
+<h4 id="isoslam.processing.summarise_counts--returns">Returns</h4>
+<p>None
+    Function does not return anything.</p>
 
             <details class="quote">
               <summary>Source code in <code>isoslam/processing.py</code></summary>
@@ -1264,7 +1499,12 @@ conversion observed.</p>
 
     </div>
 
-</div>
+</div><p>handler: python
+options:
+docstring_style:
+numpy
+rendering:
+show_signature_annotations: true</p>
 
 
 

@@ -11,6 +11,10 @@
         <link rel="canonical" href="https://sudlab.github.io/IsoSLAM/api/isoslam/">
       
       
+        <link rel="prev" href="../io/">
+      
+      
+        <link rel="next" href="../logging/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -18,7 +22,7 @@
     
     
       
-        <title>IsoSLAM - IsoSLAM</title>
+        <title>Isoslam - IsoSLAM</title>
       
     
     
@@ -102,7 +106,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              IsoSLAM
+              Isoslam
             
           </span>
         </div>
@@ -356,18 +360,382 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
   
   <span class="md-ellipsis">
     API
   </span>
   
 
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            API
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../io/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    IO
+  </span>
+  
+
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Isoslam
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Isoslam
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#isoslam.isoslam" class="md-nav__link">
+    <span class="md-ellipsis">
+      isoslam
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#isoslam.isoslam.extract_features_from_pair" class="md-nav__link">
+    <span class="md-ellipsis">
+      extract_features_from_pair
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="extract_features_from_pair">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.isoslam.extract_features_from_pair--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.isoslam.extract_features_from_pair--returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#isoslam.isoslam.extract_features_from_read" class="md-nav__link">
+    <span class="md-ellipsis">
+      extract_features_from_read
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="extract_features_from_read">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.isoslam.extract_features_from_read--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.isoslam.extract_features_from_read--returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#isoslam.isoslam.extract_segment_pairs" class="md-nav__link">
+    <span class="md-ellipsis">
+      extract_segment_pairs
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="extract_segment_pairs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.isoslam.extract_segment_pairs--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.isoslam.extract_segment_pairs--yields" class="md-nav__link">
+    <span class="md-ellipsis">
+      Yields
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#isoslam.isoslam.extract_strand_transcript" class="md-nav__link">
+    <span class="md-ellipsis">
+      extract_strand_transcript
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="extract_strand_transcript">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.isoslam.extract_strand_transcript--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.isoslam.extract_strand_transcript--returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#isoslam.isoslam.extract_transcripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      extract_transcripts
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="extract_transcripts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.isoslam.extract_transcripts--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.isoslam.extract_transcripts--returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../logging/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Logging
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../processing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Processing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../summary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Summary
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../utils/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Utils
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -414,6 +782,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="extract_features_from_pair">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.isoslam.extract_features_from_pair--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.isoslam.extract_features_from_pair--returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -422,6 +814,30 @@
       extract_features_from_read
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="extract_features_from_read">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.isoslam.extract_features_from_read--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.isoslam.extract_features_from_read--returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -432,6 +848,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="extract_segment_pairs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.isoslam.extract_segment_pairs--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.isoslam.extract_segment_pairs--yields" class="md-nav__link">
+    <span class="md-ellipsis">
+      Yields
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -441,6 +881,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="extract_strand_transcript">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.isoslam.extract_strand_transcript--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.isoslam.extract_strand_transcript--returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -449,6 +913,30 @@
       extract_transcripts
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="extract_transcripts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.isoslam.extract_transcripts--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.isoslam.extract_transcripts--returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -512,60 +1000,12 @@
     <div class="doc doc-contents ">
 
         <p>Extract features from a pair of reads.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>pair</code>
-            </td>
-            <td>
-                  <code>list[<span title="pysam.AlignedSegment">AlignedSegment</span>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>A list of two aligned segments from <code>pysam</code>.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code>dic[str, dict[str, <span title="typing.Any">Any</span>]]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Returns a nested dictionaries of the <code>start</code>, <code>end</code> and <code>length</code> of each read.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+<h4 id="isoslam.isoslam.extract_features_from_pair--parameters">Parameters</h4>
+<p>pair : list[AlignedSegment]
+    A list of two aligned segments from <code>pysam</code>.</p>
+<h4 id="isoslam.isoslam.extract_features_from_pair--returns">Returns</h4>
+<p>dic[str, dict[str, Any]]
+    Returns a nested dictionaries of the <code>start</code>, <code>end</code> and <code>length</code> of each read.</p>
 
             <details class="quote">
               <summary>Source code in <code>isoslam/isoslam.py</code></summary>
@@ -622,60 +1062,12 @@
     <div class="doc doc-contents ">
 
         <p>Extract start, end and length from an aligned segment read.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>read</code>
-            </td>
-            <td>
-                  <code><span title="pysam.AlignedSegment">AlignedSegment</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>An aligned segment read from <code>pysam</code>.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code>dict[str, <span title="typing.Any">Any</span>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Dictionary of <code>start</code>, <code>end</code> and <code>length</code> of the segment.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+<h4 id="isoslam.isoslam.extract_features_from_read--parameters">Parameters</h4>
+<p>read : AlignedSegment
+    An aligned segment read from <code>pysam</code>.</p>
+<h4 id="isoslam.isoslam.extract_features_from_read--returns">Returns</h4>
+<p>dict[str, Any]
+    Dictionary of <code>start</code>, <code>end</code> and <code>length</code> of the segment.</p>
 
             <details class="quote">
               <summary>Source code in <code>isoslam/isoslam.py</code></summary>
@@ -762,60 +1154,12 @@
         <p>Extract pairs of AlignedSegments from a <code>.bam</code> file.</p>
 <p>When there are two adjacent <code>AlignedSegments</code> with the same <code>query_name</code> only the first is paired, subsequent
 segments are dropped.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>bam_file</code>
-            </td>
-            <td>
-                  <code>str | <span title="pathlib.Path">Path</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Path to a <code>.bam</code> file.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Yields:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="collections.abc.Generator">Generator</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Itterable of paired segments.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+<h4 id="isoslam.isoslam.extract_segment_pairs--parameters">Parameters</h4>
+<p>bam_file : str | Path
+    Path to a <code>.bam</code> file.</p>
+<h4 id="isoslam.isoslam.extract_segment_pairs--yields">Yields</h4>
+<p>Generator
+    Itterable of paired segments.</p>
 
             <details class="quote">
               <summary>Source code in <code>isoslam/isoslam.py</code></summary>
@@ -894,61 +1238,13 @@ segments are dropped.</p>
     <div class="doc doc-contents ">
 
         <p>Extract strand and transcript ID data from <code>.gtf</code> file.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>gtf_file</code>
-            </td>
-            <td>
-                  <code><span title="pathlib.Path">Path</span> | str</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Path to a 'gtf' file.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code>tuple[dict[str, tuple[str]], dict[str, tuple[str]]]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Two dictionaries are returned, one of the <code>strand</code> the other of the <code>transcript_id</code> both using the
-<code>gene_id</code> as the key.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+<h4 id="isoslam.isoslam.extract_strand_transcript--parameters">Parameters</h4>
+<p>gtf_file : Path | str
+    Path to a 'gtf' file.</p>
+<h4 id="isoslam.isoslam.extract_strand_transcript--returns">Returns</h4>
+<p>tuple[dict[str, tuple[str]], dict[str, tuple[str]]]
+    Two dictionaries are returned, one of the <code>strand</code> the other of the <code>transcript_id</code> both using the
+    <code>gene_id</code> as the key.</p>
 
             <details class="quote">
               <summary>Source code in <code>isoslam/isoslam.py</code></summary>
@@ -1017,61 +1313,13 @@ segments are dropped.</p>
     <div class="doc doc-contents ">
 
         <p>Extract features from <code>.bed</code> file and return as a dictionary indexed by <code>transcript_id</code>.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>bed_file</code>
-            </td>
-            <td>
-                  <code>str | <span title="pathlib.Path">Path</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Path, as string or pathlib Path, to a <code>.bed</code> file.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code>dict[<span title="typing.Any">Any</span>, list[tuple[<span title="typing.Any">Any</span>, int, int, <span title="typing.Any">Any</span>, <span title="typing.Any">Any</span>]]]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Dictionary of <code>chromosome</code>, <code>start</code>, <code>end</code>, <code>transcript_id</code> and <code>bedstrand</code> indexed by
-<code>transcript_id</code>.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+<h4 id="isoslam.isoslam.extract_transcripts--parameters">Parameters</h4>
+<p>bed_file : str | Path
+    Path, as string or pathlib Path, to a <code>.bed</code> file.</p>
+<h4 id="isoslam.isoslam.extract_transcripts--returns">Returns</h4>
+<p>dict[Any, list[tuple[Any, int, int, Any, Any]]]
+    Dictionary of <code>chromosome</code>, <code>start</code>, <code>end</code>, <code>transcript_id</code> and <code>bedstrand</code> indexed by
+    <code>transcript_id</code>.</p>
 
             <details class="quote">
               <summary>Source code in <code>isoslam/isoslam.py</code></summary>
@@ -1146,7 +1394,12 @@ segments are dropped.</p>
 
     </div>
 
-</div>
+</div><p>handler: python
+options:
+docstring_style:
+numpy
+rendering:
+show_signature_annotations: true</p>
 
 
 

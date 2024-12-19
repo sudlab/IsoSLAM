@@ -11,6 +11,10 @@
         <link rel="canonical" href="https://sudlab.github.io/IsoSLAM/api/io/">
       
       
+        <link rel="prev" href="../../extending/">
+      
+      
+        <link rel="next" href="../isoslam/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -18,7 +22,7 @@
     
     
       
-        <title>IO Modules - IsoSLAM</title>
+        <title>IO - IsoSLAM</title>
       
     
     
@@ -102,7 +106,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              IO Modules
+              IO
             
           </span>
         </div>
@@ -356,18 +360,421 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
   
   <span class="md-ellipsis">
     API
   </span>
   
 
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            API
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    IO
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    IO
+  </span>
+  
+
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#isoslam.io" class="md-nav__link">
+    <span class="md-ellipsis">
+      io
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#isoslam.io.create_config" class="md-nav__link">
+    <span class="md-ellipsis">
+      create_config
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="create_config">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.io.create_config--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#isoslam.io.data_frame_to_file" class="md-nav__link">
+    <span class="md-ellipsis">
+      data_frame_to_file
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="data_frame_to_file">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.io.data_frame_to_file--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#isoslam.io.load_and_update_config" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_and_update_config
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="load_and_update_config">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.io.load_and_update_config--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.io.load_and_update_config--returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#isoslam.io.load_file" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_file
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="load_file">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.io.load_file--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.io.load_file--returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#isoslam.io.load_files" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_files
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="load_files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.io.load_files--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.io.load_files--returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#isoslam.io.read_yaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      read_yaml
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="read_yaml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.io.read_yaml--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.io.read_yaml--returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#isoslam.io.write_yaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      write_yaml
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="write_yaml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.io.write_yaml--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../isoslam/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Isoslam
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../logging/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Logging
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../processing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Processing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../summary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Summary
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../utils/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Utils
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -414,6 +821,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="create_config">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.io.create_config--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -422,6 +844,21 @@
       data_frame_to_file
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="data_frame_to_file">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.io.data_frame_to_file--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -432,6 +869,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="load_and_update_config">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.io.load_and_update_config--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.io.load_and_update_config--returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -440,6 +901,30 @@
       load_file
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="load_file">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.io.load_file--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.io.load_file--returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -450,6 +935,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="load_files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.io.load_files--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.io.load_files--returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -459,6 +968,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="read_yaml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.io.read_yaml--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.io.read_yaml--returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -467,6 +1000,21 @@
       write_yaml
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="write_yaml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isoslam.io.write_yaml--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -529,37 +1077,9 @@
     <div class="doc doc-contents ">
 
         <p>Write the default configuration file to disk.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>args</code>
-            </td>
-            <td>
-                  <code><span title="argparse.Namespace">Namespace</span> | None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Optional arguments to parse.</p>
-              </div>
-            </td>
-            <td>
-                  <code>None</code>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+<h4 id="isoslam.io.create_config--parameters">Parameters</h4>
+<p>args : argparse.Namespace | None
+    Optional arguments to parse.</p>
 
             <details class="quote">
               <summary>Source code in <code>isoslam/io.py</code></summary>
@@ -632,101 +1152,17 @@
     <div class="doc doc-contents ">
 
         <p>Write a Pandas DataFrame to disk.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>data</code>
-            </td>
-            <td>
-                  <code><span title="pandas.DataFrame">DataFrame</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Pandas DataFrame to write to disk.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>output_dir</code>
-            </td>
-            <td>
-                  <code>str | <span title="pathlib.Path">Path</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Location to write the output to, default is ''./output''.capitalize.</p>
-              </div>
-            </td>
-            <td>
-                  <code>&#39;./output/&#39;</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>outfile</code>
-            </td>
-            <td>
-                  <code>str</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Filename to write data to.</p>
-              </div>
-            </td>
-            <td>
-                  <code>&#39;summary_counts.csv&#39;</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>sep</code>
-            </td>
-            <td>
-                  <code>str</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Separator to use in output file.</p>
-              </div>
-            </td>
-            <td>
-                  <code>&#39;\t&#39;</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>**kwargs</code>
-            </td>
-            <td>
-                  <code>dict[<span title="typing.Any">Any</span>, <span title="typing.Any">Any</span>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Dictionary of keyword arguments to pass to ''pandas.DataFrame.to_csv()''.</p>
-              </div>
-            </td>
-            <td>
-                  <code>{}</code>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+<h4 id="isoslam.io.data_frame_to_file--parameters">Parameters</h4>
+<p>data : pd.DataFrame
+    Pandas DataFrame to write to disk.
+output_dir : str | Path
+    Location to write the output to, default is ''./output''.capitalize.
+outfile : str
+    Filename to write data to.
+sep : str
+    Separator to use in output file.
+**kwargs
+    Dictionary of keyword arguments to pass to ''pandas.DataFrame.to_csv()''.</p>
 
             <details class="quote">
               <summary>Source code in <code>isoslam/io.py</code></summary>
@@ -802,60 +1238,12 @@
 <p>If ''args'' does not contain any value for ''args.config_file'' the default configuration
 (''isoslam/default_config.yaml'') is loaded, otherwise the user specified configuration is loaded.</p>
 <p>Once the configuration is loaded any user specified options update the dictionary.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>args</code>
-            </td>
-            <td>
-                  <code><span title="argparse.Namespace">Namespace</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Arguments supplied by user.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code>dict[str:<span title="typing.Any">Any</span>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Dictionary of configuration optionsupdated with user specified options.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+<h4 id="isoslam.io.load_and_update_config--parameters">Parameters</h4>
+<p>args : argparse.Namespace
+    Arguments supplied by user.</p>
+<h4 id="isoslam.io.load_and_update_config--returns">Returns</h4>
+<p>dict[str: Any]
+    Dictionary of configuration optionsupdated with user specified options.</p>
 
             <details class="quote">
               <summary>Source code in <code>isoslam/io.py</code></summary>
@@ -925,60 +1313,12 @@
 <li><code>.gtf</code> - Transcript structures from which the <code>.bed</code> file is derived.</li>
 <li><code>.vcf</code> - Locations of known sequences difference from the reference sequence.</li>
 </ul>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>file_path</code>
-            </td>
-            <td>
-                  <code>str | <span title="pathlib.Path">Path</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Path to file to load.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="typing.Any">Any</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Returns the loaded file as an object.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+<h4 id="isoslam.io.load_file--parameters">Parameters</h4>
+<p>file_path : str | Path
+    Path to file to load.</p>
+<h4 id="isoslam.io.load_file--returns">Returns</h4>
+<p>Any
+    Returns the loaded file as an object.</p>
 
             <details class="quote">
               <summary>Source code in <code>isoslam/io.py</code></summary>
@@ -1051,76 +1391,14 @@
     <div class="doc doc-contents ">
 
         <p>Read a set of files into a list of Pandas DataFrames.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>pattern</code>
-            </td>
-            <td>
-                  <code>str</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>File name pattern to search for.</p>
-              </div>
-            </td>
-            <td>
-                  <code>&#39;**/*.tsv&#39;</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>sep</code>
-            </td>
-            <td>
-                  <code>str</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Separator/delimiter used in files.</p>
-              </div>
-            </td>
-            <td>
-                  <code>&#39;\t&#39;</code>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code>list[<span title="pandas.DataFrame">DataFrame</span>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>A list of Pandas DataFrames of each file found.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+<h4 id="isoslam.io.load_files--parameters">Parameters</h4>
+<p>pattern : str
+    File name pattern to search for.
+sep : str
+    Separator/delimiter used in files.</p>
+<h4 id="isoslam.io.load_files--returns">Returns</h4>
+<p>list[pd.DataFrame]
+    A list of Pandas DataFrames of each file found.</p>
 
             <details class="quote">
               <summary>Source code in <code>isoslam/io.py</code></summary>
@@ -1175,60 +1453,12 @@
     <div class="doc doc-contents ">
 
         <p>Read a YAML file.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>filename</code>
-            </td>
-            <td>
-                  <code>Union[str, <span title="pathlib.Path">Path</span>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>YAML file to read.</p>
-              </div>
-            </td>
-            <td>
-                  <code>None</code>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code>Dict</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Dictionary of the file.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+<h4 id="isoslam.io.read_yaml--parameters">Parameters</h4>
+<p>filename : Union[str, Path]
+    YAML file to read.</p>
+<h4 id="isoslam.io.read_yaml--returns">Returns</h4>
+<p>Dict
+    Dictionary of the file.</p>
 
             <details class="quote">
               <summary>Source code in <code>isoslam/io.py</code></summary>
@@ -1295,85 +1525,15 @@
     <div class="doc doc-contents ">
 
         <p>Write a configuration (stored as a dictionary) to a YAML file.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>config</code>
-            </td>
-            <td>
-                  <code>dict</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Configuration dictionary.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>output_dir</code>
-            </td>
-            <td>
-                  <code>Union[str, <span title="pathlib.Path">Path</span>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Path to save the dictionary to as a YAML file (it will be called 'config.yaml').</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>config_file</code>
-            </td>
-            <td>
-                  <code>str</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Filename to write to.</p>
-              </div>
-            </td>
-            <td>
-                  <code>&#39;config.yaml&#39;</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>header_message</code>
-            </td>
-            <td>
-                  <code>str</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>String to write to the header message of the YAML file.</p>
-              </div>
-            </td>
-            <td>
-                  <code>None</code>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+<h4 id="isoslam.io.write_yaml--parameters">Parameters</h4>
+<p>config : dict
+    Configuration dictionary.
+output_dir : Union[str, Path]
+    Path to save the dictionary to as a YAML file (it will be called 'config.yaml').
+config_file : str
+    Filename to write to.
+header_message : str
+    String to write to the header message of the YAML file.</p>
 
             <details class="quote">
               <summary>Source code in <code>isoslam/io.py</code></summary>
@@ -1460,7 +1620,12 @@
 
     </div>
 
-</div>
+</div><p>handler: python
+options:
+docstring_style:
+numpy
+rendering:
+show_signature_annotations: true</p>
 
 
 
