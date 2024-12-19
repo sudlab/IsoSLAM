@@ -12,6 +12,15 @@ jobs:
       - name: Checkout master
         uses: actions/checkout@v1
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+
+      - name: Install package and dependencies
+        run: |
+          pip3 install .[docs]
+
       - name: Deploy docs
         uses: mhausenblas/mkdocs-deploy-gh-pages@master
         env:
