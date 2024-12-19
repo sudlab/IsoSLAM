@@ -1,0 +1,5 @@
+# IsoSLAM
+
+This module contains the main functions that constitute the IsoSLAM package.
+
+<!-- {{ auto_module("isoslam.isoslam") }} -->

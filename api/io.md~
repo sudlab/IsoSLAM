@@ -1,0 +1,7 @@
+# IO Modules
+
+This module is concerned with input/output operations
+
+::: isoslam.io
+
+<!-- {{ auto_module("isoslam.io") }} -->

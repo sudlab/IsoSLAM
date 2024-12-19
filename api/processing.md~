@@ -1,0 +1,5 @@
+# Processing
+
+This module handles the entry point and command line arguments and sub-commands.
+
+<!-- {{ auto_module("isoslam.processing") }} -->
