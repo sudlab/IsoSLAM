@@ -1,4 +1,4 @@
-"""Configure logging."""
+"""Setup and configure logging."""
 
 import sys
 

@@ -24,7 +24,7 @@ def extract_transcripts(bed_file: str | Path) -> dict[Any, list[tuple[Any, int, 
     -------
     dict[Any, list[tuple[Any, int, int, Any, Any]]]
         Dictionary of ``chromosome``, ``start``, ``end``, ``transcript_id`` and ``bedstrand`` indexed by
-       ``transcript_id``.
+        ``transcript_id``.
     """
     coordinates = defaultdict(list)
     for line in io.load_file(bed_file):

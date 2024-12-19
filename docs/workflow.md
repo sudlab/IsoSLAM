@@ -5,9 +5,6 @@ This page gives an overview of the workflow undertaken by IsoSLAM.
 **WORK IN PROGRESS** - This is very much a work in progress and is not yet complete. Contributions are welcome.
 
 ```{mermaid}
-%%{init: {'theme': 'base', 'gitGraph': {'rotateCommitLabel': true}
-         }
-}%%
 graph TD;
 
   subgraph input

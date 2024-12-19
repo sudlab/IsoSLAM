@@ -59,7 +59,7 @@ pip install --no-cache-dir -e .[docs,dev]
 ## Git
 
 [Git][git] is used to version control development of the package. The `main` branch on GitHub and the [pre-commit
-hooks](contributing#pre-commit) have protections in place that prevent committing/pushing directly to the `main`
+hooks](#pre-commit) have protections in place that prevent committing/pushing directly to the `main`
 branch. This means you should create a branch to undertake development or fix bugs.
 
 ### Issues
