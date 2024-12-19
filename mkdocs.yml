@@ -1,0 +1,38 @@
+site_name: IsoSLAM
+site_url: https://sudlab.github.io/IsoSLAM/
+repo_url: https://github.com/sudlab/IsoSLAM/
+theme:
+  name: material
+nav:
+  - Home: index.md
+  - Introduction: introduction.md
+  - Installation: installation.md
+  - Usage: usage.md
+  - Workflow: workflow.md
+  - Contributing: contributing.md
+  - Extending: extending.md
+  - API:
+      - IO: api/io.md
+      - Isoslam: api/isoslam.md
+      - Logging: api/logging.md
+      - Processing: api/processing.md
+      - Summary: api/summary.md
+      - Utils: api/utils.md
+
+extra:
+  version:
+    provider: mike
+
+plugins:
+  - mermaid2
+  - search
+  - mkdocstrings
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences

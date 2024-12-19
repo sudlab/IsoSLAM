@@ -59,16 +59,10 @@ tests = [
   "syrupy",
 ]
 docs = [
-  "Sphinx",
-  "myst_parser",
-  "numpydoc",
-  "pydata_sphinx_theme",
-  "sphinx-autoapi",
-  "sphinx-multiversion",
-  "sphinx_markdown_tables",
-  "sphinx_rtd_theme",
-  "sphinxcontrib-mermaid",
-  "sphinxcontrib-napoleon",
+  "mkdocs",
+  "mkdocs-material",
+  "mkdocs-mermaid2-plugin",
+  "mkdocstrings[python]",
 ]
 dev = [
   "black",

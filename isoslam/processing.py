@@ -1,4 +1,4 @@
-"""Functions for Processing."""
+"""Entry point, sub-parsers and arguments and processing functions."""
 
 import argparse as arg
 import sys

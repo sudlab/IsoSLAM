@@ -1,4 +1,4 @@
-"""Module for reading files."""
+"""Module for reading and writing files."""
 
 import argparse
 import gzip
@@ -192,17 +192,10 @@ def load_file(file_path: str | Path) -> Any:
 
     Supports the following file types...
 
-    +----------+--------------------------------------------------------------------------+
-    | File     | Description                                                              |
-    +==========+==========================================================================+
-    | ``.bam`` | The sequence data that is to be analysed.                                |
-    +----------+--------------------------------------------------------------------------+
-    | ``.bed`` | The locations of introns/splice junctions.                               |
-    +----------+--------------------------------------------------------------------------+
-    | ``.gtf`` | Transcript structures from which the ``.bed`` file is derived.           |
-    +----------+--------------------------------------------------------------------------+
-    | ``.vcf`` | Locations of known sequences difference from the reference sequence.     |
-    +----------+--------------------------------------------------------------------------+
+    * ``.bam`` - The sequence data that is to be analysed.
+    * ``.bed`` - The locations of introns/splice junctions.
+    * ``.gtf`` - Transcript structures from which the ``.bed`` file is derived.
+    * ``.vcf`` - Locations of known sequences difference from the reference sequence.
 
     Parameters
     ----------
