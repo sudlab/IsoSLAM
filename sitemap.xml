@@ -1,59 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://sudlab.github.io/IsoSLAM/</loc>
+         <loc>https://sudlab.github.io/IsoSLAM/main/</loc>
          <lastmod>2024-12-19</lastmod>
     </url>
     <url>
-         <loc>https://sudlab.github.io/IsoSLAM/api/</loc>
+         <loc>https://sudlab.github.io/IsoSLAM/main/api/</loc>
          <lastmod>2024-12-19</lastmod>
     </url>
     <url>
-         <loc>https://sudlab.github.io/IsoSLAM/contributing/</loc>
+         <loc>https://sudlab.github.io/IsoSLAM/main/contributing/</loc>
          <lastmod>2024-12-19</lastmod>
     </url>
     <url>
-         <loc>https://sudlab.github.io/IsoSLAM/extending/</loc>
+         <loc>https://sudlab.github.io/IsoSLAM/main/extending/</loc>
          <lastmod>2024-12-19</lastmod>
     </url>
     <url>
-         <loc>https://sudlab.github.io/IsoSLAM/installation/</loc>
+         <loc>https://sudlab.github.io/IsoSLAM/main/installation/</loc>
          <lastmod>2024-12-19</lastmod>
     </url>
     <url>
-         <loc>https://sudlab.github.io/IsoSLAM/introduction/</loc>
+         <loc>https://sudlab.github.io/IsoSLAM/main/introduction/</loc>
          <lastmod>2024-12-19</lastmod>
     </url>
     <url>
-         <loc>https://sudlab.github.io/IsoSLAM/usage/</loc>
+         <loc>https://sudlab.github.io/IsoSLAM/main/usage/</loc>
          <lastmod>2024-12-19</lastmod>
     </url>
     <url>
-         <loc>https://sudlab.github.io/IsoSLAM/workflow/</loc>
+         <loc>https://sudlab.github.io/IsoSLAM/main/workflow/</loc>
          <lastmod>2024-12-19</lastmod>
     </url>
     <url>
-         <loc>https://sudlab.github.io/IsoSLAM/api/io/</loc>
+         <loc>https://sudlab.github.io/IsoSLAM/main/api/io/</loc>
          <lastmod>2024-12-19</lastmod>
     </url>
     <url>
-         <loc>https://sudlab.github.io/IsoSLAM/api/isoslam/</loc>
+         <loc>https://sudlab.github.io/IsoSLAM/main/api/isoslam/</loc>
          <lastmod>2024-12-19</lastmod>
     </url>
     <url>
-         <loc>https://sudlab.github.io/IsoSLAM/api/logging/</loc>
+         <loc>https://sudlab.github.io/IsoSLAM/main/api/logging/</loc>
          <lastmod>2024-12-19</lastmod>
     </url>
     <url>
-         <loc>https://sudlab.github.io/IsoSLAM/api/processing/</loc>
+         <loc>https://sudlab.github.io/IsoSLAM/main/api/processing/</loc>
          <lastmod>2024-12-19</lastmod>
     </url>
     <url>
-         <loc>https://sudlab.github.io/IsoSLAM/api/summary/</loc>
+         <loc>https://sudlab.github.io/IsoSLAM/main/api/summary/</loc>
          <lastmod>2024-12-19</lastmod>
     </url>
     <url>
-         <loc>https://sudlab.github.io/IsoSLAM/api/utils/</loc>
+         <loc>https://sudlab.github.io/IsoSLAM/main/api/utils/</loc>
          <lastmod>2024-12-19</lastmod>
     </url>
 </urlset>
