@@ -185,6 +185,30 @@ def test_load_bed(file_path: str | Path, object_type: TextIO) -> None:
 
 
 @pytest.mark.parametrize(
+    ("file_path", "object_type", "row1"),
+    [
+        pytest.param(
+            RESOURCES / "bed" / "test_coding_introns.bed",
+            dict,
+            {"chr": 9, "start": 25004, "end": 29601, "bedstrand": 0},
+            id="bed file as Path",
+        ),
+        pytest.param(
+            "tests/resources/bed/test_coding_introns.bed",
+            dict,
+            {"chr": 9, "start": 25004, "end": 29601, "bedstrand": 0},
+            id="bed file as str",
+        ),
+    ],
+)
+def test_bed_to_dictionary(file_path: str | Path, object_type: TextIO, row1: tuple[int, str]) -> None:
+    """Test loading of bed file."""
+    bed_file = io._bed_to_dictionary(file_path)
+    assert isinstance(bed_file, object_type)
+    assert bed_file["ENST00000442898_intron"] == row1
+
+
+@pytest.mark.parametrize(
     ("file_path", "object_type"),
     [
         pytest.param(
@@ -222,7 +246,7 @@ def test_load_vcf(
     ("file_ext", "function"),
     [
         pytest.param(".bam", io._load_bam, id="bam extension"),
-        pytest.param(".bed", io._load_bed, id="bed extension"),
+        pytest.param(".bed", io._bed_to_dictionary, id="bed extension"),
         pytest.param(".gtf", io._load_gtf, id="gtf extension"),
         pytest.param(".vcf", io._load_vcf, id="vcf extension"),
         pytest.param(".vcf.gz", io._load_vcf, id="vcf.gz extension"),

@@ -1,6 +1,7 @@
 """Module for reading and writing files."""
 
 import argparse
+import csv
 import gzip
 from collections.abc import Callable, Generator
 from datetime import datetime
@@ -236,7 +237,7 @@ def _get_loader(file_ext: str = "bam") -> Callable:  # type: ignore[type-arg]
     if file_ext == ".bam":
         return _load_bam
     if file_ext in (".bed", ".bed.gz"):
-        return _load_bed
+        return _bed_to_dictionary
     if file_ext == ".gtf":
         return _load_gtf
     if file_ext in (".vcf", ".vcf.gz"):
@@ -288,6 +289,37 @@ def _load_bed(bed_file: str | Path) -> TextIO:
         return Path(bed_file).open(mode="r", encoding="utf-8")
     except OSError as e:
         raise e
+
+
+def _bed_to_dictionary(bed_file: str | Path) -> dict[str, dict[str, int | str]]:
+    """
+    Convert a connection to a ``.bed`` file to a dictionary indexed by ``transcript_id``.
+
+    ``.bed`` files are tab-delimited with the following columns (which correspond the to columns returned by
+    ``csv.DictReader()``)
+
+    0 chromosome
+    1 start
+    2 end
+    3 transcript_id
+    4 bedstrand
+
+    Parameters
+    ----------
+    bed_file : str | Path
+        Path to a ``.bed`` file.
+
+    Returns
+    -------
+    dict[str, tuple]
+        A dictionary of chromosome information indexed by ``transcript_id``.
+    """
+    # ns-rse 2024-12-20 : Unsure why transcript_id (entry[3]) is in the tuple as well as being key?
+    with _load_bed(bed_file) as bedfile:
+        return {
+            entry[3]: {"chr": int(entry[0]), "start": int(entry[1]), "end": int(entry[2]), "bedstrand": int(entry[4])}
+            for entry in csv.reader(bedfile, delimiter="\t")
+        }
 
 
 def _load_gtf(gtf_file: str | Path) -> pysam.libctabix.tabix_generic_iterator:
