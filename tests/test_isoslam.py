@@ -232,3 +232,50 @@ def test_extract_features_from_pair(
     )
     assert isinstance(read_pair, dict)
     assert read_pair == expected
+
+
+@pytest.mark.parametrize(
+    ("aligned_segment", "transcript_id", "length"),
+    [
+        pytest.param(  # type: ignore[misc]
+            "aligned_segment_unassigned_28584",
+            "",
+            0,
+            id="28584 - Assignment and Transcript are None",
+        ),
+        pytest.param(
+            "aligned_segment_assigned_17814",
+            "ENST00000442898",
+            10,
+            id="17814 - Assigned to MSTRG.63147",
+        ),
+        pytest.param(
+            "aligned_segment_assigned_14770",
+            "ENST00000442898",
+            10,
+            id="14770 - Assigned to MSTRG.63147",
+        ),
+        pytest.param(
+            "aligned_segment_assigned_15967",
+            "ENST00000442898",
+            10,
+            id="15967 - Assigned to MSTRG.63147",
+        ),
+    ],
+)
+def test_extract_utron(
+    aligned_segment: str,
+    transcript_id: str,
+    length: int,
+    extract_transcript: dict[str, list[int | str]],
+    extract_strand_transcript: tuple[dict[str, list[Any]], dict[str, str]],
+    request: pytest.FixtureRequest,
+) -> None:
+    """Test extraction of the untranslated regions using extract_utron()."""
+    segment = isoslam.extract_features_from_read(request.getfixturevalue(aligned_segment))
+    _, gene_transcript = extract_strand_transcript
+    untranslated_region = isoslam.extract_utron(segment, gene_transcript, coordinates=extract_transcript)
+    assert isinstance(untranslated_region, list)
+    assert len(untranslated_region) == length
+    if len(untranslated_region):
+        assert untranslated_region[0][3] == transcript_id  # type: ignore[misc]

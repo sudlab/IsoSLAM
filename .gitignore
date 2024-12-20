@@ -178,4 +178,8 @@ cython_debug/
 # pytest-testmon
 .testmon*
 
+# Misc
 tmp/
+data/
+bin/
+output/

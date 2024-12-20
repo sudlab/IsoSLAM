@@ -3,10 +3,11 @@
 from pathlib import Path
 from typing import Any
 
+import pysam
 import pytest
 from pysam import AlignedSegment, AlignmentFile
 
-from isoslam import io
+from isoslam import io, isoslam
 
 BASE_DIR = Path.cwd()
 TEST_DIR = BASE_DIR / "tests"
@@ -36,6 +37,30 @@ def bam_file2() -> AlignmentFile:
 def bam_unaligned_file1() -> AlignmentFile:
     """Load an unsorted and unassigned ``.bam`` file (ignore the filename!)."""
     return io.load_file(BAM_DIR / "d0_no4sU_filtered_remapped_sorted.bam")
+
+
+@pytest.fixture()
+def gtf_file() -> pysam.tabix_generic_iterator:
+    """Load a ``.gtf`` file."""
+    return io.load_file(GTF_DIR / "test_wash1.gtf")
+
+
+@pytest.fixture()
+def bed_file() -> dict:
+    """Load a ``.gtf`` file."""
+    return io.load_file(BED_DIR / "test_coding_introns.bed")
+
+
+@pytest.fixture()
+def extract_strand_transcript() -> tuple[dict, dict]:
+    """Tuple of dictionaries from ``.gtf`` file."""
+    return isoslam.extract_strand_transcript(GTF_DIR / "test_wash1.gtf")
+
+
+@pytest.fixture()
+def extract_transcript() -> dict:
+    """Extract dictionary of transcripts from ``.bed`` file."""
+    return isoslam.extract_transcripts(BED_DIR / "test_coding_introns.bed")
 
 
 @pytest.fixture()
