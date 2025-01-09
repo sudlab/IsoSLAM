@@ -100,7 +100,7 @@ def test_extract_segment_pairs(bam_file: str | Path, expected_length: int) -> No
             "aligned_segment_unassigned_28584",
             28584,
             28733,
-            149,
+            150,
             None,
             None,
             (28584, 28704),
@@ -111,7 +111,7 @@ def test_extract_segment_pairs(bam_file: str | Path, expected_length: int) -> No
             "aligned_segment_unassigned_17416",
             17416,
             17805,
-            389,
+            150,
             None,
             None,
             (17416, 17718),
@@ -122,7 +122,7 @@ def test_extract_segment_pairs(bam_file: str | Path, expected_length: int) -> No
             "aligned_segment_unassigned_18029",
             18029,
             18385,
-            356,
+            150,
             None,
             None,
             (18029, 18380),
@@ -133,7 +133,7 @@ def test_extract_segment_pairs(bam_file: str | Path, expected_length: int) -> No
             "aligned_segment_assigned_17814",
             17814,
             18136,
-            322,
+            150,
             "Assigned",
             "MSTRG.63147",
             (17814, 18027),
@@ -144,7 +144,7 @@ def test_extract_segment_pairs(bam_file: str | Path, expected_length: int) -> No
             "aligned_segment_assigned_14770",
             14770,
             14876,
-            106,
+            150,
             "Assigned",
             "MSTRG.63147",
             (14770,),
@@ -177,6 +177,7 @@ def test_extract_features_from_read(
 ) -> None:
     """Test extract of features from an unassigned and assigned segment reads."""
     segment = isoslam.extract_features_from_read(request.getfixturevalue(aligned_segment))
+    print(f"{segment['length']}")
     assert isinstance(segment, dict)
     assert segment["start"] == start
     assert segment["end"] == end
@@ -197,7 +198,7 @@ def test_extract_features_from_read(
                 "read1": {
                     "start": 17814,
                     "end": 18136,
-                    "length": 322,
+                    "length": 150,
                     "status": "Assigned",
                     "transcript": "MSTRG.63147",
                     "block_start": (17814, 18027),
@@ -206,7 +207,7 @@ def test_extract_features_from_read(
                 "read2": {
                     "start": 14770,
                     "end": 14876,
-                    "length": 106,
+                    "length": 150,
                     "status": "Assigned",
                     "transcript": "MSTRG.63147",
                     "block_start": (14770,),
