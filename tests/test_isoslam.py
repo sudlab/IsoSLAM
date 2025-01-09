@@ -162,6 +162,28 @@ def test_extract_segment_pairs(bam_file: str | Path, expected_length: int) -> No
             (16117,),
             id="15967 - Assigned to MSTRG.63147",
         ),
+        pytest.param(
+            "aligned_segment_assigned_21051",
+            21051,
+            21201,
+            150,
+            "Unassigned_NoFeatures",
+            None,
+            (21051,),
+            (21201,),
+            id="21051 - Unassigned",
+        ),
+        pytest.param(
+            "aligned_segment_assigned_20906",
+            20906,
+            21056,
+            150,
+            "Unassigned_NoFeatures",
+            None,
+            (20906,),
+            (21056,),
+            id="20906 - Unassigned",
+        ),
     ],
 )
 def test_extract_features_from_read(
@@ -177,7 +199,7 @@ def test_extract_features_from_read(
 ) -> None:
     """Test extract of features from an unassigned and assigned segment reads."""
     segment = isoslam.extract_features_from_read(request.getfixturevalue(aligned_segment))
-    print(f"{segment['length']}")
+    print(f"{segment=}")
     assert isinstance(segment, dict)
     assert segment["start"] == start
     assert segment["end"] == end
@@ -214,7 +236,32 @@ def test_extract_features_from_read(
                     "block_end": (14876,),
                 },
             },
-            id="28584 and 17416 - Assignment and Transcript are None",
+            id="28584 and 17416 - Assigned and transcript MSTRG.63147",
+        ),
+        pytest.param(
+            "aligned_segment_assigned_21051",
+            "aligned_segment_assigned_20906",
+            {
+                "read1": {
+                    "start": 21051,
+                    "end": 21201,
+                    "length": 150,
+                    "status": "Unassigned_NoFeatures",
+                    "transcript": None,
+                    "block_start": (21051,),
+                    "block_end": (21201,),
+                },
+                "read2": {
+                    "start": 20906,
+                    "end": 21056,
+                    "length": 150,
+                    "status": "Unassigned_NoFeatures",
+                    "transcript": None,
+                    "block_start": (20906,),
+                    "block_end": (21056,),
+                },
+            },
+            id="21051 and 21056 - Assignment and Transcript are None",
         ),
     ],
 )
@@ -262,6 +309,18 @@ def test_extract_features_from_pair(
             10,
             id="15967 - Assigned to MSTRG.63147",
         ),
+        pytest.param(
+            "aligned_segment_assigned_21051",
+            None,
+            0,
+            id="21051 - Unassigned",
+        ),
+        pytest.param(
+            "aligned_segment_assigned_20906",
+            None,
+            0,
+            id="20906 - Unassigned",
+        ),
     ],
 )
 def test_extract_utron(
@@ -308,6 +367,18 @@ def test_extract_utron(
             (15967,),
             (16117,),
             id="15967 - Assigned to MSTRG.63147",
+        ),
+        pytest.param(
+            "aligned_segment_assigned_21051",
+            (21051,),
+            (21201,),
+            id="21051 - Unassigned",
+        ),
+        pytest.param(
+            "aligned_segment_assigned_20906",
+            (20906,),
+            (21056,),
+            id="20906 - Unassigned",
         ),
     ],
 )
