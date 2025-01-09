@@ -100,7 +100,7 @@ def test_extract_segment_pairs(bam_file: str | Path, expected_length: int) -> No
             "aligned_segment_unassigned_28584",
             28584,
             28733,
-            149,
+            150,
             None,
             None,
             (28584, 28704),
@@ -111,7 +111,7 @@ def test_extract_segment_pairs(bam_file: str | Path, expected_length: int) -> No
             "aligned_segment_unassigned_17416",
             17416,
             17805,
-            389,
+            150,
             None,
             None,
             (17416, 17718),
@@ -122,7 +122,7 @@ def test_extract_segment_pairs(bam_file: str | Path, expected_length: int) -> No
             "aligned_segment_unassigned_18029",
             18029,
             18385,
-            356,
+            150,
             None,
             None,
             (18029, 18380),
@@ -133,7 +133,7 @@ def test_extract_segment_pairs(bam_file: str | Path, expected_length: int) -> No
             "aligned_segment_assigned_17814",
             17814,
             18136,
-            322,
+            150,
             "Assigned",
             "MSTRG.63147",
             (17814, 18027),
@@ -144,7 +144,7 @@ def test_extract_segment_pairs(bam_file: str | Path, expected_length: int) -> No
             "aligned_segment_assigned_14770",
             14770,
             14876,
-            106,
+            150,
             "Assigned",
             "MSTRG.63147",
             (14770,),
@@ -177,6 +177,7 @@ def test_extract_features_from_read(
 ) -> None:
     """Test extract of features from an unassigned and assigned segment reads."""
     segment = isoslam.extract_features_from_read(request.getfixturevalue(aligned_segment))
+    print(f"{segment['length']}")
     assert isinstance(segment, dict)
     assert segment["start"] == start
     assert segment["end"] == end
@@ -197,7 +198,7 @@ def test_extract_features_from_read(
                 "read1": {
                     "start": 17814,
                     "end": 18136,
-                    "length": 322,
+                    "length": 150,
                     "status": "Assigned",
                     "transcript": "MSTRG.63147",
                     "block_start": (17814, 18027),
@@ -206,7 +207,7 @@ def test_extract_features_from_read(
                 "read2": {
                     "start": 14770,
                     "end": 14876,
-                    "length": 106,
+                    "length": 150,
                     "status": "Assigned",
                     "transcript": "MSTRG.63147",
                     "block_start": (14770,),
@@ -232,3 +233,50 @@ def test_extract_features_from_pair(
     )
     assert isinstance(read_pair, dict)
     assert read_pair == expected
+
+
+@pytest.mark.parametrize(
+    ("aligned_segment", "transcript_id", "length"),
+    [
+        pytest.param(  # type: ignore[misc]
+            "aligned_segment_unassigned_28584",
+            "",
+            0,
+            id="28584 - Assignment and Transcript are None",
+        ),
+        pytest.param(
+            "aligned_segment_assigned_17814",
+            "ENST00000442898",
+            10,
+            id="17814 - Assigned to MSTRG.63147",
+        ),
+        pytest.param(
+            "aligned_segment_assigned_14770",
+            "ENST00000442898",
+            10,
+            id="14770 - Assigned to MSTRG.63147",
+        ),
+        pytest.param(
+            "aligned_segment_assigned_15967",
+            "ENST00000442898",
+            10,
+            id="15967 - Assigned to MSTRG.63147",
+        ),
+    ],
+)
+def test_extract_utron(
+    aligned_segment: str,
+    transcript_id: str,
+    length: int,
+    extract_transcript: dict[str, list[int | str]],
+    extract_strand_transcript: tuple[dict[str, list[Any]], dict[str, str]],
+    request: pytest.FixtureRequest,
+) -> None:
+    """Test extraction of the untranslated regions using extract_utron()."""
+    segment = isoslam.extract_features_from_read(request.getfixturevalue(aligned_segment))
+    _, gene_transcript = extract_strand_transcript
+    untranslated_region = isoslam.extract_utron(segment, gene_transcript, coordinates=extract_transcript)
+    assert isinstance(untranslated_region, list)
+    assert len(untranslated_region) == length
+    if len(untranslated_region):
+        assert untranslated_region[0][3] == transcript_id  # type: ignore[misc]

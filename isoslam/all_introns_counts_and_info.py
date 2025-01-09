@@ -90,13 +90,11 @@ def main(argv=None):
         )
         results = pd.DataFrame()
 
-        for pair in fragment_iterator(bamfile.fetch(until_eof=True)):
-            # if i_total_progress >= 2000000:
-            ##    print("length break")
-            #    break
-
-            # if first_matched >1000:
-            #    break
+        for pair in isoslam.extract_segment_pairs(argv_as_dictionary["infile_bam"]):
+            if i_total_progress >= 2000000:
+                break
+            if first_matched > 1000:
+                break
 
             if len(pair) != 2:
                 continue
@@ -112,27 +110,35 @@ def main(argv=None):
             if i_progress == 10000:
                 i_progress = 0
 
-            read1_start = read1.reference_start
-            read1_end = read1.reference_end
-            read2_start = read2.reference_start
-            read2_end = read2.reference_end
-            read1_length = read1.query_length
-            read2_length = read2.query_length
+            # Extract features
+            pair_features = isoslam.extract_features_from_pair(pair)
+            # Temporary code sets up variables from the returned dictionary to match those currently used
+            read1_start = pair_features["read1"]["start"]
+            read1_end = pair_features["read1"]["end"]
+            read1_length = pair_features["read1"]["length"]
+            read1_status = pair_features["read1"]["status"]
+            read1_transcript = pair_features["read1"]["transcript"]
+            read1_block_start = pair_features["read1"]["block_start"]
+            read1_block_end = pair_features["read1"]["block_end"]
+            read2_start = pair_features["read2"]["start"]
+            read2_end = pair_features["read2"]["end"]
+            read2_length = pair_features["read2"]["length"]
+            read2_status = pair_features["read2"]["status"]
+            read2_transcript = pair_features["read2"]["transcript"]
+            read2_block_start = pair_features["read2"]["block_start"]
+            read2_block_end = pair_features["read2"]["block_end"]
 
-            if read1.get_tag("XS") == "Assigned":
-                transcripts_read1 = tx2gene[read1.get_tag("XT")]
-                utrons1 = [utron_coords[tx] for tx in transcripts_read1]
-                utrons1 = sum(utrons1, [])
-            else:
-                utrons1 = list()
+            # Lists (utrons1 and utrons2) are iterated over further down
+            pair_features["read1"]["utron"] = isoslam.extract_utron(
+                features=pair_features["read1"], gene_transcript=tx2gene, coordinates=utron_coords
+            )
+            utrons1 = pair_features["read1"]["utron"]
+            pair_features["read2"]["utron"] = isoslam.extract_utron(
+                features=pair_features["read2"], gene_transcript=tx2gene, coordinates=utron_coords
+            )
+            utrons2 = pair_features["read2"]["utron"]
 
-            if read2.get_tag("XS") == "Assigned":
-                transcripts_read2 = tx2gene[read2.get_tag("XT")]
-                utrons2 = [utron_coords[tx] for tx in transcripts_read2]
-                utrons2 = sum(utrons2, [])
-            else:
-                utrons2 = list()
-
+            ## @ns-rse 2023-12-20
             ## Get blocks to see how the reads are spliced
             ## Mainly use this to assign spliced reads
             ## But also use to check retained reads aren't spliced

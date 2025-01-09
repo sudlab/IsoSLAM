@@ -126,7 +126,7 @@ def extract_features_from_read(read: AlignedSegment) -> dict[str, int | str | No
     return {
         "start": read.reference_start,
         "end": read.reference_end,
-        "length": read.reference_length,
+        "length": read.query_length,
         "status": status,
         "transcript": transcript,
         "block_start": block_start,
@@ -154,27 +154,28 @@ def extract_features_from_pair(pair: list[AlignedSegment]) -> dict[str, dict[str
     }
 
 
-# def extract_utron(read: AlignedSegment, transcript_to_gene: Any, tag: str = "XS") -> list | None:
-#     """
-#     Extract and sum the utrons based on tag.
+def extract_utron(features: dict[str, Any], gene_transcript: Any, coordinates: Any) -> list[tuple[int | str]] | None:
+    """
+    Extract and sum the utrons based on tag.
 
-#     ACTION : This function needs better documentation, my guess is that its extracting the transcripts to genes and
-#     then getting some related information (what I'm not sure) from the .bed file and adding these up.
+    ACTION : This function needs better documentation, my guess is that its extracting the transcripts to genes and
+    then getting some related information (what I'm not sure) from the .bed file and adding these up.
 
-#     Parameters
-#     ----------
-#     read : AlignedSegement
-#         An aligned segment read.
-#     transcript_to_gene : TextIO
-#         Transcript to gene from a ``.bed`` file.
-#     tag : str
-#         Type of tag to extract.
+    Parameters
+    ----------
+    features : str
+        A tag from an assigned read.
+    gene_transcript : TextIO
+        Transcript to gene from a ``.gtf`` file.
+    coordinates : Any
+        Untranslated region coordinates from a ``.bed`` file.
 
-#     Returns
-#     -------
-#     list | None
-#         List of the length of assigned regions.
-#     """
-#     if read.get_tag(tag) == "Assigned":
-#         return sum(bed_file[transcript] for transcript in tx2gene[read.get_tag("XT")])
-#     return None
+    Returns
+    -------
+    list | None
+        List of the length of assigned regions.
+    """
+    if features["status"] == "Assigned":
+        untranslated_regions = [coordinates[transcript] for transcript in gene_transcript[features["transcript"]]]
+        return sum(untranslated_regions, [])
+    return []
