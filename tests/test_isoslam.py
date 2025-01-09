@@ -279,3 +279,44 @@ def test_extract_utron(
     assert len(untranslated_region) == length
     if len(untranslated_region):
         assert untranslated_region[0][3] == transcript_id  # type: ignore[misc]
+
+
+@pytest.mark.parametrize(
+    ("aligned_segment", "expected_start", "expected_end"),
+    [
+        pytest.param(  # type: ignore[misc]
+            "aligned_segment_unassigned_28584",
+            (28584, 28704),
+            (28704, 28733),
+            id="28584 - Assignment and Transcript are None",
+        ),
+        pytest.param(
+            "aligned_segment_assigned_17814",
+            (17814, 18027),
+            (17855, 18136),
+            id="17814 - Assigned to MSTRG.63147",
+        ),
+        pytest.param(
+            "aligned_segment_assigned_14770",
+            (14770,),
+            (14876,),
+            id="14770 - Assigned to MSTRG.63147",
+        ),
+        pytest.param(
+            "aligned_segment_assigned_15967",
+            (15967,),
+            (16117,),
+            id="15967 - Assigned to MSTRG.63147",
+        ),
+    ],
+)
+def test_zip_blocks(
+    aligned_segment: str,
+    expected_start: tuple[int],
+    expected_end: tuple[int],
+    request: pytest.FixtureRequest,
+) -> None:
+    """Test that block starts and ends are zipped correctly."""
+    start_blocks, end_blocks = isoslam.zip_blocks(request.getfixturevalue(aligned_segment))
+    assert start_blocks == expected_start
+    assert end_blocks == expected_end
