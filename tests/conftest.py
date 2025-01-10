@@ -91,24 +91,60 @@ def aligned_segment_unassigned_18029(bam_unaligned_file1: AlignmentFile) -> Alig
 
 
 @pytest.fixture()
-def bam_sorted_assigned_file() -> list[AlignedSegment]:
+def bam_sorted_assigned_file_no4sU() -> list[AlignedSegment]:
     """Return a list of a ``AlignedSegment`` from a ``.bam`` file that has been sorted and assigned."""
     return list(io.load_file(BAM_SORTED_ASSIGNED_DIR / "d0_no4sU_filtered_remapped_sorted.sorted.assigned.bam"))
 
 
 @pytest.fixture()
-def aligned_segment_assigned_15967(bam_sorted_assigned_file: list[AlignedSegment]) -> AlignedSegment:
+def aligned_segment_assigned_15967(bam_sorted_assigned_file_no4sU: list[AlignedSegment]) -> AlignedSegment:
     """Return a single assigned AlignedSegment where start is 15967."""
-    return [x for x in bam_sorted_assigned_file if x.reference_start == 15967][0]
+    return [x for x in bam_sorted_assigned_file_no4sU if x.reference_start == 15967][0]
 
 
 @pytest.fixture()
-def aligned_segment_assigned_14770(bam_sorted_assigned_file: list[AlignedSegment]) -> AlignedSegment:
+def aligned_segment_assigned_14770(bam_sorted_assigned_file_no4sU: list[AlignedSegment]) -> AlignedSegment:
     """Return a single assigned AlignedSegment where start is 14770."""
-    return [x for x in bam_sorted_assigned_file if x.reference_start == 14770][0]
+    return [x for x in bam_sorted_assigned_file_no4sU if x.reference_start == 14770][0]
 
 
 @pytest.fixture()
-def aligned_segment_assigned_17814(bam_sorted_assigned_file: list[AlignedSegment]) -> AlignedSegment:
+def aligned_segment_assigned_17814(bam_sorted_assigned_file_no4sU: list[AlignedSegment]) -> AlignedSegment:
     """Return a single assigned AlignedSegment where start is 17814."""
-    return [x for x in bam_sorted_assigned_file if x.reference_start == 17814][0]
+    return [x for x in bam_sorted_assigned_file_no4sU if x.reference_start == 17814][0]
+
+
+@pytest.fixture()
+def bam_sorted_assigned_file_0hr1() -> list[AlignedSegment]:
+    """Return a list of a ``AlignedSegment`` from a ``.bam`` file that has been sorted and assigned."""
+    return list(io.load_file(BAM_SORTED_ASSIGNED_DIR / "d0_0hr1_filtered_remapped_sorted.sorted.assigned.bam"))
+
+
+@pytest.fixture()
+def aligned_segment_assigned_21051(bam_sorted_assigned_file_0hr1: list[AlignedSegment]) -> AlignedSegment:
+    """
+    Return a single assigned AlignedSegment where start is 21051.
+
+    Along with the next fixture (20906) this was the 484th pair of reads that caused some early problems with regression
+    tests which is why they have been pulled out and added to the parameterised tests.
+
+    The reason these problems occurred is because initially 9 alignments are found at this location but 6 of these
+    should be filtered out subsequently, a mistake in refactoring used the wrong length. But this will serve as a useful
+    aligned segment to be testing because of this filtering.
+    """
+    return [x for x in bam_sorted_assigned_file_0hr1 if x.reference_start == 21051][0]
+
+
+@pytest.fixture()
+def aligned_segment_assigned_20906(bam_sorted_assigned_file_0hr1: list[AlignedSegment]) -> AlignedSegment:
+    """
+    Return a single assigned AlignedSegment where start is 20906.
+
+    Along with the previous fixture (21051) this was the 484th pair of reads that cause some early problems with
+    regression tests which is why they have been pulled out and added to the parameterised tests.
+
+    The reason these problems occurred is because initially 9 alignments are found at this location but 6 of these
+    should be filtered out subsequently, a mistake in refactoring used the wrong length. But this will serve as a useful
+    aligned segment to be testing because of this filtering.
+    """
+    return [x for x in bam_sorted_assigned_file_0hr1 if x.reference_start == 20906][0]

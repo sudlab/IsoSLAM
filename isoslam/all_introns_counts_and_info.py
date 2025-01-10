@@ -112,6 +112,9 @@ def main(argv=None):
 
             # Extract features
             pair_features = isoslam.extract_features_from_pair(pair)
+            # DEBUGGING - Get information on features
+            if i_total_progress in (484):
+                print(f"{pair_features=}")
             # Temporary code sets up variables from the returned dictionary to match those currently used
             read1_start = pair_features["read1"]["start"]
             read1_end = pair_features["read1"]["end"]
