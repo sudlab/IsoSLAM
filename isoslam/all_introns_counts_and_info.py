@@ -150,8 +150,8 @@ def main(argv=None):
             ## If not, we should cull assignment to those events
             ## We are comparing ret vs spliced, so instead of adding 1 to both
             ## we will just ignore those few
-            block_starts1, block_ends1 = zip(*read1.get_blocks())
-            block_starts2, block_ends2 = zip(*read2.get_blocks())
+            block_starts1, block_ends1 = isoslam.zip_blocks(read1)
+            block_starts2, block_ends2 = isoslam.zip_blocks(read2)
             # RETAINED
             read1_within_intron = {}
 

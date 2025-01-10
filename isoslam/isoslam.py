@@ -1,7 +1,7 @@
 """IsoSLAM module."""
 
 from collections import defaultdict
-from collections.abc import Generator
+from collections.abc import Generator, Iterator
 from pathlib import Path
 from typing import Any
 
@@ -179,3 +179,20 @@ def extract_utron(features: dict[str, Any], gene_transcript: Any, coordinates: A
         untranslated_regions = [coordinates[transcript] for transcript in gene_transcript[features["transcript"]]]
         return sum(untranslated_regions, [])
     return []
+
+
+def zip_blocks(read: AlignedSegment) -> Iterator[tuple[Any, ...]]:
+    """
+    Zip the block starts and ends into two lists.
+
+    Parameters
+    ----------
+    read : AlignedSegment
+        An individual aligned segment read from a ''.bam'' file.
+
+    Returns
+    -------
+    tuple[list[int], list[int]]
+        Tuple of two lists of integers the first is start location, the second is the end location.
+    """
+    return zip(*read.get_blocks())
