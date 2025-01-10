@@ -113,7 +113,7 @@ def main(argv=None):
             # Extract features
             pair_features = isoslam.extract_features_from_pair(pair)
             # DEBUGGING - Get information on features
-            if i_total_progress in (484):
+            if i_total_progress == 484:
                 print(f"{pair_features=}")
             # Temporary code sets up variables from the returned dictionary to match those currently used
             read1_start = pair_features["read1"]["start"]
@@ -155,6 +155,13 @@ def main(argv=None):
             ## we will just ignore those few
             block_starts1, block_ends1 = isoslam.zip_blocks(read1)
             block_starts2, block_ends2 = isoslam.zip_blocks(read2)
+
+            # Build a dictionary as its cleaner to work with
+            blocks = {
+                "read1": {"starts": block_starts1, "ends": block_ends1},
+                "read2": {"starts": block_starts2, "ends": block_ends2},
+            }
+
             # RETAINED
             read1_within_intron = {}
 
@@ -185,6 +192,9 @@ def main(argv=None):
                     if transcript_id not in read1_within_intron:
                         read1_within_intron[transcript_id] = []
                     read1_within_intron[transcript_id].append((start, end, chr, strand))
+            # DEBUGGING - Get information on features
+            if i_total_progress == 484:
+                print(f"{read1_within_intron=}")
 
             # SPLICED
             read1_spliced_3UI = {}
@@ -194,6 +204,9 @@ def main(argv=None):
                     if transcript_id not in read1_spliced_3UI:
                         read1_spliced_3UI[transcript_id] = []
                     read1_spliced_3UI[transcript_id].append((start, end, chr, strand))
+            # DEBUGGING - Get information on features
+            if i_total_progress == 484:
+                print(f"{read1_spliced_3UI=}")
 
             ## READ 2
             # RETAINED
@@ -226,6 +239,9 @@ def main(argv=None):
                     if transcript_id not in read2_within_intron:
                         read2_within_intron[transcript_id] = []
                     read2_within_intron[transcript_id].append((start, end, chr, strand))
+            # DEBUGGING - Get information on features
+            if i_total_progress == 484:
+                print(f"{read2_within_intron=}")
 
             # SPLICED
             read2_spliced_3UI = {}
@@ -235,6 +251,9 @@ def main(argv=None):
                     if transcript_id not in read2_spliced_3UI:
                         read2_spliced_3UI[transcript_id] = []
                     read2_spliced_3UI[transcript_id].append((start, end, chr, strand))
+            # DEBUGGING - Get information on features
+            if i_total_progress == 484:
+                print(f"{read2_spliced_3UI=}")
 
             all_dicts = [read1_within_intron, read2_within_intron, read1_spliced_3UI, read2_spliced_3UI]
             all_empty = all(not contents for contents in all_dicts)

@@ -148,3 +148,71 @@ def aligned_segment_assigned_20906(bam_sorted_assigned_file_0hr1: list[AlignedSe
     aligned segment to be testing because of this filtering.
     """
     return [x for x in bam_sorted_assigned_file_0hr1 if x.reference_start == 20906][0]
+
+
+@pytest.fixture()
+def feature_pair_14770_17814(
+    bam_sorted_assigned_file_no4sU: list[AlignedSegment],
+    extract_transcript: dict[str, list[int | str]],
+    extract_strand_transcript: tuple[dict[str, list[Any]], dict[str, str]],
+) -> tuple[dict["str", Any], list, list, list, list]:
+    """Feature pair for 17814 and 14770 augment with utrons and return along with block start/ends."""
+    aligned_segment_14770 = [x for x in bam_sorted_assigned_file_no4sU if x.reference_start == 14770][0]
+    aligned_segment_17814 = [x for x in bam_sorted_assigned_file_no4sU if x.reference_start == 17814][0]
+    pair_features = isoslam.extract_features_from_pair(
+        [
+            aligned_segment_14770,
+            aligned_segment_17814,
+        ]
+    )
+    # ...and get the utron for both reads and add them to the dictionary
+    _, gene_transcript = extract_strand_transcript
+    pair_features["read1"]["utron"] = isoslam.extract_utron(
+        pair_features["read1"], gene_transcript, coordinates=extract_transcript
+    )
+    pair_features["read2"]["utron"] = isoslam.extract_utron(
+        pair_features["read2"], gene_transcript, coordinates=extract_transcript
+    )
+    # ...then we can get the block_starts/ends
+    block_starts1, block_ends1 = isoslam.zip_blocks(aligned_segment_14770)
+    block_starts2, block_ends2 = isoslam.zip_blocks(aligned_segment_17814)
+    blocks = {
+        "read1": {"starts": block_starts1, "ends": block_ends1},
+        "read2": {"starts": block_starts2, "ends": block_ends2},
+    }
+    # return (pair_features, block_starts1, block_ends1, block_starts2, block_ends2)
+    return (pair_features, blocks)
+
+
+@pytest.fixture()
+def feature_pair_20906_21051(
+    bam_sorted_assigned_file_0hr1: list[AlignedSegment],
+    extract_transcript: dict[str, list[int | str]],
+    extract_strand_transcript: tuple[dict[str, list[Any]], dict[str, str]],
+) -> tuple[dict["str", Any], list, list, list, list]:
+    """Feature pair for 21051 and 20906 augment with utrons and return along with block start/ends."""
+    aligned_segment_20906 = [x for x in bam_sorted_assigned_file_0hr1 if x.reference_start == 20906][0]
+    aligned_segment_21051 = [x for x in bam_sorted_assigned_file_0hr1 if x.reference_start == 21051][0]
+    pair_features = isoslam.extract_features_from_pair(
+        [
+            aligned_segment_20906,
+            aligned_segment_21051,
+        ]
+    )
+    # ...and get the utron for both reads and add them to the dictionary
+    _, gene_transcript = extract_strand_transcript
+    pair_features["read1"]["utron"] = isoslam.extract_utron(
+        pair_features["read1"], gene_transcript, coordinates=extract_transcript
+    )
+    pair_features["read2"]["utron"] = isoslam.extract_utron(
+        pair_features["read2"], gene_transcript, coordinates=extract_transcript
+    )
+    # ...then we can get the block_starts/ends
+    block_starts1, block_ends1 = isoslam.zip_blocks(aligned_segment_20906)
+    block_starts2, block_ends2 = isoslam.zip_blocks(aligned_segment_21051)
+    blocks = {
+        "read1": {"starts": block_starts1, "ends": block_ends1},
+        "read2": {"starts": block_starts2, "ends": block_ends2},
+    }
+    # return (pair_features, block_starts1, block_ends1, block_starts2, block_ends2)
+    return (pair_features, blocks)

@@ -392,3 +392,105 @@ def test_zip_blocks(
     start_blocks, end_blocks = isoslam.zip_blocks(request.getfixturevalue(aligned_segment))
     assert start_blocks == expected_start
     assert end_blocks == expected_end
+
+
+# Need to identify aligned segments that are within introns
+@pytest.mark.parametrize(
+    (
+        "feature_pair",
+        "read",
+        "expected",
+    ),
+    [
+        pytest.param(  # type: ignore[misc]
+            "feature_pair_14770_17814",
+            "read1",
+            {},
+            id="14770 and 17814 for read1 - Assigned to MSTRG.63147",
+        ),
+        pytest.param(
+            "feature_pair_14770_17814",
+            "read2",
+            {},
+            id="14770 and 17814 for read2 - Assigned to MSTRG.63147",
+        ),
+        pytest.param(
+            "feature_pair_20906_21051",
+            "read1",
+            {},
+            id="20906 and 21051 for read1 - Unassigned",
+        ),
+        pytest.param(
+            "feature_pair_20906_21051",
+            "read2",
+            {},
+            id="20906 and 21051 for read2 - Unassigned",
+        ),
+    ],
+)
+def test_filter_within_introns(
+    feature_pair: tuple[dict["str", Any], list[int], list[int], list[int], list[int]],
+    read: str,
+    expected: dict[str, tuple[Any]],
+    request: pytest.FixtureRequest,
+) -> None:
+    """Test filtering within introns."""
+    # We first extract the required pair_features and block start/ends
+    pair_features, blocks = request.getfixturevalue(feature_pair)
+    within_introns = isoslam.filter_within_introns(
+        pair_features,
+        blocks,
+        read,
+    )
+    assert within_introns == expected
+
+
+# Not getting the same as from debugging all_introns_counts_and_info.py
+@pytest.mark.parametrize(
+    (
+        "feature_pair",
+        "read",
+        "expected",
+    ),
+    [
+        pytest.param(  # type: ignore[misc]
+            "feature_pair_14770_17814",
+            "read1",
+            {"ENST00000442898": [(18174, 18380, "9", "-")]},
+            id="14770 and 17814 for read1 - Assigned to MSTRG.63147",
+        ),
+        pytest.param(
+            "feature_pair_14770_17814",
+            "read2",
+            {"ENST00000442898": [(17855, 18027, "9", "-")]},
+            id="14770 and 17814 for read2 - Assigned to MSTRG.63147",
+        ),
+        pytest.param(
+            "feature_pair_20906_21051",
+            "read1",
+            {},
+            id="20906 and 21051 for read1 - Unassigned",
+        ),
+        pytest.param(
+            "feature_pair_20906_21051",
+            "read2",
+            {},
+            id="20906 and 21051 for read2 - Unassigned",
+        ),
+    ],
+)
+def test_filter_spliced_utrons(
+    feature_pair: tuple[dict["str", Any], list[int], list[int], list[int], list[int]],
+    read: str,
+    expected: dict[str, list[Any]],
+    request: pytest.FixtureRequest,
+) -> None:
+    """Test filtering within introns."""
+    # We first extract the required pair_features and block start/ends
+    pair_features, blocks = request.getfixturevalue(feature_pair)
+    within_introns = isoslam.filter_spliced_utrons(
+        pair_features,
+        blocks,
+        read,
+    )
+    assert within_introns == expected
