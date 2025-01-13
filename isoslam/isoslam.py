@@ -222,13 +222,6 @@ def filter_within_introns(
     """
     within_intron: dict[str, Any] = {}
     for chromosome, start, end, transcript_id, strand in pair_features[read]["utron"]:
-        # print("\n=========================")
-        # print(f"{chr=}")
-        # print(f"{start=}")
-        # print(f"{end=}")
-        # print(f"{transcript_id=}")
-        # print(f"{strand=}")
-        # Check if starts/ends are within introns
         start_end_within_intron = (
             start <= pair_features[read]["start"] <= end or start <= pair_features[read]["end"] <= end
         )
@@ -259,7 +252,7 @@ def filter_spliced_utrons(
     read: str = "read1",
 ) -> dict[str, list[Any]]:
     """
-    Filter utrons that are within spliced 3UI's.
+    Filter utrons where start is in the block ends or end is in the block start.
 
     Parameters
     ----------
@@ -277,13 +270,6 @@ def filter_spliced_utrons(
     """
     spliced_3ui: dict[str, list[Any]] = {}
     for chromosome, start, end, transcript_id, strand in pair_features[read]["utron"]:
-        # print("\n=========================")
-        # print(f"{chr=}")
-        # print(f"{start=}")
-        # print(f"{end=}")
-        # print(f"{transcript_id=}")
-        # print(f"{strand=}")
-        # if start in block_ends1 and end in block_starts1:
         if start in blocks[read]["ends"] and end in blocks[read]["starts"]:
             # Why add an empty list and append a tuple?
             if transcript_id not in spliced_3ui:

@@ -39,3 +39,5 @@ def test_main(file_path: Path, tmp_path: Path, regtest) -> None:
     # Ideally would like to use syrupy to test snapshots but pd.DataFrame() are not yet supported
     # https://github.com/syrupy-project/syrupy/issues/887
     print(results.to_string(float_format="{:.4e}".format), file=regtest)
+    # Uncomment to print out debugging information when running tests
+    # assert False

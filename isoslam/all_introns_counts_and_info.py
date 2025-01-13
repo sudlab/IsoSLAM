@@ -165,6 +165,15 @@ def main(argv=None):
             # RETAINED
             read1_within_intron = {}
 
+            def print_info(chr, start, end, transcript_id, strand, blocks, text, count=i_total_progress) -> None:
+                print(f"\n{count} =========================== {text=}\n")
+                print(f"{transcript_id=}")
+                print(f"{chr=}")
+                print(f"{start=}")
+                print(f"{end=}")
+                print(f"{strand=}")
+                print(f"\n{blocks}\n")
+
             for chr, start, end, transcript_id, strand in utrons1:
                 # if starts/ends in intron/(s)
                 if (
@@ -174,6 +183,8 @@ def main(argv=None):
                     and start not in block_ends2
                     and end not in block_starts2
                 ):
+                    # if transcript_id == "ENST00000442898":
+                    #     print_info(chr, start, end, transcript_id, strand, blocks, text="read1_within_intron")
                     if transcript_id not in read1_within_intron:
                         read1_within_intron[transcript_id] = []
                     read1_within_intron[transcript_id].append((start, end, chr, strand))
@@ -189,6 +200,8 @@ def main(argv=None):
                     and start not in block_ends2
                     and end not in block_starts2
                 ):
+                    # if transcript_id == "ENST00000442898":
+                    #     print_info(chr, start, end, transcript_id, strand, blocks, text="spans_intron")
                     if transcript_id not in read1_within_intron:
                         read1_within_intron[transcript_id] = []
                     read1_within_intron[transcript_id].append((start, end, chr, strand))
@@ -201,6 +214,8 @@ def main(argv=None):
 
             for chr, start, end, transcript_id, strand in utrons1:
                 if start in block_ends1 and end in block_starts1:
+                    # if transcript_id == "ENST00000442898":
+                    #     print_info(chr, start, end, transcript_id, strand, blocks, text="spliced")
                     if transcript_id not in read1_spliced_3UI:
                         read1_spliced_3UI[transcript_id] = []
                     read1_spliced_3UI[transcript_id].append((start, end, chr, strand))
@@ -214,6 +229,7 @@ def main(argv=None):
 
             for chr, start, end, transcript_id, strand in utrons2:
                 # if starts/ends in intron/(s)
+
                 if (
                     (start <= read2_start <= end or start <= read2_end <= end)
                     and start not in block_ends2

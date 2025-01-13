@@ -394,7 +394,6 @@ def test_zip_blocks(
     assert end_blocks == expected_end
 
 
-# Need to identify aligned segments that are within introns
 @pytest.mark.parametrize(
     (
         "feature_pair",
@@ -403,28 +402,28 @@ def test_zip_blocks(
     ),
     [
         pytest.param(  # type: ignore[misc]
-            "feature_pair_14770_17814",
+            "feature_pair_within_15967_24715",
+            "read1",
+            {"ENST00000442898": [(16061, 16717, "9", "-")]},
+            id="15967 and 24715 feature pair from no4sU",
+        ),
+        pytest.param(
+            "feature_pair_within_17790_18093",
+            "read1",
+            {"ENST00000442898": [(17855, 18027, "9", "-")]},
+            id="17790 and 18093 feature pair from 0hr1",
+        ),
+        pytest.param(
+            "feature_pair_within_17709_18290",
+            "read1",
+            {"ENST00000442898": [(17479, 17718, "9", "-"), (17855, 18027, "9", "-")]},
+            id="17709 and 18290 feature pair from 0hr1",
+        ),
+        pytest.param(
+            "feature_pair_within_14770_17814",
             "read1",
             {},
-            id="14770 and 17814 for read1 - Assigned to MSTRG.63147",
-        ),
-        pytest.param(
-            "feature_pair_14770_17814",
-            "read2",
-            {},
-            id="14770 and 17814 for read2 - Assigned to MSTRG.63147",
-        ),
-        pytest.param(
-            "feature_pair_20906_21051",
-            "read1",
-            {},
-            id="20906 and 21051 for read1 - Unassigned",
-        ),
-        pytest.param(
-            "feature_pair_20906_21051",
-            "read2",
-            {},
-            id="20906 and 21051 for read2 - Unassigned",
+            id="14770 and 17814 feature pair from no4sU",
         ),
     ],
 )
@@ -434,8 +433,13 @@ def test_filter_within_introns(
     expected: dict[str, tuple[Any]],
     request: pytest.FixtureRequest,
 ) -> None:
-    """Test filtering within introns."""
-    # We first extract the required pair_features and block start/ends
+    """
+    Test filtering within introns.
+
+    Tests are very basic and not all conditional statements are covered, in particular instances where transcripts span
+    the whole region are not covered. This may be challenging as the length is _always_ 150.
+    """
+    # We first extract the required pair_features and block start/ends from the fixture
     pair_features, blocks = request.getfixturevalue(feature_pair)
     within_introns = isoslam.filter_within_introns(
         pair_features,
@@ -445,7 +449,6 @@ def test_filter_within_introns(
     assert within_introns == expected
 
 
-# Not getting the same as from debugging all_introns_counts_and_info.py
 @pytest.mark.parametrize(
     (
         "feature_pair",
@@ -454,28 +457,22 @@ def test_filter_within_introns(
     ),
     [
         pytest.param(  # type: ignore[misc]
-            "feature_pair_14770_17814",
+            "feature_pair_spliced_17739_17814",
             "read1",
-            {"ENST00000442898": [(18174, 18380, "9", "-")]},
-            id="14770 and 17814 for read1 - Assigned to MSTRG.63147",
+            {"ENST00000442898": [(17855, 18027, "9", "-")]},
+            id="14770 and 17814 for read1 from no4sU",
         ),
         pytest.param(
-            "feature_pair_14770_17814",
+            "feature_pair_spliced_17430_18155",
+            "read2",
+            {"ENST00000442898": [(18174, 18380, "9", "-"), (18492, 24850, "9", "-")]},
+            id="17430 and 18155 for from 0hr1",
+        ),
+        pytest.param(
+            "feature_pair_within_14770_17814",
             "read2",
             {"ENST00000442898": [(17855, 18027, "9", "-")]},
-            id="14770 and 17814 for read2 - Assigned to MSTRG.63147",
-        ),
-        pytest.param(
-            "feature_pair_20906_21051",
-            "read1",
-            {},
-            id="20906 and 21051 for read1 - Unassigned",
-        ),
-        pytest.param(
-            "feature_pair_20906_21051",
-            "read2",
-            {},
-            id="20906 and 21051 for read2 - Unassigned",
+            id="17430 and 18155 for from no4sU",
         ),
     ],
 )
@@ -485,8 +482,11 @@ def test_filter_spliced_utrons(
     expected: dict[str, list[Any]],
     request: pytest.FixtureRequest,
 ) -> None:
-    """Test filtering within introns."""
-    # We first extract the required pair_features and block start/ends
+    """Test filtering spliced utrons.
+
+    Tests are very basic and not all conditional statements are covered.
+    """
+    # We first extract the required pair_features and block start/ends from the fixture
     pair_features, blocks = request.getfixturevalue(feature_pair)
     within_introns = isoslam.filter_spliced_utrons(
         pair_features,
