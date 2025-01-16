@@ -113,7 +113,7 @@ def main(argv=None):
             # Extract features
             pair_features = isoslam.extract_features_from_pair(pair)
             # DEBUGGING - Get information on features
-            if i_total_progress in (484):
+            if i_total_progress == 484:
                 print(f"{pair_features=}")
             # Temporary code sets up variables from the returned dictionary to match those currently used
             read1_start = pair_features["read1"]["start"]
@@ -312,7 +312,7 @@ def main(argv=None):
                     # if read 2 is the 1 assigned]
                     assignment = read2.get_tag("XT")
                     strand = strand_dict[assignment]
-
+            # TODO: Move logic to earlier in work flow and skip more preocessing if evaluate to False
             # assigned a "forward" and "reverse" read relative to the genome
             if read1.is_reverse and not read2.is_reverse:
                 reverse_read = read1
