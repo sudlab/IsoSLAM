@@ -16,6 +16,7 @@ globs:
 ignores:
   - "tmp/**/*.md"
   - "docs/api/**/*.md"
+  - TODO.md
 
 # Fix any fixable errors
 fix: true
