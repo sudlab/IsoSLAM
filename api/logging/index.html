@@ -503,21 +503,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="setup">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#isoslam.logging.setup--parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      Parameters
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
     </ul>
@@ -641,21 +626,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="setup">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#isoslam.logging.setup--parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      Parameters
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
     </ul>
@@ -718,9 +688,37 @@
     <div class="doc doc-contents ">
 
         <p>Loguru setup with the required logging level and format.</p>
-<h4 id="isoslam.logging.setup--parameters">Parameters</h4>
-<p>level : str
-    Log level, default is "INFO", other options "WARNING", "DEBUG" etc.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>level</code>
+            </td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Log level, default is "INFO", other options "WARNING", "DEBUG" etc.</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#39;INFO&#39;</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
             <details class="quote">
               <summary>Source code in <code>isoslam/logging.py</code></summary>
@@ -743,7 +741,7 @@
 <span class="normal"><a href="#__codelineno-0-24">24</a></span>
 <span class="normal"><a href="#__codelineno-0-25">25</a></span>
 <span class="normal"><a href="#__codelineno-0-26">26</a></span>
-<span class="normal"><a href="#__codelineno-0-27">27</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="n">level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;INFO&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal"><a href="#__codelineno-0-27">27</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="n">level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;INFO&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10"></a><span class="sd">    Loguru setup with the required logging level and format.</span>
 </span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11"></a>
@@ -775,12 +773,7 @@
 
     </div>
 
-</div><p>handler: python
-options:
-docstring_style:
-numpy
-rendering:
-show_signature_annotations: true</p>
+</div>
 
 
 
