@@ -256,7 +256,7 @@ def main(argv=None):
                     # if read 2 is the 1 assigned]
                     assignment = read2.get_tag("XT")
                     strand = strand_dict[assignment]
-
+            # TODO: Move logic to earlier in work flow and skip more preocessing if evaluate to False
             # assigned a "forward" and "reverse" read relative to the genome
             if read1.is_reverse and not read2.is_reverse:
                 reverse_read = read1
