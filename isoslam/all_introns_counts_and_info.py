@@ -113,8 +113,8 @@ def main(argv=None):
             # Extract features
             pair_features = isoslam.extract_features_from_pair(pair)
             # DEBUGGING - Get information on features
-            if i_total_progress == 484:
-                print(f"{pair_features=}")
+            # if i_total_progress == 484:
+            #     print(f"{pair_features=}")
             # Temporary code sets up variables from the returned dictionary to match those currently used
             read1_start = pair_features["read1"]["start"]
             read1_end = pair_features["read1"]["end"]
@@ -155,91 +155,35 @@ def main(argv=None):
             ## we will just ignore those few
             block_starts1, block_ends1 = isoslam.zip_blocks(read1)
             block_starts2, block_ends2 = isoslam.zip_blocks(read2)
-            # RETAINED
-            read1_within_intron = {}
 
-            for chr, start, end, transcript_id, strand in utrons1:
-                # if starts/ends in intron/(s)
-                if (
-                    (start <= read1_start <= end or start <= read1_end <= end)
-                    and start not in block_ends1
-                    and end not in block_starts1
-                    and start not in block_ends2
-                    and end not in block_starts2
-                ):
-                    if transcript_id not in read1_within_intron:
-                        read1_within_intron[transcript_id] = []
-                    read1_within_intron[transcript_id].append((start, end, chr, strand))
+            # Build a dictionary as its cleaner to work with
+            blocks = {
+                "read1": {"starts": block_starts1, "ends": block_ends1},
+                "read2": {"starts": block_starts2, "ends": block_ends2},
+            }
 
-                # if spans an entire intron
-                intron_length = end - start
-                if (
-                    read1_start < start
-                    and read1_end > end
-                    and intron_length < read1_length
-                    and start not in block_ends1
-                    and end not in block_starts1
-                    and start not in block_ends2
-                    and end not in block_starts2
-                ):
-                    if transcript_id not in read1_within_intron:
-                        read1_within_intron[transcript_id] = []
-                    read1_within_intron[transcript_id].append((start, end, chr, strand))
+            def print_info(chr, start, end, transcript_id, strand, blocks, text, count=i_total_progress) -> None:
+                """Print information on progress to aid debugging."""
+                print(f"\n{count} =========================== {text=}\n")
+                print(f"{transcript_id=}")
+                print(f"{chr=}")
+                print(f"{start=}")
+                print(f"{end=}")
+                print(f"{strand=}")
+                print(f"{blocks=}")
 
-            # SPLICED
-            read1_spliced_3UI = {}
-
-            for chr, start, end, transcript_id, strand in utrons1:
-                if start in block_ends1 and end in block_starts1:
-                    if transcript_id not in read1_spliced_3UI:
-                        read1_spliced_3UI[transcript_id] = []
-                    read1_spliced_3UI[transcript_id].append((start, end, chr, strand))
-
-            ## READ 2
-            # RETAINED
-            read2_within_intron = {}
-
-            for chr, start, end, transcript_id, strand in utrons2:
-                # if starts/ends in intron/(s)
-                if (
-                    (start <= read2_start <= end or start <= read2_end <= end)
-                    and start not in block_ends2
-                    and end not in block_starts2
-                    and start not in block_ends1
-                    and end not in block_starts1
-                ):
-                    if transcript_id not in read2_within_intron:
-                        read2_within_intron[transcript_id] = []
-                    read2_within_intron[transcript_id].append((start, end, chr, strand))
-
-                # if spans an entire intron
-                intron_length = end - start
-                if (
-                    read2_start < start
-                    and read2_end > end
-                    and intron_length < read2_length
-                    and start not in block_ends2
-                    and end not in block_starts2
-                    and start not in block_ends1
-                    and end not in block_starts1
-                ):
-                    if transcript_id not in read2_within_intron:
-                        read2_within_intron[transcript_id] = []
-                    read2_within_intron[transcript_id].append((start, end, chr, strand))
-
-            # SPLICED
-            read2_spliced_3UI = {}
-
-            for chr, start, end, transcript_id, strand in utrons2:
-                if start in block_ends2 and end in block_starts2:
-                    if transcript_id not in read2_spliced_3UI:
-                        read2_spliced_3UI[transcript_id] = []
-                    read2_spliced_3UI[transcript_id].append((start, end, chr, strand))
+            # Retain within introns
+            read1_within_intron = isoslam.filter_within_introns(pair_features, blocks, read="read1")
+            read2_within_intron = isoslam.filter_within_introns(pair_features, blocks, read="read2")
+            # Retain spliced
+            read1_spliced_3UI = isoslam.filter_spliced_utrons(pair_features, blocks, read="read1")
+            read2_spliced_3UI = isoslam.filter_spliced_utrons(pair_features, blocks, read="read2")
 
             all_dicts = [read1_within_intron, read2_within_intron, read1_spliced_3UI, read2_spliced_3UI]
-            all_empty = all(not contents for contents in all_dicts)
 
-            if all_empty:
+            # Check that there are some retained regions (all dictionaries would be empty if there are none retained and
+            # not {} evaluates to True, hence wrapping in all())
+            if all(not contents for contents in all_dicts):
                 continue
             first_matched += 1
 

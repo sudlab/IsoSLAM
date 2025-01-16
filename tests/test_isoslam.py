@@ -392,3 +392,105 @@ def test_zip_blocks(
     start_blocks, end_blocks = isoslam.zip_blocks(request.getfixturevalue(aligned_segment))
     assert start_blocks == expected_start
     assert end_blocks == expected_end
+
+
+@pytest.mark.parametrize(
+    (
+        "feature_pair",
+        "read",
+        "expected",
+    ),
+    [
+        pytest.param(  # type: ignore[misc]
+            "feature_pair_within_15967_24715",
+            "read1",
+            {"ENST00000442898": [(16061, 16717, "9", "-")]},
+            id="15967 and 24715 feature pair from no4sU",
+        ),
+        pytest.param(
+            "feature_pair_within_17790_18093",
+            "read1",
+            {"ENST00000442898": [(17855, 18027, "9", "-")]},
+            id="17790 and 18093 feature pair from 0hr1",
+        ),
+        pytest.param(
+            "feature_pair_within_17709_18290",
+            "read1",
+            {"ENST00000442898": [(17479, 17718, "9", "-"), (17855, 18027, "9", "-")]},
+            id="17709 and 18290 feature pair from 0hr1",
+        ),
+        pytest.param(
+            "feature_pair_within_14770_17814",
+            "read1",
+            {},
+            id="14770 and 17814 feature pair from no4sU",
+        ),
+    ],
+)
+def test_filter_within_introns(
+    feature_pair: tuple[dict["str", Any], list[int], list[int], list[int], list[int]],
+    read: str,
+    expected: dict[str, tuple[Any]],
+    request: pytest.FixtureRequest,
+) -> None:
+    """
+    Test filtering within introns.
+
+    Tests are very basic and not all conditional statements are covered, in particular instances where transcripts span
+    the whole region are not covered. This may be challenging as the length is _always_ 150.
+    """
+    # We first extract the required pair_features and block start/ends from the fixture
+    pair_features, blocks = request.getfixturevalue(feature_pair)
+    within_introns = isoslam.filter_within_introns(
+        pair_features,
+        blocks,
+        read,
+    )
+    assert within_introns == expected
+
+
+@pytest.mark.parametrize(
+    (
+        "feature_pair",
+        "read",
+        "expected",
+    ),
+    [
+        pytest.param(  # type: ignore[misc]
+            "feature_pair_spliced_17739_17814",
+            "read1",
+            {"ENST00000442898": [(17855, 18027, "9", "-")]},
+            id="14770 and 17814 for read1 from no4sU",
+        ),
+        pytest.param(
+            "feature_pair_spliced_17430_18155",
+            "read2",
+            {"ENST00000442898": [(18174, 18380, "9", "-"), (18492, 24850, "9", "-")]},
+            id="17430 and 18155 for from 0hr1",
+        ),
+        pytest.param(
+            "feature_pair_within_14770_17814",
+            "read2",
+            {"ENST00000442898": [(17855, 18027, "9", "-")]},
+            id="17430 and 18155 for from no4sU",
+        ),
+    ],
+)
+def test_filter_spliced_utrons(
+    feature_pair: tuple[dict["str", Any], list[int], list[int], list[int], list[int]],
+    read: str,
+    expected: dict[str, list[Any]],
+    request: pytest.FixtureRequest,
+) -> None:
+    """Test filtering spliced utrons.
+
+    Tests are very basic and not all conditional statements are covered.
+    """
+    # We first extract the required pair_features and block start/ends from the fixture
+    pair_features, blocks = request.getfixturevalue(feature_pair)
+    within_introns = isoslam.filter_spliced_utrons(
+        pair_features,
+        blocks,
+        read,
+    )
+    assert within_introns == expected

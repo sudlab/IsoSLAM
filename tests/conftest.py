@@ -148,3 +148,187 @@ def aligned_segment_assigned_20906(bam_sorted_assigned_file_0hr1: list[AlignedSe
     aligned segment to be testing because of this filtering.
     """
     return [x for x in bam_sorted_assigned_file_0hr1 if x.reference_start == 20906][0]
+
+
+@pytest.fixture()
+def start_within_intron(bam_sorted_assigned_file_no4sU: list[AlignedSegment]) -> AlignedSegment:
+    """Fixture where the start (16061) is within the intron (16011-16161)."""
+    return [x for x in bam_sorted_assigned_file_no4sU if x.reference_start == 16061 and x.reference_end == 16717][0]
+
+
+@pytest.fixture()
+def end_within_intron(bam_sorted_assigned_file_no4sU: list[AlignedSegment]) -> AlignedSegment:
+    """Fixture where the end (24850) is within the intron (24715-24865)."""
+    return [x for x in bam_sorted_assigned_file_no4sU if x.reference_start == 18492 and x.reference_end == 24850][0]
+
+
+def _feature_pair(
+    bam_file: list[AlignedSegment],
+    read1_start: int,
+    read2_start: int,
+    extract_transcript: dict[str, list[int | str]],
+    extract_strand_transcript: tuple[dict[str, list[Any]], dict[str, str]],
+) -> tuple[dict["str", Any], list, list, list, list]:
+    """Construct feature pairs."""
+    aligned_segment1 = [x for x in bam_file if x.reference_start == read1_start][0]
+    aligned_segment2 = [x for x in bam_file if x.reference_start == read2_start][0]
+    pair_features = isoslam.extract_features_from_pair(
+        [
+            aligned_segment1,
+            aligned_segment2,
+        ]
+    )
+    # ...and get the utron for both reads and add them to the dictionary
+    _, gene_transcript = extract_strand_transcript
+    pair_features["read1"]["utron"] = isoslam.extract_utron(
+        pair_features["read1"], gene_transcript, coordinates=extract_transcript
+    )
+    pair_features["read2"]["utron"] = isoslam.extract_utron(
+        pair_features["read2"], gene_transcript, coordinates=extract_transcript
+    )
+    # ...then we can get the block_starts/ends
+    block_starts1, block_ends1 = isoslam.zip_blocks(aligned_segment1)
+    block_starts2, block_ends2 = isoslam.zip_blocks(aligned_segment2)
+    blocks = {
+        "read1": {"starts": block_starts1, "ends": block_ends1},
+        "read2": {"starts": block_starts2, "ends": block_ends2},
+    }
+    return (pair_features, blocks)
+
+
+# Fixtures for within introns
+@pytest.fixture()
+def feature_pair_within_15967_24715(
+    bam_sorted_assigned_file_no4sU: list[AlignedSegment],
+    extract_transcript: dict[str, list[int | str]],
+    extract_strand_transcript: tuple[dict[str, list[Any]], dict[str, str]],
+) -> tuple[dict["str", Any], list, list, list, list]:
+    """
+    Feature pair for 15967 and 24715 augment with utrons and return along with block start/ends.
+
+    Both of these have a start within ''read1''.
+
+    Used in test_filter_within_introns()
+    """
+    return _feature_pair(
+        bam_file=bam_sorted_assigned_file_no4sU,
+        read1_start=15967,
+        read2_start=24715,
+        extract_transcript=extract_transcript,
+        extract_strand_transcript=extract_strand_transcript,
+    )
+
+
+@pytest.fixture()
+def feature_pair_within_17790_18093(
+    bam_sorted_assigned_file_0hr1: list[AlignedSegment],
+    extract_transcript: dict[str, list[int | str]],
+    extract_strand_transcript: tuple[dict[str, list[Any]], dict[str, str]],
+) -> tuple[dict["str", Any], list, list, list, list]:
+    """
+    Feature pair for 17790 and 18093 augment with utrons and return along with block start/ends.
+
+    Both of these have a start within ''read1''.
+
+    Used in test_filter_within_introns()
+    """
+    return _feature_pair(
+        bam_file=bam_sorted_assigned_file_0hr1,
+        read1_start=17790,
+        read2_start=18093,
+        extract_transcript=extract_transcript,
+        extract_strand_transcript=extract_strand_transcript,
+    )
+
+
+@pytest.fixture()
+def feature_pair_within_17709_18290(
+    bam_sorted_assigned_file_0hr1: list[AlignedSegment],
+    extract_transcript: dict[str, list[int | str]],
+    extract_strand_transcript: tuple[dict[str, list[Any]], dict[str, str]],
+) -> tuple[dict["str", Any], list, list, list, list]:
+    """
+    Feature pair for 17709 and 18290 augment with utrons and return along with block start/ends.
+
+    17709 has a start within ''read1'' and end within ''read2'' whilst 18290 has a start within ''read2'' and an end
+    within ''read1''.
+
+    Used in test_filter_within_introns()
+    """
+    return _feature_pair(
+        bam_file=bam_sorted_assigned_file_0hr1,
+        read1_start=17709,
+        read2_start=18290,
+        extract_transcript=extract_transcript,
+        extract_strand_transcript=extract_strand_transcript,
+    )
+
+
+# Fixtures for within and spliced
+@pytest.fixture()
+def feature_pair_within_14770_17814(
+    bam_sorted_assigned_file_no4sU: list[AlignedSegment],
+    extract_transcript: dict[str, list[int | str]],
+    extract_strand_transcript: tuple[dict[str, list[Any]], dict[str, str]],
+) -> tuple[dict["str", Any], list, list, list, list]:
+    """
+    Feature pair for 14770 and 17814 augment with utrons and return along with block start/ends.
+
+    14770 has a start within ''read1'' and end within ''read2'' whilst 17814 has a start within ''read2'' and an end
+    within ''read1''.
+
+    Used in both test_filter_within_introns() and test_filter_spliced_utrons()
+    """
+    return _feature_pair(
+        bam_file=bam_sorted_assigned_file_no4sU,
+        read1_start=14770,
+        read2_start=17814,
+        extract_transcript=extract_transcript,
+        extract_strand_transcript=extract_strand_transcript,
+    )
+
+
+# Fixtures for spliced matches
+@pytest.fixture()
+def feature_pair_spliced_17739_17814(
+    bam_sorted_assigned_file_no4sU: list[AlignedSegment],
+    extract_transcript: dict[str, list[int | str]],
+    extract_strand_transcript: tuple[dict[str, list[Any]], dict[str, str]],
+) -> tuple[dict["str", Any], list, list, list, list]:
+    """
+    Feature pair for 17739 and 17814 augment with utrons and return along with block start/ends.
+
+    17739 has an end that matches the end of ''read1'' whilst 17814 has a start that matches the end of ''read1''.
+
+    Used in test_filter_spliced_utrons()
+    """
+    return _feature_pair(
+        bam_file=bam_sorted_assigned_file_no4sU,
+        read1_start=17739,
+        read2_start=17814,
+        extract_transcript=extract_transcript,
+        extract_strand_transcript=extract_strand_transcript,
+    )
+
+
+@pytest.fixture()
+def feature_pair_spliced_17430_18155(
+    bam_sorted_assigned_file_0hr1: list[AlignedSegment],
+    extract_transcript: dict[str, list[int | str]],
+    extract_strand_transcript: tuple[dict[str, list[Any]], dict[str, str]],
+) -> tuple[dict["str", Any], list, list, list, list]:
+    """
+    Feature pair for 17430 and 18155 augment with utrons and return along with block start/ends.
+
+    17430 has an end that matches ''read1'' start whilst 18155 has an end that matches the start of ''read1'' and an end
+    within ''read1''.
+
+    Used in test_filter_spliced_introns()
+    """
+    return _feature_pair(
+        bam_file=bam_sorted_assigned_file_0hr1,
+        read1_start=17430,
+        read2_start=18155,
+        extract_transcript=extract_transcript,
+        extract_strand_transcript=extract_strand_transcript,
+    )

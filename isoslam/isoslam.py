@@ -196,3 +196,83 @@ def zip_blocks(read: AlignedSegment) -> Iterator[tuple[Any, ...]]:
         Tuple of two lists of integers the first is start location, the second is the end location.
     """
     return zip(*read.get_blocks())
+
+
+def filter_within_introns(
+    pair_features: dict[str, dict[str, Any]],
+    blocks: dict[str, dict[str, set[int]]],
+    read: str = "read1",
+) -> dict[str, tuple[Any]]:
+    """
+    Filter utrons that are within introns.
+
+    Parameters
+    ----------
+    pair_features : dict[str, dict]
+        Dictionary of extracted features and utron in both read directions.
+    blocks : dic[str: dict[str, set]]
+        Nested dictionary of start and ends for each read. Top level is read, with a dictionary of start and end.
+    read : str
+        Direction of read to filter on, default is ''read1'' but can also use ''read2''.
+
+    Returns
+    -------
+    dict[str, tuple(Any)]
+        Dictionary of the chromosome, start, end and strand of transcripts that are within introns.
+    """
+    within_intron: dict[str, Any] = {}
+    for chromosome, start, end, transcript_id, strand in pair_features[read]["utron"]:
+        start_end_within_intron = (
+            start <= pair_features[read]["start"] <= end or start <= pair_features[read]["end"] <= end
+        )
+        spans_intron = (
+            pair_features[read]["start"] < start
+            and pair_features[read]["end"] > end
+            and (end - start) < pair_features[read]["length"]
+        )
+        if (  # pylint: disable=too-many-boolean-expressions
+            (start_end_within_intron or spans_intron)
+            # Start should not be in ends and ends should not be in start, can we combine the start and end block
+            # sets I wonder?
+            and start not in blocks["read1"]["ends"]
+            and end not in blocks["read1"]["starts"]
+            and start not in blocks["read2"]["ends"]
+            and end not in blocks["read2"]["starts"]
+        ):
+            # Why add an empty list and append a tuple?
+            if transcript_id not in within_intron:
+                within_intron[transcript_id] = []
+            within_intron[transcript_id].append((start, end, chromosome, strand))
+    return within_intron
+
+
+def filter_spliced_utrons(
+    pair_features: dict[str, dict[str, Any]],
+    blocks: dict[str, dict[str, set[int]]],
+    read: str = "read1",
+) -> dict[str, list[Any]]:
+    """
+    Filter utrons where start is in the block ends or end is in the block start.
+
+    Parameters
+    ----------
+    pair_features : dict[str, dict]
+        Dictionary of extracted features and utron in both read directions.
+    blocks : dic[str: dict[str, set]]
+        Nested dictionary of start and ends for each read. Top level is read, with a dictionary of start and end.
+    read : str
+        Direction of read to filter on, default is ''read1'' but can also use ''read2''.
+
+    Returns
+    -------
+    dict[str, tuple(Any)]
+        Dictionary of the chromosome, start, end and strand of transcripts that are within introns.
+    """
+    spliced_3ui: dict[str, list[Any]] = {}
+    for chromosome, start, end, transcript_id, strand in pair_features[read]["utron"]:
+        if start in blocks[read]["ends"] and end in blocks[read]["starts"]:
+            # Why add an empty list and append a tuple?
+            if transcript_id not in spliced_3ui:
+                spliced_3ui[transcript_id] = []
+            spliced_3ui[transcript_id].append((start, end, chromosome, strand))
+    return spliced_3ui

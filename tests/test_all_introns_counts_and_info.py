@@ -21,9 +21,11 @@ BAM_DIR = RESOURCES / "bam"
     ("file_path"),
     [
         pytest.param(
-            BAM_DIR / "sorted_assigned" / "d0_no4sU_filtered_remapped_sorted.sorted.assigned.bam", id="file 1"
+            BAM_DIR / "sorted_assigned" / "d0_no4sU_filtered_remapped_sorted.sorted.assigned.bam", id="file no4sU"
         ),
-        pytest.param(BAM_DIR / "sorted_assigned" / "d0_0hr1_filtered_remapped_sorted.sorted.assigned.bam", id="file 2"),
+        pytest.param(
+            BAM_DIR / "sorted_assigned" / "d0_0hr1_filtered_remapped_sorted.sorted.assigned.bam", id="file 0hr1"
+        ),
     ],
 )
 def test_main(file_path: Path, tmp_path: Path, regtest) -> None:
@@ -39,3 +41,5 @@ def test_main(file_path: Path, tmp_path: Path, regtest) -> None:
     # Ideally would like to use syrupy to test snapshots but pd.DataFrame() are not yet supported
     # https://github.com/syrupy-project/syrupy/issues/887
     print(results.to_string(float_format="{:.4e}".format), file=regtest)
+    # Uncomment to print out debugging information when running tests
+    # assert False
