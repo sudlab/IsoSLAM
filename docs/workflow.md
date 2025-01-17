@@ -70,3 +70,41 @@ develop/modify it using the [Mermaid Live Editor][mermaid-live] and make pull-re
 
 [mermaid]: https://mermaid.js.org/
 [mermaid-live]: https://mermaid.live
+
+## Descriptive Workflow
+
+<!-- markdownlint-disable MD033 -->
+<style>
+body {
+    counter-reset: h3counter;
+}
+h3 {
+    counter-increment: h3counter;
+}
+h3:before {
+    content: counter(h3counter) ". ";
+}
+</style>
+
+### Read alignments are loaded
+
+### The gene transcript these are within are identified
+
+### Introns within these genes are identified
+
+### Retain reads that are overlap with introns or splice ends
+
+```text
+                                                 Genome ----------------------->
+
+Read Alignment Blocks                     |>>>>|                     |>>>>>>>>>>>>>>>|
+Transcript 1:                      |===========|---------------------|=========|-------------------|==========|
+Transcript 2:              |====|------------------------------------|=========|-------------------|==========|
+
+Introns[0]                                      ---------------------
+Introns[1]                                                                      -------------------
+Introns[2]                       ------------------------------------
+Introns[3]                                                                      -------------------
+
+Exon : |========|   Read alignment block:  |>>>>>|
+```
