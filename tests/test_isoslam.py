@@ -494,3 +494,242 @@ def test_filter_spliced_utrons(
         read,
     )
     assert within_introns == expected
+
+
+@pytest.mark.parametrize(
+    ("reads1", "reads2", "expected"),
+    [
+        pytest.param(  # type: ignore[misc]
+            {
+                "transcript1": [
+                    (1, 2, "9", "Ret"),
+                    (3, 4, "10", "Ret"),
+                ]
+            },
+            {
+                "transcript1": [
+                    (1, 2, "9", "Ret"),
+                    (5, 6, "11", "Ret"),
+                ]
+            },
+            {
+                ("transcript1", (1, 2, "9", "Ret")),
+                ("transcript1", (3, 4, "10", "Ret")),
+                ("transcript1", (5, 6, "11", "Ret")),
+            },
+            id="one transcripts across two reads with one duplicate",
+        ),
+        pytest.param(
+            {
+                "transcript1": [
+                    (1, 2, "9", "Ret"),
+                    (3, 4, "10", "Ret"),
+                ],
+                "transcript2": [
+                    (5, 6, "20", "Ret"),
+                    (7, 8, "20", "Ret"),
+                ],
+            },
+            {
+                "transcript1": [
+                    (1, 2, "9", "Ret"),
+                    (5, 6, "11", "Ret"),
+                ],
+                "transcript2": [
+                    (5, 6, "20", "Spl"),
+                    (9, 10, "21", "Ret"),
+                ],
+            },
+            {
+                ("transcript1", (1, 2, "9", "Ret")),
+                ("transcript1", (3, 4, "10", "Ret")),
+                ("transcript1", (5, 6, "11", "Ret")),
+                ("transcript2", (5, 6, "20", "Ret")),
+                ("transcript2", (5, 6, "20", "Spl")),
+                ("transcript2", (7, 8, "20", "Ret")),
+                ("transcript2", (9, 10, "21", "Ret")),
+            },
+            id="two transcripts across two reads with one duplicate one very similar",
+        ),
+        pytest.param(
+            {
+                "transcript1": [
+                    (1, 2, "9", "Ret"),
+                    (3, 4, "10", "Ret"),
+                    (1, 2, "9", "Ret"),
+                    (3, 4, "10", "Ret"),
+                    (1, 2, "9", "Ret"),
+                    (3, 4, "10", "Ret"),
+                    (1, 2, "9", "Ret"),
+                    (3, 4, "10", "Ret"),
+                    (1, 2, "9", "Ret"),
+                    (3, 4, "10", "Ret"),
+                    (1, 2, "9", "Ret"),
+                    (3, 4, "10", "Ret"),
+                    (1, 2, "9", "Ret"),
+                    (3, 4, "10", "Ret"),
+                    (1, 2, "9", "Ret"),
+                    (3, 4, "10", "Ret"),
+                    (1, 2, "9", "Ret"),
+                    (3, 4, "10", "Ret"),
+                    (1, 2, "9", "Ret"),
+                    (3, 4, "10", "Ret"),
+                    (1, 2, "9", "Ret"),
+                    (3, 4, "10", "Ret"),
+                    (1, 2, "9", "Ret"),
+                    (3, 4, "10", "Ret"),
+                    (1, 2, "9", "Ret"),
+                    (3, 4, "10", "Ret"),
+                    (1, 2, "9", "Ret"),
+                    (3, 4, "10", "Ret"),
+                    (1, 2, "9", "Ret"),
+                    (3, 4, "10", "Ret"),
+                ],
+                "transcript2": [
+                    (5, 6, "20", "Ret"),
+                    (7, 8, "20", "Ret"),
+                    (5, 6, "20", "Ret"),
+                    (7, 8, "20", "Ret"),
+                    (5, 6, "20", "Ret"),
+                    (7, 8, "20", "Ret"),
+                    (5, 6, "20", "Ret"),
+                    (7, 8, "20", "Ret"),
+                    (5, 6, "20", "Ret"),
+                    (7, 8, "20", "Ret"),
+                    (5, 6, "20", "Ret"),
+                    (7, 8, "20", "Ret"),
+                    (5, 6, "20", "Ret"),
+                    (7, 8, "20", "Ret"),
+                    (5, 6, "20", "Ret"),
+                    (7, 8, "20", "Ret"),
+                    (5, 6, "20", "Ret"),
+                    (7, 8, "20", "Ret"),
+                    (5, 6, "20", "Ret"),
+                    (7, 8, "20", "Ret"),
+                    (5, 6, "20", "Ret"),
+                    (7, 8, "20", "Ret"),
+                    (5, 6, "20", "Ret"),
+                    (7, 8, "20", "Ret"),
+                    (5, 6, "20", "Ret"),
+                    (7, 8, "20", "Ret"),
+                    (5, 6, "20", "Ret"),
+                    (7, 8, "20", "Ret"),
+                ],
+            },
+            {
+                "transcript1": [
+                    (1, 2, "9", "Ret"),
+                    (5, 6, "11", "Ret"),
+                    (5, 6, "20", "Ret"),
+                    (7, 8, "20", "Ret"),
+                    (5, 6, "20", "Ret"),
+                    (7, 8, "20", "Ret"),
+                    (5, 6, "20", "Ret"),
+                    (7, 8, "20", "Ret"),
+                    (5, 6, "20", "Ret"),
+                    (7, 8, "20", "Ret"),
+                    (5, 6, "20", "Ret"),
+                    (7, 8, "20", "Ret"),
+                    (5, 6, "20", "Ret"),
+                    (7, 8, "20", "Ret"),
+                    (5, 6, "20", "Ret"),
+                    (7, 8, "20", "Ret"),
+                    (5, 6, "20", "Ret"),
+                    (7, 8, "20", "Ret"),
+                    (5, 6, "20", "Ret"),
+                    (7, 8, "20", "Ret"),
+                    (5, 6, "20", "Ret"),
+                    (7, 8, "20", "Ret"),
+                    (5, 6, "20", "Ret"),
+                    (7, 8, "20", "Ret"),
+                    (5, 6, "20", "Ret"),
+                    (7, 8, "20", "Ret"),
+                    (5, 6, "20", "Ret"),
+                    (7, 8, "20", "Ret"),
+                    (5, 6, "20", "Ret"),
+                    (7, 8, "20", "Ret"),
+                ],
+                "transcript2": [
+                    (5, 6, "20", "Spl"),
+                    (9, 10, "21", "Ret"),
+                    (5, 6, "20", "Spl"),
+                    (9, 10, "21", "Ret"),
+                    (5, 6, "20", "Spl"),
+                    (9, 10, "21", "Ret"),
+                    (5, 6, "20", "Spl"),
+                    (9, 10, "21", "Ret"),
+                    (5, 6, "20", "Spl"),
+                    (9, 10, "21", "Ret"),
+                    (5, 6, "20", "Spl"),
+                    (9, 10, "21", "Ret"),
+                    (5, 6, "20", "Spl"),
+                    (9, 10, "21", "Ret"),
+                    (5, 6, "20", "Spl"),
+                    (9, 10, "21", "Ret"),
+                    (5, 6, "20", "Spl"),
+                    (9, 10, "21", "Ret"),
+                    (5, 6, "20", "Spl"),
+                    (9, 10, "21", "Ret"),
+                    (5, 6, "20", "Spl"),
+                    (9, 10, "21", "Ret"),
+                    (5, 6, "20", "Spl"),
+                    (9, 10, "21", "Ret"),
+                    (5, 6, "20", "Spl"),
+                    (9, 10, "21", "Ret"),
+                    (5, 6, "20", "Spl"),
+                    (9, 10, "21", "Ret"),
+                    (5, 6, "20", "Spl"),
+                    (9, 10, "21", "Ret"),
+                    (5, 6, "20", "Spl"),
+                    (9, 10, "21", "Ret"),
+                    (5, 6, "20", "Spl"),
+                    (9, 10, "21", "Ret"),
+                    (5, 6, "20", "Spl"),
+                    (9, 10, "21", "Ret"),
+                    (5, 6, "20", "Spl"),
+                    (9, 10, "21", "Ret"),
+                ],
+            },
+            {
+                ("transcript1", (1, 2, "9", "Ret")),
+                ("transcript1", (3, 4, "10", "Ret")),
+                ("transcript1", (5, 6, "11", "Ret")),
+                ("transcript1", (5, 6, "20", "Ret")),
+                ("transcript1", (7, 8, "20", "Ret")),
+                ("transcript2", (5, 6, "20", "Ret")),
+                ("transcript2", (5, 6, "20", "Spl")),
+                ("transcript2", (7, 8, "20", "Ret")),
+                ("transcript2", (9, 10, "21", "Ret")),
+            },
+            id="BIG dictionaries",
+        ),
+    ],
+)
+def test_unique_conversions(
+    reads1: dict[str, list[tuple[Any]]], reads2: dict[str, list[tuple[Any]]], expected: set[list[Any]]
+) -> None:
+    """Test the combining of two read sets into one unique set."""
+    unique_conversions = isoslam.unique_conversions(reads1, reads2)
+    assert unique_conversions == expected
+
+
+@pytest.mark.parametrize(
+    ("set1", "set2", "expected_set1", "expected_set2"),
+    [
+        pytest.param(  # type: ignore[misc]
+            {"a", "b", "c"},
+            {"d", "e", "f"},
+            {"a", "b", "c"},
+            {"d", "e", "f"},
+            id="No overlap",
+        ),
+        pytest.param({"a", "b", "c"}, {"b", "d", "e", "f"}, {"a", "c"}, {"d", "e", "f"}, id="b common"),
+        pytest.param({"a", "b", "c"}, {"b", "c", "d", "e", "f"}, {"a"}, {"d", "e", "f"}, id="b and ccommon"),
+        pytest.param({"a", "b", "c"}, {"a", "b", "c"}, set(), set(), id="identical"),
+    ],
+)
+def test_remove_common_reads(set1: set[str], set2: set[str], expected_set1: set[str], expected_set2: set[str]) -> None:
+    """Test common elements are removed from two sets."""
+    set1, set2 = isoslam.remove_common_reads(set1, set2)  # type: ignore[arg-type, assignment]
+    assert set1 == expected_set1
+    assert set2 == expected_set2

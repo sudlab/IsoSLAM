@@ -187,40 +187,13 @@ def main(argv=None):
                 continue
             first_matched += 1
 
-            # Create a set of tuples: (tx_id,(start,end))
-            # Retained
-            assign_conversions_to_retained = []
-
-            for transcript_id, start_end_list in read1_within_intron.items():
-                for start_end in start_end_list:
-                    assign_conversions_to_retained.append((transcript_id, start_end))
-
-            for transcript_id, start_end_list in read2_within_intron.items():
-                for start_end in start_end_list:
-                    assign_conversions_to_retained.append((transcript_id, start_end))
-
-            # Only need each unique element once
-            assign_conversions_to_retained = set(assign_conversions_to_retained)
-
-            # Spliced
-            assign_conversions_to_spliced = []
-
-            for transcript_id, start_end_list in read1_spliced_3UI.items():
-                for start_end in start_end_list:
-                    assign_conversions_to_spliced.append((transcript_id, start_end))
-
-            for transcript_id, start_end_list in read2_spliced_3UI.items():
-                for start_end in start_end_list:
-                    assign_conversions_to_spliced.append((transcript_id, start_end))
-
-            # Only need each unique element once
-            assign_conversions_to_spliced = set(assign_conversions_to_spliced)
+            assign_conversions_to_retained = isoslam.unique_conversions(read1_within_intron, read2_within_intron)
+            assign_conversions_to_spliced = isoslam.unique_conversions(read1_spliced_3UI, read2_spliced_3UI)
 
             ## If there are any events in both we want to remove them - this should be rare
-            in_both = assign_conversions_to_retained.intersection(assign_conversions_to_spliced)
-            assign_conversions_to_spliced -= in_both
-            assign_conversions_to_retained -= in_both
-
+            assign_conversions_to_retained, assign_conversions_to_spliced = isoslam.remove_common_reads(
+                assign_conversions_to_retained, assign_conversions_to_spliced
+            )
             i += 1
 
             read1_status = read1.get_tag("XS")
@@ -256,7 +229,7 @@ def main(argv=None):
                     # if read 2 is the 1 assigned]
                     assignment = read2.get_tag("XT")
                     strand = strand_dict[assignment]
-            # TODO: Move logic to earlier in work flow and skip more preocessing if evaluate to False
+            # TODO: Move logic to earlier in work flow and skip more pre-proocessing if evaluate to False
             # assigned a "forward" and "reverse" read relative to the genome
             if read1.is_reverse and not read2.is_reverse:
                 reverse_read = read1

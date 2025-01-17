@@ -276,3 +276,53 @@ def filter_spliced_utrons(
                 spliced_3ui[transcript_id] = []
             spliced_3ui[transcript_id].append((start, end, chromosome, strand))
     return spliced_3ui
+
+
+def unique_conversions(
+    reads1: dict[str, list[Any]],
+    reads2: dict[str, list[Any]],
+) -> frozenset[list[Any]]:
+    """
+    Create a unique set of conversions that are to be retained.
+
+    Parameters
+    ----------
+    reads1 : dict[str, list[tuple[Any]]]
+        A dictionary of reads mapped to transcripts (key) which overlap introns. Each read has the ''start'',  ''end'',
+       ''chromsome'' and ''strand'' recorded.
+    reads2 : dict[str, list[tuple[Any]]]
+        A dictionary of reads mapped to transcripts (key) which overlap introns. Each read has the ''start'',  ''end'',
+       ''chromsome'' and ''strand'' recorded.
+
+    Returns
+    -------
+    set[list[Any]]
+        Combines the two sets of observations and de-duplicates them, returning only the unique assigned conversions.
+    """
+    flat1 = [(key, nested_list) for key, values in reads1.items() for nested_list in values]
+    flat2 = [(key, nested_list) for key, values in reads2.items() for nested_list in values]
+    return frozenset(flat1 + flat2)  # type: ignore[arg-type]
+
+
+def remove_common_reads(retained: set[list[Any]], spliced: set[list[Any]]) -> tuple[set[list[Any]], set[list[Any]]]:
+    """
+    Remove reads that are common to both retained and spliced sets.
+
+    Parameters
+    ----------
+    retained : set[list[Any]]
+        Set of retained reads. Each item is a tuple with ''transcript_id'' and a list of ''start'', ''end'',
+        ''chromosome'' and ''strand''.
+    spliced : set[list[Any]]
+        Set of retained reads. Each item is a tuple with ''transcript_id'' and a list of ''start'', ''end'',
+        ''chromosome'' and ''strand''.
+
+    Returns
+    -------
+    tuple[set[list[Any]], set[list[Any]]]
+        A tuple of the ''retained'' (first) and ''spliced'' reads with common items removed.
+    """
+    common = retained & spliced
+    retained -= common
+    spliced -= common
+    return (retained, spliced)
