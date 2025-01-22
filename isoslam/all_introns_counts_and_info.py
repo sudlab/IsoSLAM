@@ -77,7 +77,6 @@ def main(argv=None):
 
         yield read_list
 
-    i = 0
     i_progress = 0
     i_total_progress = 0
     first_matched = 0
@@ -130,6 +129,42 @@ def main(argv=None):
             read2_transcript = pair_features["read2"]["transcript"]
             read2_block_start = pair_features["read2"]["block_start"]
             read2_block_end = pair_features["read2"]["block_end"]
+
+            # Use the intersection of sets, this skips if either read1 or read2 aren't assigned, - or +
+            if not {"Assigned", "+", "-"} & {read1_status, read2_status}:
+                continue
+
+            # pass if either is assigned
+            status_list = [pair_features["read1"]["status"], pair_features["read2"]["status"]]
+            # If both reads are assigned/+/-...
+            if all(status in ["Assigned", "+", "-"] for status in status_list):
+                # ...check if strands are equal if so they are assign one to strand
+                if (
+                    strand_dict[pair_features["read1"]["transcript"]]
+                    == strand_dict[pair_features["read2"]["transcript"]]
+                ):
+                    strand = strand_dict[pair_features["read1"]["transcript"]]
+                # ...if not we pass this pair
+                else:
+                    continue
+            else:
+                # If read1 is Assigned we get the ??? for this transcript, otherwise it comes from read2
+                strand = (
+                    strand_dict[pair_features["read1"]["transcript"]]
+                    if pair_features["read1"]["status"] == "Assigned"
+                    else strand_dict[pair_features["read2"]["transcript"]]
+                )
+            # Set forward and reverse reads
+            # TODO: Extract is_reverse to the pair_features["read1"]["reverse"] in refactored code
+            if read1.is_reverse and not read2.is_reverse:
+                reverse_read = read1
+                forward_read = read2
+            elif read2.is_reverse and not read1.is_reverse:
+                reverse_read = read2
+                forward_read = read1
+            else:
+                # Not proper pair
+                continue
 
             # Lists (utrons1 and utrons2) are iterated over further down
             pair_features["read1"]["utron"] = isoslam.extract_utron(
@@ -194,52 +229,6 @@ def main(argv=None):
             assign_conversions_to_retained, assign_conversions_to_spliced = isoslam.remove_common_reads(
                 assign_conversions_to_retained, assign_conversions_to_spliced
             )
-            i += 1
-
-            read1_status = read1.get_tag("XS")
-            read2_status = read2.get_tag("XS")
-
-            status_list = list()
-            status_list.append(read1_status)
-            status_list.append(read2_status)
-
-            if not (any(status in ["Assigned", "+", "-"] for status in status_list)):
-                continue
-
-            # pass if either is assigned
-            if all(status in ["Assigned", "+", "-"] for status in status_list):
-                # pass if both are assigned
-                assignment1 = read1.get_tag("XT")
-                assignment2 = read2.get_tag("XT")
-                strand1 = strand_dict[assignment1]
-                strand2 = strand_dict[assignment2]
-                if strand1 == strand2:
-                    # pass if both on same strand
-                    strand = strand1
-                else:
-                    # if not on same strand bin the pair
-                    continue
-            else:
-                # pass if only 1 is assigned
-                if read1_status == "Assigned":
-                    # if read 1 is the 1 assigned
-                    assignment = read1.get_tag("XT")
-                    strand = strand_dict[assignment]
-                else:
-                    # if read 2 is the 1 assigned]
-                    assignment = read2.get_tag("XT")
-                    strand = strand_dict[assignment]
-            # TODO: Move logic to earlier in work flow and skip more pre-proocessing if evaluate to False
-            # assigned a "forward" and "reverse" read relative to the genome
-            if read1.is_reverse and not read2.is_reverse:
-                reverse_read = read1
-                forward_read = read2
-            elif read2.is_reverse and not read1.is_reverse:
-                reverse_read = read2
-                forward_read = read1
-            else:
-                # Not proper pair
-                continue
 
             # if we are mapped to a +ve stranded transcript, then count T>C in
             # the forward read and A>G in the reverse read. if we are mapped to
