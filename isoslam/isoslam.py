@@ -123,6 +123,10 @@ def extract_features_from_read(read: AlignedSegment) -> dict[str, int | str | No
         transcript = read.get_tag("XT")
     except KeyError:
         transcript = None
+    try:
+        reverse = read.is_reverse
+    except KeyError:
+        reverse = None
     return {
         "start": read.reference_start,
         "end": read.reference_end,
@@ -131,6 +135,7 @@ def extract_features_from_read(read: AlignedSegment) -> dict[str, int | str | No
         "transcript": transcript,
         "block_start": block_start,
         "block_end": block_end,
+        "reverse": reverse,
     }
 
 

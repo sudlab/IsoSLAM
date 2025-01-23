@@ -95,7 +95,7 @@ def test_extract_segment_pairs(bam_file: str | Path, expected_length: int) -> No
 
 
 @pytest.mark.parametrize(
-    ("aligned_segment", "start", "end", "length", "status", "transcript", "block_start", "block_end"),
+    ("aligned_segment", "start", "end", "length", "status", "transcript", "block_start", "block_end", "reverse"),
     [
         pytest.param(  # type: ignore[misc]
             "aligned_segment_unassigned_28584",
@@ -106,6 +106,7 @@ def test_extract_segment_pairs(bam_file: str | Path, expected_length: int) -> No
             None,
             (28584, 28704),
             (28704, 28733),
+            True,
             id="28584 - Assignment and Transcript are None",
         ),
         pytest.param(
@@ -117,6 +118,7 @@ def test_extract_segment_pairs(bam_file: str | Path, expected_length: int) -> No
             None,
             (17416, 17718),
             (17479, 17805),
+            False,
             id="17416 - Assignment and Transcript are None",
         ),
         pytest.param(
@@ -128,6 +130,7 @@ def test_extract_segment_pairs(bam_file: str | Path, expected_length: int) -> No
             None,
             (18029, 18380),
             (18174, 18385),
+            True,
             id="18029 - Assignment and Transcript are None",
         ),
         pytest.param(
@@ -139,6 +142,7 @@ def test_extract_segment_pairs(bam_file: str | Path, expected_length: int) -> No
             "MSTRG.63147",
             (17814, 18027),
             (17855, 18136),
+            True,
             id="17814 - Assigned to MSTRG.63147",
         ),
         pytest.param(
@@ -150,6 +154,7 @@ def test_extract_segment_pairs(bam_file: str | Path, expected_length: int) -> No
             "MSTRG.63147",
             (14770,),
             (14876,),
+            False,
             id="14770 - Assigned to MSTRG.63147",
         ),
         pytest.param(
@@ -161,6 +166,7 @@ def test_extract_segment_pairs(bam_file: str | Path, expected_length: int) -> No
             "MSTRG.63147",
             (15967,),
             (16117,),
+            False,
             id="15967 - Assigned to MSTRG.63147",
         ),
         pytest.param(
@@ -172,6 +178,7 @@ def test_extract_segment_pairs(bam_file: str | Path, expected_length: int) -> No
             None,
             (21051,),
             (21201,),
+            True,
             id="21051 - Unassigned",
         ),
         pytest.param(
@@ -183,6 +190,7 @@ def test_extract_segment_pairs(bam_file: str | Path, expected_length: int) -> No
             None,
             (20906,),
             (21056,),
+            False,
             id="20906 - Unassigned",
         ),
     ],
@@ -196,11 +204,11 @@ def test_extract_features_from_read(
     transcript: str,
     block_start: tuple[int, int],
     block_end: tuple[int, int],
+    reverse: bool,
     request: pytest.FixtureRequest,
 ) -> None:
     """Test extract of features from an unassigned and assigned segment reads."""
     segment = isoslam.extract_features_from_read(request.getfixturevalue(aligned_segment))
-    print(f"{segment=}")
     assert isinstance(segment, dict)
     assert segment["start"] == start
     assert segment["end"] == end
@@ -209,6 +217,7 @@ def test_extract_features_from_read(
     assert segment["transcript"] == transcript
     assert segment["block_start"] == block_start
     assert segment["block_end"] == block_end
+    assert segment["reverse"] == reverse
 
 
 @pytest.mark.parametrize(
@@ -226,6 +235,7 @@ def test_extract_features_from_read(
                     "transcript": "MSTRG.63147",
                     "block_start": (17814, 18027),
                     "block_end": (17855, 18136),
+                    "reverse": True,
                 },
                 "read2": {
                     "start": 14770,
@@ -235,6 +245,7 @@ def test_extract_features_from_read(
                     "transcript": "MSTRG.63147",
                     "block_start": (14770,),
                     "block_end": (14876,),
+                    "reverse": False,
                 },
             },
             id="28584 and 17416 - Assigned and transcript MSTRG.63147",
@@ -251,6 +262,7 @@ def test_extract_features_from_read(
                     "transcript": None,
                     "block_start": (21051,),
                     "block_end": (21201,),
+                    "reverse": True,
                 },
                 "read2": {
                     "start": 20906,
@@ -260,6 +272,7 @@ def test_extract_features_from_read(
                     "transcript": None,
                     "block_start": (20906,),
                     "block_end": (21056,),
+                    "reverse": False,
                 },
             },
             id="21051 and 21056 - Assignment and Transcript are None",
