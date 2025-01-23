@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from loguru import logger
-from pysam import AlignedSegment
+from pysam import AlignedSegment, VariantFile
 
 from isoslam import io
 
@@ -326,3 +326,64 @@ def remove_common_reads(retained: set[list[Any]], spliced: set[list[Any]]) -> tu
     retained -= common
     spliced -= common
     return (retained, spliced)
+
+
+def conversions_per_read(  # pylint: disable=too-many-positional-arguments
+    read: AlignedSegment,
+    conversion_from: str,
+    conversion_to: str,
+    convertible: set[str],
+    converted_position: set[str],
+    coverage: set[str],
+    vcf_file: VariantFile,
+) -> tuple[set[str], set[str], set[str]]:
+    """
+    Build sets of genome position for conversions, converted positions and coverage for a given read.
+
+    Parameters
+    ----------
+    read : dict[str, dict[str, Any]]
+        Aligned read.
+    conversion_from : str
+        The base pair the conversion is from, typically either ''T'' or ''C''.
+    conversion_to : str
+        The base pair the conversion is to, typically the opposite pairing of ''from'', i.e. ''A'' or ''C''
+        respectively.
+    convertible : set
+        Set, possibly empty, to which the genome position is added if the sequence at a given location matches
+        ''conversion_from''.
+    converted_position : set
+        Set, possibly, empty, to which the genome position is added if a conversion has occurred.
+    coverage : set
+        Set, possibly empty, to which the genome position is added for all aligned pairs of a read.
+    vcf_file : VariantFile
+        VCF file.
+
+    Returns
+    -------
+    tuple[set[str], set[str], set[str]]
+        Three sets of the ''convertible'', ''converted_position'' and ''coverage''.
+    """
+    # Ensure we have upper case conversions to compare
+    conversion_from = conversion_from.upper()
+    conversion_to = conversion_to.upper()
+    print(f"{vcf_file=}")
+    for read_position, genome_position, genome_sequence in read.get_aligned_pairs(with_seq=True):
+        if None in (read_position, genome_position, genome_sequence):
+            continue
+        coverage.add(genome_position)
+        if genome_sequence.upper() == conversion_from:
+            convertible.add(genome_position)
+
+        # If the sequence at this position has been converted compared to the genome sequence...
+        if read.query_sequence[read_position].upper() == conversion_to and genome_sequence.upper() == conversion_from:
+            # ...check that this is a new variant at this position? Question : Is this the correctinterpretation?
+            variants_at_position = list(vcf_file.fetch(read.reference_name, genome_position, genome_position + 1))
+            if variants_at_position:
+                if any(variant.alts[0].upper() == conversion_to.upper() for variant in variants_at_position):
+                    pass
+                else:
+                    converted_position.add(genome_position)
+            else:
+                converted_position.add(genome_position)
+    return (convertible, converted_position, coverage)

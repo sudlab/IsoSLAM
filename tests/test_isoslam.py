@@ -5,6 +5,7 @@ from types import GeneratorType
 from typing import Any
 
 import pytest  # type: ignore[import-not-found]
+from pysam import VariantFile
 
 from isoslam import isoslam
 
@@ -733,3 +734,52 @@ def test_remove_common_reads(set1: set[str], set2: set[str], expected_set1: set[
     set1, set2 = isoslam.remove_common_reads(set1, set2)  # type: ignore[arg-type, assignment]
     assert set1 == expected_set1
     assert set2 == expected_set2
+
+
+@pytest.mark.parametrize(
+    (
+        "read",
+        "vcf_file_fixture",
+        "conversion_from",
+        "conversion_to",
+        "len_convertible",
+        "len_converted_position",
+        "len_coverage",
+    ),
+    [
+        pytest.param(  # type: ignore[misc]
+            "aligned_segment_assigned_14770", "vcf_file", "T", "C", 23, 0, 106, id="no4sU 14770 T>C"
+        ),
+        pytest.param("aligned_segment_assigned_14770", "vcf_file", "A", "G", 14, 0, 106, id="no4sU 14770 A>G"),
+        pytest.param("aligned_segment_assigned_21051", "vcf_file", "T", "C", 31, 0, 150, id="0hr1 21051 T>C"),
+        pytest.param("aligned_segment_assigned_21051", "vcf_file", "A", "G", 23, 1, 150, id="0hr1 21051 A>G"),
+        pytest.param("aligned_segment_assigned_20906", "vcf_file", "T", "C", 17, 0, 150, id="0hr1 20906 T>C"),
+        pytest.param("aligned_segment_assigned_20906", "vcf_file", "A", "G", 50, 1, 150, id="0hr1 20906 A>G"),
+    ],
+)
+def test_conversions_per_read(
+    read: str,
+    vcf_file_fixture: VariantFile,
+    conversion_from: str,
+    conversion_to: str,
+    len_convertible: int,
+    len_converted_position: int,
+    len_coverage: int,
+    request: pytest.FixtureRequest,
+) -> None:
+    """Test the building of sets of conversion for a given read."""
+    convertible, converted_position, coverage = isoslam.conversions_per_read(
+        request.getfixturevalue(read),
+        conversion_from,
+        conversion_to,
+        convertible=set(),
+        converted_position=set(),
+        coverage=set(),
+        vcf_file=request.getfixturevalue(vcf_file_fixture),
+    )
+    assert isinstance(convertible, set)
+    assert isinstance(converted_position, set)
+    assert isinstance(coverage, set)
+    assert len(convertible) == len_convertible
+    assert len(converted_position) == len_converted_position
+    assert len(coverage) == len_coverage
