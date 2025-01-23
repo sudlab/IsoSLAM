@@ -1,57 +1,112 @@
 # Workflow
 
-This page gives an overview of the workflow undertaken by IsoSLAM.
+This page gives an overview of the workflow undertaken by IsoSLAM, it is a **WORK IN PROGRESS** as the code base is
+underoing refactoring.
 
-**WORK IN PROGRESS** - This is very much a work in progress and is not yet complete. Contributions are welcome.
+- This is very much a work in progress and is not yet complete. Contributions are welcome.
 
 ```{mermaid}
-graph TD;
+flowchart TB
+    subgraph Input
+        BAM[(BAM Files)]
+        VCF[("VCF Files")]
+        GTF[("GTF Files")]
+        Config[("Config Files")]
+    end
 
-  subgraph input
-  A1([STAR Aligned Reads]) --> B1
-  A2([.FASTA file]) --> B1
-  A3([Contigs]) --> B1
-  A4([.BED file]) --> B1
-  A5([.GTF file]) --> B1
-  end
+    subgraph Core["Core Processing"]
+        IO["Input/Output Handler"]:::core
+        Process["Processing Engine"]:::core
+        Pipeline["SLAM Pipeline"]:::core
+        Summary["Summary Generator"]:::core
+    end
 
-  subgraph Python
+    subgraph Support["Support Components"]
+        Logger["Logging System"]:::support
+        Utils["Utility Functions"]:::support
+        DefaultConfig["Configuration Manager"]:::support
+    end
 
-  B1[pipeline.py] --> B2
+    subgraph Testing["Testing & Documentation"]
+        TestInfra["Testing Infrastructure"]:::test
+        TestRes["Test Resources"]:::test
+        APIDoc["API Documentation"]:::doc
+    end
 
+    subgraph Integration["External Integration"]
+        RScript["R Script Integration"]:::integration
+        CICD["CI/CD Pipeline"]:::integration
+        PipeConfig["Pipeline Configuration"]:::integration
+    end
 
-  style A1 fill:#648FFF,stroke:#000000
-  style A2 fill:#648FFF,stroke:#000000
-  style A3 fill:#648FFF,stroke:#000000
-  style A4 fill:#648FFF,stroke:#000000
-  style A5 fill:#648FFF,stroke:#000000
-  end
+    %% Main Data Flow
+    BAM --> IO
+    VCF --> IO
+    GTF --> IO
+    Config --> DefaultConfig
 
-  B2([Pipeline_slam_3UIs.py]) --> statistics
+    IO --> Process
+    Process --> Pipeline
+    Pipeline --> Summary
 
+    %% Support Flow
+    DefaultConfig -.-> IO
+    DefaultConfig -.-> Process
+    DefaultConfig -.-> Pipeline
 
-  subgraph statistics
-  D1([get_pair_pvalues])
-  D2([get_pair_half_lives])
-  D3([get_over_time_pvalues])
-  D4([get_interaction_over_time_pvals])
+    Logger -.-> IO
+    Logger -.-> Process
+    Logger -.-> Pipeline
+    Logger -.-> Summary
 
-  end
-  style B1 fill:#00FF90,stroke:#000000
-  style B2 fill:#00FF90,stroke:#000000
+    Utils --> IO
+    Utils --> Process
+    Utils --> Pipeline
 
+    %% Integration Flow
+    Pipeline --> RScript
+    PipeConfig -.-> Pipeline
+    CICD -.-> TestInfra
 
+    %% Testing Flow
+    TestRes --> TestInfra
+    TestInfra -.-> Core
 
+    %% Click Events
+    click IO "https://github.com/sudlab/IsoSLAM/blob/main/isoslam/io.py"
+    click Process "https://github.com/sudlab/IsoSLAM/blob/main/isoslam/processing.py"
+    click Pipeline "https://github.com/sudlab/IsoSLAM/tree/main/isoslam/pipeline_slam_3UIs/"
+    click Summary "https://github.com/sudlab/IsoSLAM/blob/main/isoslam/summary.py"
+    click Logger "https://github.com/sudlab/IsoSLAM/blob/main/isoslam/logging.py"
+    click Utils "https://github.com/sudlab/IsoSLAM/blob/main/isoslam/utils.py"
+    click DefaultConfig "https://github.com/sudlab/IsoSLAM/blob/main/isoslam/default_config.yaml"
+    click TestInfra "https://github.com/sudlab/IsoSLAM/tree/main/tests/"
+    click APIDoc "https://github.com/sudlab/IsoSLAM/tree/main/docs/api/"
+    click CICD "https://github.com/sudlab/IsoSLAM/tree/main/.github/workflows/"
+    click PipeConfig "https://github.com/sudlab/IsoSLAM/blob/main/isoslam/pipeline_slam_3UIs/pipeline.yml"
+    click RScript "https://github.com/sudlab/IsoSLAM/blob/main/isoslam/pipeline_slam_3UIs/summarize_counts.R"
+    click TestRes "https://github.com/sudlab/IsoSLAM/tree/main/tests/resources/"
 
+    %% Styling
+    classDef core fill:#90EE90,stroke:#333,stroke-width:2px
+    classDef support fill:#FFE4B5,stroke:#333,stroke-width:2px
+    classDef test fill:#DDA0DD,stroke:#333,stroke-width:2px
+    classDef doc fill:#87CEEB,stroke:#333,stroke-width:2px
+    classDef integration fill:#F08080,stroke:#333,stroke-width:2px
 
-  style D1 fill:#FE6100,stroke:#000000
-  style D2 fill:#FE6100,stroke:#000000
-  style D3 fill:#FE6100,stroke:#000000
-  style D4 fill:#FE6100,stroke:#000000
-
-  style E1 fill:#FEE100,stroke:#000000
-
+    %% Legend
+    subgraph Legend
+        L1["Core Components"]:::core
+        L2["Support Components"]:::support
+        L3["Testing Components"]:::test
+        L4["Documentation"]:::doc
+        L5["Integration"]:::integration
+    end
 ```
+
+Generated using [GitDiagram](https://gitdiagram.com/sudlab/IsoSLAM). The above diagram is written in
+[Mermaid][mermaid]. You can view the source code in the IsoSLAM repository and develop/modify it using the [Mermaid Live
+Editor][mermaid-live] and make pull-requests to update this documentation.
 
 ## IsoSLAM
 
@@ -62,14 +117,6 @@ the code is refactored.
    then `n > 1` segments are dropped.
 2. Pairs of segments (individual `AlignedSegments`) are then assessed and if they are `Assigned` the `start`, `end`,
    `length`, `status` (i.e. `Assigned`), `transcript_id`, `block_start` and `block_end` are extracted.
-
-## Updating
-
-The above diagram is written in [Mermaid][mermaid]. You can view the source code in the IsoSLAM repository and
-develop/modify it using the [Mermaid Live Editor][mermaid-live] and make pull-requests to update this documentation.
-
-[mermaid]: https://mermaid.js.org/
-[mermaid-live]: https://mermaid.live
 
 ## Descriptive Workflow
 
@@ -108,3 +155,6 @@ Introns[3]                                                                      
 
 Exon : |========|   Read alignment block:  |>>>>>|
 ```
+
+[mermaid]: https://mermaid.js.org/
+[mermaid-live]: https://mermaid.live
