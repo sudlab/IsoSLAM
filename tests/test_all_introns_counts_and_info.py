@@ -36,6 +36,7 @@ def test_main(file_path: Path, tmp_path: Path, regtest) -> None:
         utron_bed=list(BED_DIR.glob("*.bed"))[0],
         vcf_path=list(VCF_DIR.glob("*.vcf.gz"))[0],
         outfile_tsv=str(tmp_path / "test.tsv"),
+        config_file=None,
     )
     results = all_introns_counts_and_info.main(argv=args)
     # Ideally would like to use syrupy to test snapshots but pd.DataFrame() are not yet supported

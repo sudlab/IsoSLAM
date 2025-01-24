@@ -5,7 +5,7 @@ from typing import Any
 
 import pysam
 import pytest
-from pysam import AlignedSegment, AlignmentFile
+from pysam import AlignedSegment, AlignmentFile, VariantFile
 
 from isoslam import io, isoslam
 
@@ -34,7 +34,7 @@ def bam_file2() -> AlignmentFile:
 
 
 @pytest.fixture()
-def bam_unaligned_file1() -> AlignmentFile:
+def bam_no4sU() -> AlignmentFile:
     """Load an unsorted and unassigned ``.bam`` file (ignore the filename!)."""
     return io.load_file(BAM_DIR / "d0_no4sU_filtered_remapped_sorted.bam")
 
@@ -49,6 +49,12 @@ def gtf_file() -> pysam.tabix_generic_iterator:
 def bed_file() -> dict:
     """Load a ``.gtf`` file."""
     return io.load_file(BED_DIR / "test_coding_introns.bed")
+
+
+@pytest.fixture()
+def vcf_file() -> VariantFile:
+    """Load a ``.vcf`` file."""
+    return io.load_file(VCF_DIR / "d0.vcf.gz")
 
 
 @pytest.fixture()
@@ -70,24 +76,24 @@ def default_config() -> dict[str:Any]:
 
 
 @pytest.fixture()
-def aligned_segment_unassigned_28584(bam_unaligned_file1: AlignmentFile) -> AlignedSegment:
+def aligned_segment_unassigned_28584(bam_no4sU: AlignmentFile) -> AlignedSegment:
     """Extract an individual AlignedSegment from a ``.bam`` file."""
     # NB : .fetch() returns AlignedSegments that span the start and end region, not just those within
-    return next(bam_unaligned_file1.fetch(contig="chr9", start=28592, end=28593))
+    return next(bam_no4sU.fetch(contig="chr9", start=28592, end=28593))
 
 
 @pytest.fixture()
-def aligned_segment_unassigned_17416(bam_unaligned_file1: AlignmentFile) -> AlignedSegment:
+def aligned_segment_unassigned_17416(bam_no4sU: AlignmentFile) -> AlignedSegment:
     """Extract an individual AlignedSegment from a ``.bam`` file."""
     # NB : .fetch() returns AlignedSegments that span the start and end region, not just those within
-    return next(bam_unaligned_file1.fetch(contig="chr9", start=17804, end=18126))
+    return next(bam_no4sU.fetch(contig="chr9", start=17804, end=18126))
 
 
 @pytest.fixture()
-def aligned_segment_unassigned_18029(bam_unaligned_file1: AlignmentFile) -> AlignedSegment:
+def aligned_segment_unassigned_18029(bam_no4sU: AlignmentFile) -> AlignedSegment:
     """Extract an individual AlignedSegment from a ``.bam`` file."""
     # NB : .fetch() returns AlignedSegments that span the start and end region, not just those within
-    return next(bam_unaligned_file1.fetch(contig="chr9", start=18156, end=24870))
+    return next(bam_no4sU.fetch(contig="chr9", start=18156, end=24870))
 
 
 @pytest.fixture()

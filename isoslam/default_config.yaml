@@ -5,6 +5,12 @@ bam_file: data/bam/.bam
 gtf_file: data/gtf/
 bed_file: data/bed/
 vcf_file: data/vcf/
+forward_reads:
+  from: "T"
+  to: "C"
+reverse_reads:
+  from: "A"
+  to: "G"
 summary_counts:
   file_pattern: "**/*.tsv"
   separator: "\t"

@@ -14,12 +14,13 @@ about it's event assignment, number of conversions, coverage etc.
 
 # mypy: ignore-errors
 
-from argparse import ArgumentParser
 import sys
+from argparse import ArgumentParser
+from pathlib import Path
 
 import pandas as pd
 
-from isoslam import isoslam, io
+from isoslam import io, isoslam
 
 
 def main(argv=None):
@@ -30,6 +31,7 @@ def main(argv=None):
         argv = sys.argv
 
     parser = ArgumentParser(description=__doc__)
+    parser.add_argument("-c", "--config", dest="config_file", type=Path, help="Path to configuration file to load.")
     parser.add_argument(
         "-b",
         "--bam",
@@ -43,6 +45,7 @@ def main(argv=None):
     parser.add_argument(
         "-bed", dest="utron_bed", type=str, help="Supply a path to the utron bed file. Must be bed6 format"
     )
+    # TODO: Add option for locaing vcf file
     parser.add_argument(
         "-o",
         "--out",
@@ -54,14 +57,18 @@ def main(argv=None):
     parser.add_argument("-vcf", "--vcf", dest="vcf_path", type=str, help="""Supply a path to the VCF.gz file""")
 
     argv_as_dictionary = vars(argv)
+    print(f"{argv_as_dictionary=}")
 
     # Load files...
-    bamfile = io.load_file(argv_as_dictionary["infile_bam"])
+    # bamfile = io.load_file(argv_as_dictionary["infile_bam"])
     vcffile = io.load_file(argv_as_dictionary["vcf_path"])
     # .bed file
     utron_coords = isoslam.extract_transcripts(argv_as_dictionary["utron_bed"])
     # .gtf file
     strand_dict, tx2gene = isoslam.extract_strand_transcript(argv_as_dictionary["gtf_path"])
+
+    # Load configuration
+    config = io.load_and_update_config(argv)
 
     def fragment_iterator(read_iterator):
         read_list = list()
@@ -109,29 +116,14 @@ def main(argv=None):
             if i_progress == 10000:
                 i_progress = 0
 
-            # Extract features
+            # Extract features -
+            # TODO - It should be possible to modify extract_features_from_pair() to determine which is forward and
+            #        which reverse in this initial call so that subsequently we have pair_features["forward"] and
+            #        pair_features["reverse"] that we can work with.
             pair_features = isoslam.extract_features_from_pair(pair)
-            # DEBUGGING - Get information on features
-            # if i_total_progress == 484:
-            #     print(f"{pair_features=}")
-            # Temporary code sets up variables from the returned dictionary to match those currently used
-            read1_start = pair_features["read1"]["start"]
-            read1_end = pair_features["read1"]["end"]
-            read1_length = pair_features["read1"]["length"]
-            read1_status = pair_features["read1"]["status"]
-            read1_transcript = pair_features["read1"]["transcript"]
-            read1_block_start = pair_features["read1"]["block_start"]
-            read1_block_end = pair_features["read1"]["block_end"]
-            read2_start = pair_features["read2"]["start"]
-            read2_end = pair_features["read2"]["end"]
-            read2_length = pair_features["read2"]["length"]
-            read2_status = pair_features["read2"]["status"]
-            read2_transcript = pair_features["read2"]["transcript"]
-            read2_block_start = pair_features["read2"]["block_start"]
-            read2_block_end = pair_features["read2"]["block_end"]
 
             # Use the intersection of sets, this skips if either read1 or read2 aren't assigned, - or +
-            if not {"Assigned", "+", "-"} & {read1_status, read2_status}:
+            if not {"Assigned", "+", "-"} & {pair_features["read1"]["status"], pair_features["read2"]["status"]}:
                 continue
 
             # pass if either is assigned
@@ -170,11 +162,9 @@ def main(argv=None):
             pair_features["read1"]["utron"] = isoslam.extract_utron(
                 features=pair_features["read1"], gene_transcript=tx2gene, coordinates=utron_coords
             )
-            utrons1 = pair_features["read1"]["utron"]
             pair_features["read2"]["utron"] = isoslam.extract_utron(
                 features=pair_features["read2"], gene_transcript=tx2gene, coordinates=utron_coords
             )
-            utrons2 = pair_features["read2"]["utron"]
 
             ## @ns-rse 2023-12-20
             ## Get blocks to see how the reads are spliced
@@ -231,125 +221,27 @@ def main(argv=None):
             )
 
             # if we are mapped to a +ve stranded transcript, then count T>C in
-            # the forward read and A>G in the reverse read. if we are mapped to
-            # a -ve stranded transcript, count T>C in the reverse read and A>G
-            # in the forward read.
+            # the forward read and A>G in the reverse read.
+            # TODO - Once we have assigned `read1/read2` to `forward/reverse` much earlier we can update this
             if strand == "+":
-                # pass if mapped to +ve transcript
-                convertible = set()
-                # create a set (list that only allows unique values to be added)
-                # we will add the genome_pos at each point for both reads
-                # len(coverage) will be the # of uniquely covered positions
-                coverage = set()
-
-                # instead of counting conversions as an int +=1, just add the
-                # position to a set, and len(set) will be the number of
-                # unique conversions. ACCOUNTS FOR OVERLAP BETWEEN READ1+2.
-                converted_position = set()
-
-                for base in forward_read.get_aligned_pairs(with_seq=True):
-                    read_pos, genome_pos, genome_seq = base
-                    if None in base:
-                        continue
-
-                    coverage.add(genome_pos)
-
-                    read_seq = forward_read.query_sequence[read_pos]
-
-                    if genome_seq.upper() == "T":
-                        convertible.add(genome_pos)
-
-                    if read_seq == "C" and genome_seq == "t":
-                        variants_at_position = list(
-                            vcffile.fetch(forward_read.reference_name, genome_pos, genome_pos + 1)
-                        )
-                        if variants_at_position:
-                            if any(variant_at_pos.alts[0] == "C" for variant_at_pos in variants_at_position):
-                                pass
-                            else:
-                                converted_position.add(genome_pos)
-                        else:
-                            converted_position.add(genome_pos)
-
-                for base in reverse_read.get_aligned_pairs(with_seq=True):
-                    read_pos, genome_pos, genome_seq = base
-                    if None in base:
-                        continue
-
-                    coverage.add(genome_pos)
-
-                    read_seq = reverse_read.query_sequence[read_pos]
-
-                    if genome_seq.upper() == "A":
-                        convertible.add(genome_pos)
-
-                    if read_seq == "G" and genome_seq == "a":
-                        variants_at_position = list(
-                            vcffile.fetch(reverse_read.reference_name, genome_pos, genome_pos + 1)
-                        )
-                        if variants_at_position:
-                            if any(variant_at_pos.alts[0] == "G" for variant_at_pos in variants_at_position):
-                                pass
-                            else:
-                                converted_position.add(genome_pos)
-
-                        else:
-                            converted_position.add(genome_pos)
-
+                coverage_counts = isoslam.count_conversions_across_pairs(
+                    forward_read=forward_read,
+                    reverse_read=reverse_read,
+                    vcf_file=vcffile,
+                    forward_conversion=config["forward_reads"],
+                    reverse_conversion=config["reverse_reads"],
+                )
             elif strand == "-":
-                # pass if mapped to -ve transcript
-                convertible = set()
-                coverage = set()
-                converted_position = set()
-                for base in forward_read.get_aligned_pairs(with_seq=True):
-                    read_pos, genome_pos, genome_seq = base
-                    if None in base:
-                        continue
-
-                    coverage.add(genome_pos)
-
-                    read_seq = forward_read.query_sequence[read_pos]
-
-                    if genome_seq.upper() == "A":
-                        convertible.add(genome_pos)
-
-                    if read_seq == "G" and genome_seq == "a":
-                        variants_at_position = list(
-                            vcffile.fetch(forward_read.reference_name, genome_pos, genome_pos + 1)
-                        )
-                        if variants_at_position:
-                            if any(variant_at_pos.alts[0] == "G" for variant_at_pos in variants_at_position):
-                                pass
-                            else:
-                                converted_position.add(genome_pos)
-
-                        else:
-                            converted_position.add(genome_pos)
-
-                for base in reverse_read.get_aligned_pairs(with_seq=True):
-                    read_pos, genome_pos, genome_seq = base
-                    if None in base:
-                        continue
-
-                    coverage.add(genome_pos)
-
-                    read_seq = reverse_read.query_sequence[read_pos]
-
-                    if genome_seq.upper() == "T":
-                        convertible.add(genome_pos)
-
-                    if read_seq == "C" and genome_seq == "t":
-                        variants_at_position = list(
-                            vcffile.fetch(reverse_read.reference_name, genome_pos, genome_pos + 1)
-                        )
-                        if variants_at_position:
-                            if any(variant_at_pos.alts[0] == "C" for variant_at_pos in variants_at_position):
-                                pass
-                            else:
-                                converted_position.add(genome_pos)
-
-                        else:
-                            converted_position.add(genome_pos)
+                # If we are mapped to a -ve stranded transcript, count T>C in the reverse read and A>G
+                # in the forward read.
+                # can either flip the reads or the conversions
+                coverage_counts = isoslam.count_conversions_across_pairs(
+                    forward_read=reverse_read,
+                    reverse_read=forward_read,
+                    vcf_file=vcffile,
+                    forward_conversion=config["forward_reads"],
+                    reverse_conversion=config["reverse_reads"],
+                )
             else:
                 # should not be possible - but just in case
                 pass
@@ -361,11 +253,11 @@ def main(argv=None):
             # A read pair will cover multiple lines if it matches multiple events (but metadata will be same)
             # ns-rse : Add in building Pandas dataframe so the function can return something that is testable
             for transcript_id, position in assign_conversions_to_retained:
-                start, end, chr, strand = position
+                start, end, chromosome, strand = position
                 outfile.write(
                     f"{i_output}\t{transcript_id}\t"
-                    f"{start}\t{end}\t{chr}\t{strand}\tRet\t{len(converted_position)}\t"
-                    f"{len(convertible)}\t{len(coverage)}\n"
+                    f"{start}\t{end}\t{chromosome}\t{strand}\tRet\t{coverage_counts['converted_position']}\t"
+                    f"{coverage_counts['convertible']}\t{coverage_counts['coverage']}\n"
                 )
                 row = pd.DataFrame(
                     [
@@ -374,23 +266,23 @@ def main(argv=None):
                             "transcript_id": transcript_id,
                             "start": start,
                             "end": end,
-                            "chr": chr,
+                            "chr": chromosome,
                             "strand": strand,
                             "assignment": "Ret",
-                            "conversions": len(converted_position),
-                            "convertible": len(convertible),
-                            "coverage": len(coverage),
+                            "conversions": coverage_counts["converted_position"],
+                            "convertible": coverage_counts["convertible"],
+                            "coverage": coverage_counts["coverage"],
                         }
                     ]
                 )
                 results = pd.concat([results, row])
 
             for transcript_id, position in assign_conversions_to_spliced:
-                start, end, chr, strand = position
+                start, end, chromosome, strand = position
                 outfile.write(
                     f"{i_output}\t{transcript_id}\t"
-                    f"{start}\t{end}\t{chr}\t{strand}\tSpl\t{len(converted_position)}\t"
-                    f"{len(convertible)}\t{len(coverage)}\n"
+                    f"{start}\t{end}\t{chromosome}\t{strand}\tRet\t{coverage_counts['converted_position']}\t"
+                    f"{coverage_counts['convertible']}\t{coverage_counts['coverage']}\n"
                 )
                 row = pd.DataFrame(
                     [
@@ -399,12 +291,12 @@ def main(argv=None):
                             "transcript_id": transcript_id,
                             "start": start,
                             "end": end,
-                            "chr": chr,
+                            "chr": chromosome,
                             "strand": strand,
                             "assignment": "Spl",
-                            "conversions": len(converted_position),
-                            "convertible": len(convertible),
-                            "coverage": len(coverage),
+                            "conversions": coverage_counts["converted_position"],
+                            "convertible": coverage_counts["convertible"],
+                            "coverage": coverage_counts["coverage"],
                         }
                     ]
                 )
