@@ -306,7 +306,7 @@ def unique_conversions(
     """
     flat1 = [(key, nested_list) for key, values in reads1.items() for nested_list in values]
     flat2 = [(key, nested_list) for key, values in reads2.items() for nested_list in values]
-    logger.info("Extracted unique conversions in both reads, combining to unique set.")
+    # logger.debug("Extracted unique conversions in both reads, combining to unique set.")
     return frozenset(flat1 + flat2)  # type: ignore[arg-type]
 
 
@@ -331,7 +331,7 @@ def remove_common_reads(retained: set[list[Any]], spliced: set[list[Any]]) -> tu
     common = retained & spliced
     retained -= common
     spliced -= common
-    logger.info("Removed common elements from retained and spliced.")
+    # logger.debug("Removed common elements from retained and spliced.")
     return (retained, spliced)
 
 
@@ -392,7 +392,7 @@ def conversions_per_read(  # pylint: disable=too-many-positional-arguments
                     converted_position.add(genome_position)
             else:
                 converted_position.add(genome_position)
-    logger.debug(f"convertible : {convertible}\nconverted_position : {converted_position}\ncoverage : {coverage}")
+    # logger.debug(f"convertible : {convertible}\nconverted_position : {converted_position}\ncoverage : {coverage}")
     return (convertible, converted_position, coverage)
 
 
@@ -455,5 +455,5 @@ def count_conversions_across_pairs(
         coverage,
         vcf_file,
     )
-    logger.info("Counted conversions paired reads")
+    # logger.debug("Counted conversions paired reads")
     return {"convertible": len(convertible), "converted_position": len(converted_position), "coverage": len(coverage)}
