@@ -306,6 +306,7 @@ def unique_conversions(
     """
     flat1 = [(key, nested_list) for key, values in reads1.items() for nested_list in values]
     flat2 = [(key, nested_list) for key, values in reads2.items() for nested_list in values]
+    logger.info("Extracted unique conversions in both reads, combining to unique set.")
     return frozenset(flat1 + flat2)  # type: ignore[arg-type]
 
 
@@ -330,6 +331,7 @@ def remove_common_reads(retained: set[list[Any]], spliced: set[list[Any]]) -> tu
     common = retained & spliced
     retained -= common
     spliced -= common
+    logger.info("Removed common elements from retained and spliced.")
     return (retained, spliced)
 
 
@@ -372,7 +374,6 @@ def conversions_per_read(  # pylint: disable=too-many-positional-arguments
     # Ensure we have upper case conversions to compare
     conversion_from = conversion_from.upper()
     conversion_to = conversion_to.upper()
-    print(f"{vcf_file=}")
     for read_position, genome_position, genome_sequence in read.get_aligned_pairs(with_seq=True):
         if None in (read_position, genome_position, genome_sequence):
             continue
@@ -391,4 +392,68 @@ def conversions_per_read(  # pylint: disable=too-many-positional-arguments
                     converted_position.add(genome_position)
             else:
                 converted_position.add(genome_position)
+    logger.debug(f"convertible : {convertible}\nconverted_position : {converted_position}\ncoverage : {coverage}")
     return (convertible, converted_position, coverage)
+
+
+def count_conversions_across_pairs(
+    forward_read: dict[str, dict[str, Any]],
+    reverse_read: dict[str, dict[str, Any]],
+    vcf_file: VariantFile,
+    forward_conversion: dict[str, str] | None = None,
+    reverse_conversion: dict[str, str] | None = None,
+) -> dict[str, int]:
+    """
+    Count conversions across paired reads.
+
+    Parameters
+    ----------
+    forward_read : dict[str, dict[str, Any]]
+        Aligned segment for forward read.
+    reverse_read : dict[str, dict[str, Any]]
+        Aligned segment for reversed read.
+    vcf_file : VariantFile
+        Variant File.
+    forward_conversion : dict, optional
+        Forward conversion dictionary typically ''{"from": "A", "to": "G"}''.
+    reverse_conversion : dict, optional
+        Reverse conversion, typically ''{"from": "T", "to": "C"}''.
+
+    Returns
+    -------
+    tuple[int, int, int]
+        Tuple of the number of convertible base pairs, the number of conversions and the coverage of the paired
+      alignments.
+
+    Raises
+    ------
+    ValueError
+        ValueError is raised if either ''forward_conversion'' or ''reverse_conversion'' is ''None''.
+    """
+    if forward_conversion is None:
+        raise ValueError("forward_conversion can not be empty.")
+    if reverse_conversion is None:
+        raise ValueError("reverse_conversion can not be empty.")
+
+    # Count conversions on the forward read
+    convertible, converted_position, coverage = conversions_per_read(
+        forward_read,
+        forward_conversion["from"],
+        forward_conversion["to"],
+        convertible=set(),
+        converted_position=set(),
+        coverage=set(),
+        vcf_file=vcf_file,
+    )
+    # Count conversions on the reverse read
+    convertible, converted_position, coverage = conversions_per_read(
+        reverse_read,
+        reverse_conversion["from"],
+        reverse_conversion["to"],
+        convertible,
+        converted_position,
+        coverage,
+        vcf_file,
+    )
+    logger.info("Counted conversions paired reads")
+    return {"convertible": len(convertible), "converted_position": len(converted_position), "coverage": len(coverage)}

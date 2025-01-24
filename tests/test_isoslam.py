@@ -5,7 +5,6 @@ from types import GeneratorType
 from typing import Any
 
 import pytest  # type: ignore[import-not-found]
-from pysam import VariantFile
 
 from isoslam import isoslam
 
@@ -772,7 +771,7 @@ def test_remove_common_reads(set1: set[str], set2: set[str], expected_set1: set[
 )
 def test_conversions_per_read(
     read: str,
-    vcf_file_fixture: VariantFile,
+    vcf_file_fixture: str,
     conversion_from: str,
     conversion_to: str,
     len_convertible: int,
@@ -796,3 +795,56 @@ def test_conversions_per_read(
     assert len(convertible) == len_convertible
     assert len(converted_position) == len_converted_position
     assert len(coverage) == len_coverage
+
+
+@pytest.mark.parametrize(
+    ("forward_read", "reverse_read", "forward_conversion", "reverse_conversion", "vcf_file_fixture", "expected"),
+    [
+        pytest.param(  # type: ignore[misc]
+            "aligned_segment_assigned_14770",
+            "aligned_segment_assigned_17814",
+            {"from": "A", "to": "G"},
+            {"from": "T", "to": "C"},
+            "vcf_file",
+            {"convertible": 46, "converted_position": 0, "coverage": 256},
+            id="no4sU 14770/17814",
+        ),
+        pytest.param(
+            "aligned_segment_assigned_14770",
+            "aligned_segment_assigned_14770",
+            {"from": "A", "to": "G"},
+            {"from": "T", "to": "C"},
+            "vcf_file",
+            {"convertible": 37, "converted_position": 0, "coverage": 106},
+            id="no4sU 14770/14770 (checks sets are unique)",
+        ),
+        pytest.param(
+            "aligned_segment_assigned_21051",
+            "aligned_segment_assigned_20906",
+            {"from": "A", "to": "G"},
+            {"from": "T", "to": "C"},
+            "vcf_file",
+            {"convertible": 40, "converted_position": 1, "coverage": 295},
+            id="0hr1 21051/20906",
+        ),
+    ],
+)
+def test_count_conversions_across_pairs(
+    forward_read: str,
+    reverse_read: str,
+    forward_conversion: dict[str, str],
+    reverse_conversion: dict[str, str],
+    vcf_file_fixture: str,
+    expected: dict[str, int],
+    request: pytest.FixtureRequest,
+) -> None:
+    """Test that pairs of conversions are counted correctly."""
+    counts = isoslam.count_conversions_across_pairs(
+        forward_read=request.getfixturevalue(forward_read),
+        reverse_read=request.getfixturevalue(reverse_read),
+        vcf_file=request.getfixturevalue(vcf_file_fixture),
+        forward_conversion=forward_conversion,
+        reverse_conversion=reverse_conversion,
+    )
+    for count in ["convertible", "converted_position", "coverage"]:
+        assert counts[count] == expected[count]
