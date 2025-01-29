@@ -58,7 +58,7 @@ If you have bugs or feature requests please [create an issue][isoslam_issue], th
 [bugs][isoslam_bug] and making [feature requests][isoslam_feature].
 
 If you wish to contribute fixes or features yourself you can find detailed information in the
-[contributing](docs/src/CONTRIBUTING.md) document (which is rendered on the [website][contributing]).
+[contributing](docs/src/CONTRIBUTING.md) document (which is rendered on the [website][website]).
 
 ## Licence
 
@@ -69,8 +69,9 @@ If you wish to contribute fixes or features yourself you can find detailed infor
 Please use the [Citation File Format](https://citation-file-format.github.io/) which is available in this repository. A
 BibTex or APA formatted citation can be easily accessed from the "_Cite this repository_" link on the right hand side.
 
-[contributing]: https://sudlab.github.io/IsoSLAM/main/contributing.html
+[contributing]: https://sudlab.github.io/IsoSLAM/contributing
 [isoslam_issue]: https://github.com/sudlab/IsoSLAM/issues/new/choose
 [isoslam_bug]: https://github.com/sudlab/IsoSLAM/issues/new?assignees=&labels=bug&projects=&template=bug_report.yaml&title=%5BBug%5D%3A+
 [isoslam_feature]: https://github.com/sudlab/IsoSLAM/issues/new?assignees=&labels=enhancement&projects=&template=feature_request.yaml&title=%5Bfeature%5D+%3A+
 [slamseq]: https://www.lexogen.com/slamseq-metabolic-rna-labeling/
+[website]: https://sudlab.github.io/IsoSLAM/
