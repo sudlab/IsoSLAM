@@ -5,6 +5,7 @@ import gzip
 from collections.abc import Callable, Generator
 from datetime import datetime
 from importlib import resources
+from io import TextIOWrapper
 from pathlib import Path
 from typing import Any, TextIO
 
@@ -401,3 +402,42 @@ def data_frame_to_file(
     outdir_file = Path(output_dir) / f"{outfile}"
     data.to_csv(outdir_file, sep=sep, **kwargs)
     logger.debug(f"File written to : {outdir_file}")
+
+
+def write_assigned_conversions(  # pylint: disable=too-many-positional-arguments
+    assigned_conversions: set[list[Any]],
+    coverage_counts: dict[str, int],
+    read_uid: int,
+    assignment: str,
+    outfile: TextIOWrapper,
+    delim: str,
+) -> None:
+    r"""
+    Write assigned conversions to files.
+
+    Combines the ''coverage_counts'' with the ''assigned_conversions'' and outputs to disk at the specified location and
+    filename with configurable delimiter.
+
+    Parameters
+    ----------
+    assigned_conversions : set[list[Any]]
+        A set of assigned conversions. Each element of the set is a list of key features (CHECK WHAT THESE ARE).
+    coverage_counts : dict[str, int] dest_dir: str | Path
+        A dictionary of coverage counts indexed by CHECK.
+    read_uid : int
+        Integer representing the unique read ID.
+    assignment : str
+        Type of assignment, either ''Rep'' or ''Spl'' (for Splice).
+    outfile : Any
+        Open connection to write results to.
+    delim : str
+        Delimiter to be used between fields, typically '','' for ''.csv'' or ''\t'' for ''.tsv'' output.
+    """
+    for transcript_id, position in assigned_conversions:
+        start, end, chromosome, strand = position
+        outfile.write(
+            f"{read_uid}{delim}{transcript_id}{delim}"
+            f"{start}{delim}{end}{delim}{chromosome}{delim}"
+            f"{strand}{delim}{assignment}{delim}{coverage_counts['converted_position']}{delim}"
+            f"{coverage_counts['convertible']}{delim}{coverage_counts['coverage']}\n"
+        )

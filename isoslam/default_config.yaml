@@ -11,6 +11,8 @@ forward_reads:
 reverse_reads:
   from: "A"
   to: "G"
+delim: "\t"
+output_ext: ".tsv"
 summary_counts:
   file_pattern: "**/*.tsv"
   separator: "\t"

@@ -330,3 +330,58 @@ def test_load_files(pattern: str, expected: dict[str, pd.DataFrame]) -> None:
     assert set(files_found.keys()) == expected
     for _, dataframe in files_found.items():
         assert isinstance(dataframe, pd.DataFrame)
+
+
+@pytest.mark.parametrize(
+    ("assigned_conversions", "coverage_counts", "read_uid", "assignment", "delim", "expected"),
+    [
+        pytest.param(
+            {("read1", (1, 2, 9, "-")), ("read2", (40, 60, 9, "+"))},
+            {"converted_position": 4, "convertible": 8, "coverage": 16},
+            10,
+            "Ret",
+            "\t",
+            pd.DataFrame.from_dict(
+                {
+                    0: [10, 10],
+                    1: ["read2", "read1"],
+                    2: [40, 1],
+                    3: [60, 2],
+                    4: [9, 9],
+                    5: ["+", "-"],
+                    6: ["Ret", "Ret"],
+                    7: [4, 4],
+                    8: [8, 8],
+                    9: [16, 16],
+                }
+            ),
+            id="dummy constructs",
+        ),
+    ],
+)
+def test_write_assigned_conversions(  # pylint: disable=too-many-positional-arguments
+    assigned_conversions: dict[str, set[Any]],
+    coverage_counts: dict[str, int],
+    read_uid: int | str,
+    assignment: str,
+    delim: str,
+    expected: pd.DataFrame,
+    tmp_path: Path,
+) -> None:
+    """Test files are written correctly."""
+    with Path.open(tmp_path / "test_output.tsv", "w", encoding="utf-8") as outfile:
+        io.write_assigned_conversions(
+            assigned_conversions,
+            coverage_counts,
+            read_uid,
+            assignment,
+            outfile,
+            delim,
+        )
+
+        output = tmp_path / "test_output.tsv"
+        assert output.is_file
+    result = pd.read_csv(output, sep=delim, header=None)
+    # Ensure order is consistent with expected order
+    result.sort_values(1, ascending=False, inplace=True, ignore_index=True)
+    pd.testing.assert_frame_equal(result, expected)
