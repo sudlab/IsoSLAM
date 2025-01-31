@@ -5,6 +5,7 @@ from collections.abc import Generator, Iterator
 from pathlib import Path
 from typing import Any
 
+import polars as pl
 from loguru import logger
 from pysam import AlignedSegment, VariantFile
 
@@ -457,3 +458,60 @@ def count_conversions_across_pairs(
     )
     # logger.debug("Counted conversions paired reads")
     return {"convertible": len(convertible), "converted_position": len(converted_position), "coverage": len(coverage)}
+
+
+def append_data(  # pylint: disable=too-many-positional-arguments
+    assigned_conversions: set[list[Any]],
+    coverage_counts: dict[str, int],
+    read_uid: int,
+    assignment: str,
+    results: pl.DataFrame,
+    schema: dict[str, type],
+) -> pl.DataFrame:
+    """
+    Create a Polars dataframe combining the ''assigned_conversions'' and ''coverage_counts''.
+
+    Adds ''assignment'' to the resulting dataframe.
+
+    Parameters
+    ----------
+    assigned_conversions : set[list[Any]]
+        A set of assigned conversions. Each element of the set is a list of key features (CHECK WHAT THESE ARE).
+    coverage_counts : dict[str, int] dest_dir: str | Path
+        A dictionary of coverage counts indexed by CHECK.
+    read_uid : int
+        Integer representing the unique read ID.
+    assignment : str
+        Type of assignment, either ''Rep'' or ''Spl'' (for Splice).
+    results : pl.DataFrame
+        Polars DataFrame to append data to. This will initially be empty but the schema matches the variables that are
+        added.
+    schema : dict[str, type]
+        Schema dictionary for data frame.
+
+    Returns
+    -------
+    pl.DataFrame
+        Returns a Polars DataFrame of the data structure.
+    """
+    if results is None:
+        results = pl.DataFrame(schema=schema)
+    for transcript_id, position in assigned_conversions:
+        start, end, chromosome, strand = position
+        row = pl.DataFrame(
+            data={
+                "read_uid": read_uid,
+                "transcript_id": transcript_id,
+                "start": start,
+                "end": end,
+                "chr": chromosome,
+                "strand": strand,
+                "assignment": assignment,
+                "conversions": coverage_counts["converted_position"],
+                "convertible": coverage_counts["convertible"],
+                "coverage": coverage_counts["coverage"],
+            },
+            schema=schema,
+        )
+        results = pl.concat([results, row])
+    return results.sort(by=["read_uid", "transcript_id", "chr", "start", "end"])

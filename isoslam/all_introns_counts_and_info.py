@@ -20,6 +20,7 @@ from argparse import ArgumentParser
 from pathlib import Path
 
 import pandas as pd
+import polars as pl
 
 from isoslam import io, isoslam
 
@@ -91,6 +92,20 @@ def main(argv=None):
     first_matched = 0
     i_output = 0
     delim = argv_as_dictionary["delim"]
+    # Create Polars dataframe to hold results
+    schema = {
+        "read_uid": int,
+        "transcript_id": str,
+        "start": int,
+        "end": int,
+        "chr": str,
+        "strand": str,
+        "assignment": str,
+        "conversions": int,
+        "convertible": int,
+        "coverage": int,
+    }
+    results = pl.DataFrame(schema=schema)
     with open(argv_as_dictionary["outfile_tsv"], "w", encoding="utf-8") as outfile:
         # Add column headers
         outfile.write(
@@ -98,7 +113,7 @@ def main(argv=None):
             f"Read_UID{delim}Transcript_id{delim}Start{delim}End{delim}Chr{delim}Strand{delim}"
             f"Assignment{delim}Conversions{delim}Convertible{delim}Coverage\n"
         )
-        results = pd.DataFrame()
+        pd_results = pd.DataFrame()
 
         for pair in isoslam.extract_segment_pairs(argv_as_dictionary["infile_bam"]):
             if i_total_progress >= 2000000:
@@ -254,34 +269,8 @@ def main(argv=None):
 
             # Stream output as a tsv
             # Format: read_uid, transcript_id, start, end, ret/spl, conversions, convertible, coverage
-            # A read pair will cover multiple lines if it matches multiple events (but metadata will be same)
-            # ns-rse : Add in building Pandas dataframe so the function can return something that is testable
-            for transcript_id, position in assign_conversions_to_retained:
-                start, end, chromosome, strand = position
-                # outfile.write(
-                #     f"{i_output}\t{transcript_id}\t"
-                #     f"{start}\t{end}\t{chromosome}\t{strand}\tRet\t{coverage_counts['converted_position']}\t"
-                #     f"{coverage_counts['convertible']}\t{coverage_counts['coverage']}\n"
-                # )
-                row = pd.DataFrame(
-                    [
-                        {
-                            "read_uid": i_output,
-                            "transcript_id": transcript_id,
-                            "start": start,
-                            "end": end,
-                            "chr": chromosome,
-                            "strand": strand,
-                            "assignment": "Ret",
-                            "conversions": coverage_counts["converted_position"],
-                            "convertible": coverage_counts["convertible"],
-                            "coverage": coverage_counts["coverage"],
-                        }
-                    ]
-                )
-                results = pd.concat([results, row])
             io.write_assigned_conversions(
-                assigned_conversions=assign_conversions_to_spliced,
+                assigned_conversions=assign_conversions_to_retained,
                 coverage_counts=coverage_counts,
                 read_uid=i_output,
                 assignment="Ret",
@@ -289,39 +278,33 @@ def main(argv=None):
                 delim=argv_as_dictionary["delim"],
             )
             io.write_assigned_conversions(
-                assigned_conversions=assign_conversions_to_retained,
+                assigned_conversions=assign_conversions_to_spliced,
                 coverage_counts=coverage_counts,
                 read_uid=i_output,
                 assignment="Spl",
                 outfile=outfile,
                 delim=argv_as_dictionary["delim"],
             )
-            for transcript_id, position in assign_conversions_to_spliced:
-                start, end, chromosome, strand = position
-                # outfile.write(
-                #     f"{i_output}\t{transcript_id}\t"
-                #     f"{start}\t{end}\t{chromosome}\t{strand}\tRet\t{coverage_counts['converted_position']}\t"
-                #     f"{coverage_counts['convertible']}\t{coverage_counts['coverage']}\n"
-                # )
-                row = pd.DataFrame(
-                    [
-                        {
-                            "read_uid": i_output,
-                            "transcript_id": transcript_id,
-                            "start": start,
-                            "end": end,
-                            "chr": chromosome,
-                            "strand": strand,
-                            "assignment": "Spl",
-                            "conversions": coverage_counts["converted_position"],
-                            "convertible": coverage_counts["convertible"],
-                            "coverage": coverage_counts["coverage"],
-                        }
-                    ]
-                )
-                results = pd.concat([results, row])
+            # A read pair will cover multiple lines if it matches multiple events (but metadata will be same)
+            # ns-rse : Add in building Pandas dataframe so the function can return something that is testable
+            results = isoslam.append_data(
+                assigned_conversions=assign_conversions_to_retained,
+                coverage_counts=coverage_counts,
+                read_uid=i_output,
+                assignment="Ret",
+                results=results,
+                schema=schema,
+            )
+            results = isoslam.append_data(
+                assigned_conversions=assign_conversions_to_spliced,
+                coverage_counts=coverage_counts,
+                read_uid=i_output,
+                assignment="Spl",
+                results=results,
+                schema=schema,
+            )
 
-    return results.sort_values(by=["read_uid", "transcript_id", "chr", "start", "end"])
+    return results.sort(by=["read_uid", "transcript_id", "chr", "start", "end"])
 
 
 if __name__ == "__main__":
