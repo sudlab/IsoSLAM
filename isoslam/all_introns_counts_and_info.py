@@ -13,6 +13,7 @@ about it's event assignment, number of conversions, coverage etc.
 """
 
 # mypy: ignore-errors
+# pylint: disable=fixme
 
 import sys
 from argparse import ArgumentParser
@@ -45,7 +46,7 @@ def main(argv=None):
     parser.add_argument(
         "-bed", dest="utron_bed", type=str, help="Supply a path to the utron bed file. Must be bed6 format"
     )
-    # TODO: Add option for locaing vcf file
+    # TODO: Add option for locating vcf file
     parser.add_argument(
         "-o",
         "--out",
@@ -54,7 +55,8 @@ def main(argv=None):
         help="""Supply a path to the output file. This file will contain
                         conversions per pair, accounting for stranding""",
     )
-    parser.add_argument("-vcf", "--vcf", dest="vcf_path", type=str, help="""Supply a path to the VCF.gz file""")
+    parser.add_argument("-vcf", "--vcf", dest="vcf_path", type=str, help="Supply a path to the VCF.gz file")
+    parser.add_argument("--delim", dest="delim", type=str, help="Delimiter to use in output.")
 
     argv_as_dictionary = vars(argv)
     print(f"{argv_as_dictionary=}")
@@ -71,13 +73,13 @@ def main(argv=None):
     config = io.load_and_update_config(argv)
 
     def fragment_iterator(read_iterator):
-        read_list = list()
+        read_list = []
         last_read = None
 
         for read in read_iterator:
             if last_read is not None and last_read != read.query_name:
                 yield read_list
-                read_list = list()
+                read_list = []
                 last_read = read.query_name
             last_read = read.query_name
             read_list.append(read)
@@ -88,11 +90,13 @@ def main(argv=None):
     i_total_progress = 0
     first_matched = 0
     i_output = 0
-
-    with open(argv_as_dictionary["outfile_tsv"], "w") as outfile:
+    delim = argv_as_dictionary["delim"]
+    with open(argv_as_dictionary["outfile_tsv"], "w", encoding="utf-8") as outfile:
         # Add column headers
         outfile.write(
-            "Read_UID\tTranscript_id\tStart\tEnd\tChr\tStrand\tAssignment\tConversions\tConvertible\tCoverage\n"
+            # TODO: Lowercase and 'chromosome' over 'Chr'
+            f"Read_UID{delim}Transcript_id{delim}Start{delim}End{delim}Chr{delim}Strand{delim}"
+            f"Assignment{delim}Conversions{delim}Convertible{delim}Coverage\n"
         )
         results = pd.DataFrame()
 
@@ -187,11 +191,11 @@ def main(argv=None):
                 "read2": {"starts": block_starts2, "ends": block_ends2},
             }
 
-            def print_info(chr, start, end, transcript_id, strand, blocks, text, count=i_total_progress) -> None:
+            def print_info(chromosome, start, end, transcript_id, strand, blocks, text, count=i_total_progress) -> None:
                 """Print information on progress to aid debugging."""
                 print(f"\n{count} =========================== {text=}\n")
                 print(f"{transcript_id=}")
-                print(f"{chr=}")
+                print(f"{chromosome=}")
                 print(f"{start=}")
                 print(f"{end=}")
                 print(f"{strand=}")
@@ -254,11 +258,11 @@ def main(argv=None):
             # ns-rse : Add in building Pandas dataframe so the function can return something that is testable
             for transcript_id, position in assign_conversions_to_retained:
                 start, end, chromosome, strand = position
-                outfile.write(
-                    f"{i_output}\t{transcript_id}\t"
-                    f"{start}\t{end}\t{chromosome}\t{strand}\tRet\t{coverage_counts['converted_position']}\t"
-                    f"{coverage_counts['convertible']}\t{coverage_counts['coverage']}\n"
-                )
+                # outfile.write(
+                #     f"{i_output}\t{transcript_id}\t"
+                #     f"{start}\t{end}\t{chromosome}\t{strand}\tRet\t{coverage_counts['converted_position']}\t"
+                #     f"{coverage_counts['convertible']}\t{coverage_counts['coverage']}\n"
+                # )
                 row = pd.DataFrame(
                     [
                         {
@@ -276,14 +280,29 @@ def main(argv=None):
                     ]
                 )
                 results = pd.concat([results, row])
-
+            io.write_assigned_conversions(
+                assigned_conversions=assign_conversions_to_spliced,
+                coverage_counts=coverage_counts,
+                read_uid=i_output,
+                assignment="Ret",
+                outfile=outfile,
+                delim=argv_as_dictionary["delim"],
+            )
+            io.write_assigned_conversions(
+                assigned_conversions=assign_conversions_to_retained,
+                coverage_counts=coverage_counts,
+                read_uid=i_output,
+                assignment="Spl",
+                outfile=outfile,
+                delim=argv_as_dictionary["delim"],
+            )
             for transcript_id, position in assign_conversions_to_spliced:
                 start, end, chromosome, strand = position
-                outfile.write(
-                    f"{i_output}\t{transcript_id}\t"
-                    f"{start}\t{end}\t{chromosome}\t{strand}\tRet\t{coverage_counts['converted_position']}\t"
-                    f"{coverage_counts['convertible']}\t{coverage_counts['coverage']}\n"
-                )
+                # outfile.write(
+                #     f"{i_output}\t{transcript_id}\t"
+                #     f"{start}\t{end}\t{chromosome}\t{strand}\tRet\t{coverage_counts['converted_position']}\t"
+                #     f"{coverage_counts['convertible']}\t{coverage_counts['coverage']}\n"
+                # )
                 row = pd.DataFrame(
                     [
                         {
