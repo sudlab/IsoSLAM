@@ -281,7 +281,7 @@ def main(argv=None):
                 )
                 results = pd.concat([results, row])
             io.write_assigned_conversions(
-                assigned_conversions=assign_conversions_to_spliced,
+                assigned_conversions=assign_conversions_to_retained,
                 coverage_counts=coverage_counts,
                 read_uid=i_output,
                 assignment="Ret",
@@ -289,7 +289,7 @@ def main(argv=None):
                 delim=argv_as_dictionary["delim"],
             )
             io.write_assigned_conversions(
-                assigned_conversions=assign_conversions_to_retained,
+                assigned_conversions=assign_conversions_to_spliced,
                 coverage_counts=coverage_counts,
                 read_uid=i_output,
                 assignment="Spl",
