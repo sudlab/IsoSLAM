@@ -5,7 +5,7 @@ underoing refactoring.
 
 - This is very much a work in progress and is not yet complete. Contributions are welcome.
 
-```{mermaid}
+```mermaid
 flowchart TB
     subgraph Input
         BAM[(BAM Files)]
@@ -104,9 +104,9 @@ flowchart TB
     end
 ```
 
-Generated using [GitDiagram](https://gitdiagram.com/sudlab/IsoSLAM). The above diagram is written in
-[Mermaid][mermaid]. You can view the source code in the IsoSLAM repository and develop/modify it using the [Mermaid Live
-Editor][mermaid-live] and make pull-requests to update this documentation.
+The above diagram is written in [Mermaid][mermaid] and generated using [GitDiagram][gitdiagram]. You can view the source
+code in the IsoSLAM repository and develop/modify it using the [Mermaid Live Editor][mermaid-live] and make
+pull-requests to update this documentation.
 
 ## IsoSLAM
 
@@ -156,5 +156,6 @@ Introns[3]                                                                      
 Exon : |========|   Read alignment block:  |>>>>>|
 ```
 
+[gitdiagram]: https://gitdiagram.com/sudlab/IsoSLAM
 [mermaid]: https://mermaid.js.org/
 [mermaid-live]: https://mermaid.live

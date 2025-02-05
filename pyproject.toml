@@ -190,6 +190,7 @@ lint.select = [
   "UP", # pyupgrade
 ]
 lint.ignore = [
+  "A005",
   "B905",
   "E501",
   "S101",
