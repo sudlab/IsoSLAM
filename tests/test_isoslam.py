@@ -4,6 +4,7 @@ from pathlib import Path
 from types import GeneratorType
 from typing import Any
 
+import polars as pl
 import pytest  # type: ignore[import-not-found]
 
 from isoslam import isoslam
@@ -848,3 +849,60 @@ def test_count_conversions_across_pairs(
     )
     for count in ["convertible", "converted_position", "coverage"]:
         assert counts[count] == expected[count]
+
+
+@pytest.mark.parametrize(
+    ("assigned_conversions", "coverage_counts", "read_uid", "assignment", "expected"),
+    [
+        pytest.param(  # type: ignore[misc]
+            {
+                ("transcript1", (0, 10, "9", "-")),
+                ("transcript1", (4, 40, "9", "-")),
+                ("transcript2", (68799, 78555, "x", "-")),
+                ("transcript3", (78910, 89101, "y", "-")),
+            },
+            {"converted_position": 123456, "convertible": 35, "coverage": 248},
+            1,
+            "Ret",
+            pl.DataFrame(
+                data={
+                    "read_uid": [1, 1, 1, 1],
+                    "transcript_id": ["transcript1", "transcript1", "transcript2", "transcript3"],
+                    "start": [0, 4, 68799, 78910],
+                    "end": [10, 40, 78555, 89101],
+                    "chr": ["9", "9", "x", "y"],
+                    "strand": ["-", "-", "-", "-"],
+                    "assignment": ["Ret", "Ret", "Ret", "Ret"],
+                    "conversions": [123456, 123456, 123456, 123456],
+                    "convertible": [35, 35, 35, 35],
+                    "coverage": [248, 248, 248, 248],
+                },
+                schema={
+                    "read_uid": int,
+                    "transcript_id": str,
+                    "start": int,
+                    "end": int,
+                    "chr": str,
+                    "strand": str,
+                    "assignment": str,
+                    "conversions": int,
+                    "convertible": int,
+                    "coverage": int,
+                },
+            ),
+            id="example 1",
+        ),
+    ],
+)
+def test_append_data(
+    assigned_conversions: set[Any],
+    coverage_counts: dict[str, Any],
+    read_uid: int,
+    assignment: str,
+    expected: pl.DataFrame,
+    pl_schema: dict[str, type],
+    pl_results: pl.DataFrame,
+) -> None:
+    """Test that results are appended to a Polars dataframe."""
+    pl_target = isoslam.append_data(assigned_conversions, coverage_counts, read_uid, assignment, pl_results, pl_schema)
+    pl.testing.assert_frame_equal(pl_target, expected)

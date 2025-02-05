@@ -3,6 +3,7 @@
 from pathlib import Path
 from typing import Any
 
+import polars as pl
 import pysam
 import pytest
 from pysam import AlignedSegment, AlignmentFile, VariantFile
@@ -338,3 +339,26 @@ def feature_pair_spliced_17430_18155(
         extract_transcript=extract_transcript,
         extract_strand_transcript=extract_strand_transcript,
     )
+
+
+@pytest.fixture()
+def pl_schema() -> dict[str, type]:
+    """Polars schema."""
+    return {
+        "read_uid": int,
+        "transcript_id": str,
+        "start": int,
+        "end": int,
+        "chr": str,
+        "strand": str,
+        "assignment": str,
+        "conversions": int,
+        "convertible": int,
+        "coverage": int,
+    }
+
+
+@pytest.fixture()
+def pl_results(pl_schema: dict[str, type]) -> pl.DataFrame:
+    """Polars dataframe for use with tests."""
+    return pl.DataFrame(schema=pl_schema)

@@ -13,6 +13,17 @@ reverse_reads:
   to: "G"
 delim: "\t"
 output_ext: ".tsv"
+schema:
+  read_uid: "int"
+  transcript_id: "str"
+  start: "int"
+  end: "int"
+  chr: "str"
+  strand: "str"
+  assignment: "str"
+  conversions: "int"
+  convertible: "int"
+  coverage: "int"
 summary_counts:
   file_pattern: "**/*.tsv"
   separator: "\t"

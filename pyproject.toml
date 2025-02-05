@@ -41,6 +41,7 @@ dependencies = [
   "matplotlib",
   "numpy",
   "pandas",
+  "polars",
   "pysam",
   "ruamel.yaml",
   "sqlalchemy",
@@ -50,6 +51,7 @@ dependencies = [
 [project.optional-dependencies]
 tests = [
   "filetype",
+  "pyarrow",
   "pytest",
   "pytest-cov",
   "pytest-github-actions-annotate-failures",
@@ -276,6 +278,7 @@ module = [
   "loguru",
   "numpy.*",
   "pandas",
+  "polars",
   "pysam",
   "ruamel.yaml",
 ]
