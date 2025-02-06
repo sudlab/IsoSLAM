@@ -14,7 +14,7 @@
         <link rel="prev" href="../workflow/">
       
       
-        <link rel="next" href="../extending/">
+        <link rel="next" href="adding_modules/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -22,7 +22,7 @@
     
     
       
-        <title>Contributing - IsoSLAM</title>
+        <title>Development - IsoSLAM</title>
       
     
     
@@ -106,7 +106,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Contributing
+              Development
             
           </span>
         </div>
@@ -329,6 +329,44 @@
   
   
   
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Contributing
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
     <li class="md-nav__item md-nav__item--active">
       
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
@@ -341,7 +379,7 @@
           
   
   <span class="md-ellipsis">
-    Contributing
+    Development
     
   </span>
   
@@ -353,7 +391,7 @@
         
   
   <span class="md-ellipsis">
-    Contributing
+    Development
     
   </span>
   
@@ -550,6 +588,36 @@
     </li>
   
 
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="adding_modules/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Adding Modules
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
     
       
       
@@ -664,6 +732,28 @@
   
   <span class="md-ellipsis">
     Logging
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/plotting/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Plotting
     
   </span>
   
@@ -963,7 +1053,7 @@
 <h1 id="contributing">Contributing</h1>
 <p>This document describes how to contribute to the development of this software.</p>
 <h2 id="bug-reports">Bug Reports</h2>
-<p>If you find a but we need to know about it so we can fix it. Please report your <a href="https://github.com/sudlab/IsoSLAM/issues/new?assignees=&amp;labels=bug&amp;projects=sudlab%2F1&amp;template=bug_report.yaml&amp;title=%5Bbug%5D%3A+">bugs on our GitHub Issues
+<p>If you find a bug we need to know about it so we can fix it. Please report your <a href="https://github.com/sudlab/IsoSLAM/issues/new?assignees=&amp;labels=bug&amp;projects=sudlab%2F1&amp;template=bug_report.yaml&amp;title=%5Bbug%5D%3A+">bugs on our GitHub Issues
 page</a>.</p>
 <h2 id="feature-requests">Feature Requests</h2>
 <p>If you find IsoSLAM useful but think it can be improved you can <a href="https://github.com/sudlab/IsoSLAM/issues/new?assignees=&amp;labels=enhancement&amp;projects=sudlab%2F1&amp;template=feature_request.yaml&amp;title=%5Bfeature%5D+%3A+">make a feature request</a>.</p>
@@ -1027,6 +1117,8 @@ others (including your past self!). We use the following linters implemented as 
 <li><a href="https://github.com/DavidAnson/markdownlint-cli2">markdownlint-cli2</a> (Markdown)</li>
 <li><a href="https://prettier.io/docs/en/">prettier</a> (Markdown, YAML)</li>
 </ul>
+<p><strong>NB</strong> It is important that Python files lint with <code>black</code> otherwise the API section of this website will not
+automatically build the web-pages for that section.</p>
 <h2 id="pre-commit">Pre-commit</h2>
 <p>Style checks are made using the <a href="https://pre-commit.com/">pre-commit</a> framework which is one of the development dependencies and
 should have been installed in the previous step. You can check if its is installed in your virtual environment with <code>pip
