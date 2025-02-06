@@ -1,7 +1,5 @@
 # Utils
 
-This module contains various utilities used within the package.
-
 ::: isoslam.utils
     handler: python
     options:

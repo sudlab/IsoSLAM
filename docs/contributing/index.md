@@ -4,7 +4,7 @@ This document describes how to contribute to the development of this software.
 
 ## Bug Reports
 
-If you find a but we need to know about it so we can fix it. Please report your [bugs on our GitHub Issues
+If you find a bug we need to know about it so we can fix it. Please report your [bugs on our GitHub Issues
 page][gh-bug].
 
 ## Feature Requests
@@ -92,6 +92,9 @@ others (including your past self!). We use the following linters implemented as 
   - [Codespell][codespell] (Spelling across all filesyy)
   - [markdownlint-cli2][markdownlint-cli2] (Markdown)
   - [prettier][prettier] (Markdown, YAML)
+
+**NB** It is important that Python files lint with `black` otherwise the API section of this website will not
+automatically build the web-pages for that section.
 
 ## Pre-commit
 

@@ -4,6 +4,6 @@
 - [Installation](installation.md)
 - [Usage](usage.md)
 - [Workflow](workflow.md)
-- [Contributing](contributing.md)
+- [Contributing](contributing/index.md)
 - [Extending](extending.md)
-- [API](api.md)
+- [API](api/index.md)

@@ -1,6 +1,6 @@
-# IsoSLAM
+# Plotting
 
-::: isoslam.isoslam
+::: isoslam.plotting
     handler: python
     options:
         docstring_style: numpy
