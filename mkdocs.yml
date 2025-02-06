@@ -9,12 +9,15 @@ nav:
   - Installation: installation.md
   - Usage: usage.md
   - Workflow: workflow.md
-  - Contributing: contributing.md
+  - Contributing:
+      - Development: contributing/index.md
+      - Adding Modules: contributing/adding_modules.md
   - Extending: extending.md
   - API:
       - IO: api/io.md
       - Isoslam: api/isoslam.md
       - Logging: api/logging.md
+      - Plotting: api/plotting.md
       - Processing: api/processing.md
       - Summary: api/summary.md
       - Utils: api/utils.md
@@ -24,6 +27,7 @@ extra:
     provider: mike
 
 plugins:
+  - autorefs
   - mermaid2
   - search
   - mkdocstrings

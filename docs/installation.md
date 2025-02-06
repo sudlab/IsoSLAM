@@ -2,7 +2,7 @@
 
 Ideally you should install IsoSLAM under a Python Virtual Environment. Details of how to work with and use these is
 beyond the scope of this documentation but some advice can be found in the
-[contributing](contributing#virtual-environments) section.
+[contributing](contributing/index.md#virtual-environments) section.
 
 ## Dependencies
 

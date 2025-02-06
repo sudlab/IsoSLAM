@@ -1,7 +1,5 @@
 # Logging
 
-This module handles logging setup.
-
 ::: isoslam.logging
     handler: python
     options:
