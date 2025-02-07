@@ -79,6 +79,7 @@ def test_entry_point_help(option: str, help_message: str, capsys: pytest.Capture
                 "data/bed/some.bed",
                 "--vcf-file",
                 "data/vcf/some.vcf.gz",
+                # TODO - Add new options here
             ],
             processing.process,
             {
@@ -141,3 +142,45 @@ def test_summary_counts(file_pattern: str, separator: str, outfile: str, tmp_pat
     )
     output = tmp_path / outfile
     assert output.is_file()
+
+
+@pytest.mark.parametrize(
+    ("options"),
+    [
+        pytest.param(
+            [
+                "process",
+                "--bam-file",
+                "tests/resources/bam/sorted_assigned/d0_no4sU_filtered_remapped_sorted.sorted.assigned.bam",
+                "--gtf-file",
+                "tests/resources/gtf/test_wash1.gtf",
+                "--bed-file",
+                "tests/resources/bed/test_coding_introns.bed",
+                "--vcf-file",
+                "tests/resources/vcf/d0.vcf.gz",
+                # TODO - Add new options here
+            ],
+            id="no4sU input file",
+        ),
+        # pytest.param(
+        #     [
+        #         "process",
+        #         "--bam-file",
+        #         "tests/resources/bam/sorted_assigned/d0_0hr1_filtered_remapped_sorted.sorted.assigned.bam",
+        #         "--gtf-file",
+        #         "tests/resources/gtf/test_wash1.gtf",
+        #         "--bed-file",
+        #         "tests/resources/bed/test_coding_introns.bed",
+        #         "--vcf-file",
+        #         "tests/resources/vcf/d0.vcf.gz",
+        #         # TODO - Add new options here
+        #     ],
+        #     id="0hr1 input file"),
+    ],
+)
+def test_process(options: list, tmp_path: Path) -> None:
+    """Test the processing entry point runs."""
+    # How to invoke with global configuration option?
+    options = ["--output", f"{tmp_path}"] + options
+    processing.entry_point(manually_provided_args=options)
+    assert Path(tmp_path / ".tsv").is_file()
