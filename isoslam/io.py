@@ -156,7 +156,27 @@ def load_and_update_config(args: argparse.Namespace | None) -> dict[str, Any]:
         Dictionary of configuration optionsupdated with user specified options.
     """
     config = read_yaml() if vars(args)["config_file"] is None else read_yaml(vars(args)["config_file"])
+    config["schema"] = _type_schema(config["schema"])  # type: ignore[index]
     return utils.update_config(config, vars(args))  # type: ignore[arg-type]
+
+
+def _type_schema(schema: dict[str, str]) -> dict[str, type]:
+    """
+    Convert schemas to types.
+
+    When read from a YAML file the schema's values are strings, they need converting to types to work with Polars.
+
+    Parameters
+    ----------
+    schema : dict[str, str]
+        Dictionary of schema types with values as strings.
+
+    Returns
+    -------
+    dict[str, Type]
+        Returns dictionary with schema types as such.
+    """
+    return {key: eval(value) for key, value in schema.items()}  # pylint: disable=eval-used  # noqa: S307
 
 
 def create_config(args: argparse.Namespace | None = None) -> None:

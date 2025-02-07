@@ -385,3 +385,25 @@ def test_write_assigned_conversions(  # pylint: disable=too-many-positional-argu
     # Ensure order is consistent with expected order
     result.sort_values(1, ascending=False, inplace=True, ignore_index=True)
     pd.testing.assert_frame_equal(result, expected)
+
+
+@pytest.mark.parametrize(
+    ("raw_dict", "expected"),
+    [
+        pytest.param({"string": "str"}, {"string": str}, id="string"),
+        pytest.param({"int": "int"}, {"int": int}, id="int"),
+        pytest.param({"float": "float"}, {"float": float}, id="float"),
+        pytest.param({"dict": "dict"}, {"dict": dict}, id="dict"),
+        pytest.param({"list": "list"}, {"list": list}, id="list"),
+        pytest.param({"tuple": "tuple"}, {"tuple": tuple}, id="tuple"),
+        pytest.param(
+            {"string": "str", "int": "int", "float": "float", "dict": "dict", "list": "list", "tuple": "tuple"},
+            {"string": str, "int": int, "float": float, "dict": dict, "list": list, "tuple": tuple},
+            id="multiple",
+        ),
+    ],
+)
+def test_type_schema(raw_dict: dict[str, str], expected: dict[str, type]) -> None:
+    """Test conversion of schema with strings to types."""
+    converted = io._type_schema(raw_dict)
+    assert converted == expected
