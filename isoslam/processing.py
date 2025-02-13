@@ -10,6 +10,10 @@ from loguru import logger
 
 from isoslam import __version__, io, isoslam, logging, summary
 
+# pylint: disable=too-many-locals
+# pylint: disable=too-many-branches
+# pylint: disable=too-many-statements
+
 
 def create_parser() -> arg.ArgumentParser:
     """
@@ -121,11 +125,11 @@ def create_parser() -> arg.ArgumentParser:
         help="Delimiter to use in output.",
     )
     process_parser.add_argument(
-        "--output-ext",
-        dest="output_ext",
+        "--output-file",
+        dest="output_file",
         type=str,
         required=False,
-        help="File extension to use in output.",
+        help="File to write results to.",
     )
     process_parser.set_defaults(func=process)
 
@@ -203,7 +207,9 @@ def create_parser() -> arg.ArgumentParser:
     return parser
 
 
-def process(args: arg.Namespace | None) -> None:
+def process(
+    args: arg.Namespace | None,
+) -> pl.DataFrame:
     """
     Process a set of files.
 
@@ -214,12 +220,12 @@ def process(args: arg.Namespace | None) -> None:
 
     Returns
     -------
-    None
-        Function does not return anything.
+    pl.DataFrame
+        Polars Dataframe of results.
     """
     config = io.load_and_update_config(args)
     logger.remove()
-    if vars(args)["log_level"] is not None:
+    if "log_level" in vars(args) and vars(args)["log_level"] is not None:
         logging.setup(level=vars(args)["log_level"])
     else:
         logging.setup(level=config["log_level"])
@@ -228,23 +234,22 @@ def process(args: arg.Namespace | None) -> None:
     vcffile = io.load_file(config["vcf_file"])
     utron_coords = isoslam.extract_transcripts(config["bed_file"])
     strand_dict, tx2gene = isoslam.extract_strand_transcript(config["gtf_file"])
-    # Extract delimiter and setup Polars dataframe
-    delim = config["delim"]
+    # Setup Polars dataframe
     results = pl.DataFrame(schema=config["schema"])
     pairs_processed = 0
     first_matched = 0
     read_uid = 1
     # Process the BAM file
     for pair in isoslam.extract_segment_pairs(config["bam_file"]):
-        print(f"\n {pairs_processed=}")
         # If there are an excessive number of pairs and/or matches per file we break out
         if pairs_processed >= config["upper_pairs_limit"]:
             break
         if first_matched > config["first_matched_limit"]:
             break
         # Perform a number of checks as to whether we should proceed with processing
-        read1, read2 = pair
-        # 1. If we don't have a pair skip.
+        # 1. If we don't have a pair skip
+        #    @ns-rse : I tried unpacking and found there were indeed instances where the "pairs" could got upto 8 in
+        #    length?
         if len(pair) != 2:
             continue
         # 2. If either reads of the pair are unmapped skip.
@@ -347,7 +352,7 @@ def process(args: arg.Namespace | None) -> None:
 
         results = isoslam.append_data(
             assigned_conversions=assign_conversions_to_retained,
-            coverage_counts=coverage_counts,
+            coverage_counts=coverage_counts,  # pylint: disable=possibly-used-before-assignment
             read_uid=read_uid,
             assignment="Ret",
             results=results,
@@ -355,14 +360,18 @@ def process(args: arg.Namespace | None) -> None:
         )
         results = isoslam.append_data(
             assigned_conversions=assign_conversions_to_spliced,
-            coverage_counts=coverage_counts,
+            coverage_counts=coverage_counts,  # pylint: disable=possibly-used-before-assignment
             read_uid=read_uid,
             assignment="Spl",
             results=results,
             schema=config["schema"],
         )
         read_uid += 1
-    return results.sort(by=["read_uid", "transcript_id", "chr", "start", "end"])
+
+    results = results.sort(by=["read_uid", "transcript_id", "chr", "start", "end"])
+    io.data_frame_to_file(data=results, output_dir=config["output_dir"], outfile=config["output_file"])
+
+    return results
 
 
 def summarise_counts(args: arg.Namespace | None) -> None:

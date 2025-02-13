@@ -1,5 +1,6 @@
 """Tests of the processing modules entry point, argument parsing and ability to correctly select programs."""
 
+import argparse as arg
 from collections.abc import Callable
 from pathlib import Path
 
@@ -79,7 +80,6 @@ def test_entry_point_help(option: str, help_message: str, capsys: pytest.Capture
                 "data/bed/some.bed",
                 "--vcf-file",
                 "data/vcf/some.vcf.gz",
-                # TODO - Add new options here
             ],
             processing.process,
             {
@@ -145,7 +145,7 @@ def test_summary_counts(file_pattern: str, separator: str, outfile: str, tmp_pat
 
 
 @pytest.mark.parametrize(
-    ("options"),
+    ("options", "outfile"),
     [
         pytest.param(
             [
@@ -158,29 +158,63 @@ def test_summary_counts(file_pattern: str, separator: str, outfile: str, tmp_pat
                 "tests/resources/bed/test_coding_introns.bed",
                 "--vcf-file",
                 "tests/resources/vcf/d0.vcf.gz",
-                # TODO - Add new options here
             ],
-            id="no4sU input file",
+            "results.parquet",
+            id="no4sU input file, parquet output",
         ),
-        # pytest.param(
-        #     [
-        #         "process",
-        #         "--bam-file",
-        #         "tests/resources/bam/sorted_assigned/d0_0hr1_filtered_remapped_sorted.sorted.assigned.bam",
-        #         "--gtf-file",
-        #         "tests/resources/gtf/test_wash1.gtf",
-        #         "--bed-file",
-        #         "tests/resources/bed/test_coding_introns.bed",
-        #         "--vcf-file",
-        #         "tests/resources/vcf/d0.vcf.gz",
-        #         # TODO - Add new options here
-        #     ],
-        #     id="0hr1 input file"),
+        pytest.param(
+            [
+                "process",
+                "--bam-file",
+                "tests/resources/bam/sorted_assigned/d0_0hr1_filtered_remapped_sorted.sorted.assigned.bam",
+                "--gtf-file",
+                "tests/resources/gtf/test_wash1.gtf",
+                "--bed-file",
+                "tests/resources/bed/test_coding_introns.bed",
+                "--vcf-file",
+                "tests/resources/vcf/d0.vcf.gz",
+            ],
+            "results.parquet",
+            id="0hr1 input file, parquet output",
+        ),
     ],
 )
-def test_process(options: list, tmp_path: Path) -> None:
+def test_entry_point_process(options: list, outfile: str, tmp_path: Path) -> None:
     """Test the processing entry point runs."""
     # How to invoke with global configuration option?
-    options = ["--output", f"{tmp_path}"] + options
+    options = ["--output-dir", f"{tmp_path}"] + options
+    options = options + ["--output-file", f"{outfile}"]
     processing.entry_point(manually_provided_args=options)
-    assert Path(tmp_path / ".tsv").is_file()
+    # Check the output has been written to file
+    assert Path(tmp_path / outfile).is_file()
+
+
+@pytest.mark.parametrize(
+    ("config"),
+    [
+        pytest.param(
+            {
+                "config_file": Path("isoslam") / "default_config.yaml",
+                "bam_file": "tests/resources/bam/sorted_assigned/d0_no4sU_filtered_remapped_sorted.sorted.assigned.bam",
+                "gtf_file": "tests/resources/gtf/test_wash1.gtf",
+                "bed_file": "tests/resources/bed/test_coding_introns.bed",
+                "vcf_file": "tests/resources/vcf/d0.vcf.gz",
+            },
+            id="no4sU",
+        ),
+        pytest.param(
+            {
+                "config_file": Path("isoslam") / "default_config.yaml",
+                "bam_file": "tests/resources/bam/sorted_assigned/d0_0hr1_filtered_remapped_sorted.sorted.assigned.bam",
+                "gtf_file": "tests/resources/gtf/test_wash1.gtf",
+                "bed_file": "tests/resources/bed/test_coding_introns.bed",
+                "vcf_file": "tests/resources/vcf/d0.vcf.gz",
+            },
+            id="0hr1",
+        ),
+    ],
+)
+def test_process(config: dict, regtest) -> None:
+    """Regression test of the process() function."""
+    results = processing.process(arg.Namespace(**config))
+    print(results.to_pandas().to_string(float_format="{:.4e}".format), file=regtest)

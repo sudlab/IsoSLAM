@@ -1,6 +1,7 @@
 # Default configuration file for running IsoSlam
 log_level: "warning"
 output_dir: output
+output_file: results.parquet
 bam_file: data/bam/.bam
 gtf_file: data/gtf/
 bed_file: data/bed/
@@ -14,7 +15,6 @@ reverse_reads:
   from: "A"
   to: "G"
 delim: "\t"
-output_ext: ".tsv"
 schema:
   read_uid: "int"
   transcript_id: "str"

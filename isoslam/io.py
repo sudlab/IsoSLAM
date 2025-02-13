@@ -422,6 +422,7 @@ def data_frame_to_file(
         Dictionary of keyword arguments to pass to ''pandas.DataFrame.to_csv()''.
     """
     outdir_file = Path(output_dir) / f"{outfile}"
+    Path(output_dir).mkdir(parents=True, exist_ok=True)
     if isinstance(data, pl.DataFrame):
         try:
             if re.search(r"parquet$", str(outfile)):
