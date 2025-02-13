@@ -2,6 +2,7 @@
 
 import argparse
 import gzip
+import re
 from collections.abc import Callable, Generator
 from datetime import datetime
 from importlib import resources
@@ -10,6 +11,7 @@ from pathlib import Path
 from typing import Any, TextIO
 
 import pandas as pd
+import polars as pl
 import pysam
 from loguru import logger
 from ruamel.yaml import YAML, YAMLError
@@ -397,9 +399,9 @@ def load_files(pattern: str = "**/*.tsv", sep: str = "\t") -> dict[str, pd.DataF
 
 
 def data_frame_to_file(
-    data: pd.DataFrame,
+    data: pd.DataFrame | pl.DataFrame,
     output_dir: str | Path = "./output/",
-    outfile: str = "summary_counts.csv",
+    outfile: str = "summary_counts.tsv",
     sep: str = "\t",
     **kwargs: dict[Any, Any],
 ) -> None:
@@ -420,8 +422,26 @@ def data_frame_to_file(
         Dictionary of keyword arguments to pass to ''pandas.DataFrame.to_csv()''.
     """
     outdir_file = Path(output_dir) / f"{outfile}"
-    data.to_csv(outdir_file, sep=sep, **kwargs)
-    logger.debug(f"File written to : {outdir_file}")
+    if isinstance(data, pl.DataFrame):
+        try:
+            if re.search(r"parquet$", str(outfile)):
+                data.write_parquet(outdir_file, **kwargs)
+            elif re.search(r"\..sv$", str(outfile)):
+                data.write_csv(outdir_file, separator=sep, **kwargs)
+            logger.debug(f"File written to : {outdir_file}")
+        except Exception as e:
+            raise e
+    elif isinstance(data, pd.DataFrame):
+        try:
+            if re.search(r"parquet", str(outfile)):
+                data.to_parquet(outdir_file, **kwargs)
+            elif re.search(r"\..sv$", str(outfile)):
+                data.to_csv(outdir_file, sep=sep, **kwargs)
+            logger.debug(f"File written to : {outdir_file}")
+        except Exception as e:
+            raise e
+    else:
+        raise TypeError(f"Can not write output Pandas or Polar Dataframe object not supplied = {type(data)=}")
 
 
 def write_assigned_conversions(  # pylint: disable=too-many-positional-arguments

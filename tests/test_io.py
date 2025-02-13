@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any, TextIO
 
 import pandas as pd
+import polars as pl
 import pysam
 import pytest
 
@@ -330,6 +331,39 @@ def test_load_files(pattern: str, expected: dict[str, pd.DataFrame]) -> None:
     assert set(files_found.keys()) == expected
     for _, dataframe in files_found.items():
         assert isinstance(dataframe, pd.DataFrame)
+
+
+@pytest.mark.parametrize(
+    ("data", "outfile", "separator"),
+    [
+        pytest.param(pd.DataFrame({"test1": [0, 1], "test2": [2, 3]}), "results.parquet", ",", id="Pandas to parquet"),
+        pytest.param(pd.DataFrame({"test1": [0, 1], "test2": [2, 3]}), "results.tsv", "\t", id="Pandas to tsv"),
+        pytest.param(pd.DataFrame({"test1": [0, 1], "test2": [2, 3]}), "results.csv", ",", id="Pandas to csv"),
+        pytest.param(pl.DataFrame({"test1": [0, 1], "test2": [2, 3]}), "results.parquet", ",", id="Polars to parquet"),
+        pytest.param(pl.DataFrame({"test1": [0, 1], "test2": [2, 3]}), "results.tsv", "\t", id="Polars to tsv"),
+        pytest.param(pl.DataFrame({"test1": [0, 1], "test2": [2, 3]}), "results.csv", ",", id="Polars to csv"),
+    ],
+)
+def test_data_frame_to_file(data: pd.DataFrame | pl.DataFrame, outfile: str, separator: str, tmp_path: Path) -> None:
+    """Test data_frame_to_file() for different formats."""
+    io.data_frame_to_file(data, output_dir=tmp_path, outfile=outfile, sep=separator)
+    outdir_file = tmp_path / outfile
+    assert outdir_file.is_file()
+
+
+@pytest.mark.parametrize(
+    ("not_dataframe"),
+    [
+        pytest.param("string", id="string"),
+        pytest.param(10, id="int"),
+        pytest.param([1, 2, 3], id="list"),
+        pytest.param((1, 2, 3), id="tuple"),
+    ],
+)
+def test_data_frame_to_file_typeerror(not_dataframe: Any, tmp_path: Path) -> None:
+    """Test TypeError is raised by data_frame_to_file() when data is not Polars or Pandas DataFrame."""
+    with pytest.raises(TypeError):
+        io.data_frame_to_file(data=not_dataframe, output_dir=tmp_path, outfile="test.csv", sep=",")
 
 
 @pytest.mark.parametrize(
