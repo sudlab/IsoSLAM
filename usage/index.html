@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.2">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.4">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.d7758b05.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.8608ea7d.min.css">
       
       
 
@@ -295,6 +295,18 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Usage
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -305,6 +317,67 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#stand-alone-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stand alone usage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Stand alone usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Processing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration File
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ruffuscgat-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ruffus/CGAT pipeline
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -636,6 +709,27 @@
   
 
     
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../links/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Links
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -656,6 +750,56 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#stand-alone-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stand alone usage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Stand alone usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Processing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration File
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ruffuscgat-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ruffus/CGAT pipeline
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -674,7 +818,117 @@
 
 
 <h1 id="usage">Usage</h1>
-<p><strong>TO BE WRITTEN</strong> Awaiting refactoring of code base.</p>
+<h2 id="stand-alone-usage">Stand alone usage</h2>
+<p>Once installed the <code>isolsam</code> command is should be available and you can view the options and sub-commands with</p>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>❱<span class="w"> </span>isoslam<span class="w"> </span>--help
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>usage:<span class="w"> </span>isoslam<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-v<span class="o">]</span><span class="w"> </span><span class="o">[</span>-c<span class="w"> </span>CONFIG_FILE<span class="o">]</span><span class="w"> </span><span class="o">[</span>-b<span class="w"> </span>BASE_DIR<span class="o">]</span><span class="w"> </span><span class="o">[</span>-o<span class="w"> </span>OUTPUT_DIR<span class="o">]</span><span class="w"> </span><span class="o">[</span>-l<span class="w"> </span>LOG_LEVEL<span class="o">]</span><span class="w"> </span><span class="o">{</span>process,create-config,summary-counts<span class="o">}</span><span class="w"> </span>...
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Run<span class="w"> </span>various<span class="w"> </span>programs<span class="w"> </span>related<span class="w"> </span>to<span class="w"> </span>IsoSLAM.<span class="w"> </span>Add<span class="w"> </span>the<span class="w"> </span>name<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>program<span class="w"> </span>you<span class="w"> </span>wish<span class="w"> </span>to<span class="w"> </span>run.
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>options:
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>-h,<span class="w"> </span>--help<span class="w">            </span>show<span class="w"> </span>this<span class="w"> </span><span class="nb">help</span><span class="w"> </span>message<span class="w"> </span>and<span class="w"> </span><span class="nb">exit</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>-v,<span class="w"> </span>--version<span class="w">         </span>Report<span class="w"> </span>the<span class="w"> </span>installed<span class="w"> </span>version<span class="w"> </span>of<span class="w"> </span>IsoSLAM.
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>-c,<span class="w"> </span>--config-file<span class="w"> </span>CONFIG_FILE
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">                        </span>Path<span class="w"> </span>to<span class="w"> </span>a<span class="w"> </span>YAML<span class="w"> </span>configuration<span class="w"> </span>file.
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>-b,<span class="w"> </span>--base-dir<span class="w"> </span>BASE_DIR
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">                        </span>Base<span class="w"> </span>directory<span class="w"> </span>to<span class="w"> </span>run<span class="w"> </span>isoslam<span class="w"> </span>on.
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span>-o,<span class="w"> </span>--output-dir<span class="w"> </span>OUTPUT_DIR
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">                        </span>Output<span class="w"> </span>directory<span class="w"> </span>to<span class="w"> </span>write<span class="w"> </span>results<span class="w"> </span>to.
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span>-l,<span class="w"> </span>--log-level<span class="w"> </span>LOG_LEVEL
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">                        </span>Logging<span class="w"> </span>level<span class="w"> </span>to<span class="w"> </span>use,<span class="w"> </span>default<span class="w"> </span>is<span class="w"> </span><span class="s1">&#39;info&#39;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>verbose<span class="w"> </span>output<span class="w"> </span>use<span class="w"> </span><span class="s1">&#39;debug&#39;</span>.
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>program:
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">  </span>Available<span class="w"> </span>programs<span class="w"> </span>listed<span class="w"> </span>below:
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span><span class="o">{</span>process,create-config,summary-counts<span class="o">}</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">    </span>process<span class="w">             </span>Process<span class="w"> </span>all<span class="w"> </span>files<span class="w"> </span>and<span class="w"> </span>run<span class="w"> </span>all<span class="w"> </span>summary<span class="w"> </span>plotting<span class="w"> </span>and<span class="w"> </span>statistics.
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">    </span>create-config<span class="w">       </span>Create<span class="w"> </span>a<span class="w"> </span>configuration<span class="w"> </span>file<span class="w"> </span>using<span class="w"> </span>the<span class="w"> </span>defaults.
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">    </span>summary-counts<span class="w">      </span>Summarise<span class="w"> </span>the<span class="w"> </span>counts.
+</span></code></pre></div>
+<p>Global options that set the configuration file to use, the base and output directory and log-level can be
+specified. Users then have a number of programs from IsoSLAM.</p>
+<ul>
+<li><code>process</code></li>
+<li><code>create-config</code></li>
+<li><code>summary-counts</code></li>
+</ul>
+<h3 id="processing">Processing</h3>
+<p>Help is available on using the <code>isoslam process</code> command and can be viewed with the <code>--help</code> option.</p>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>❱<span class="w"> </span>isoslam<span class="w"> </span>process<span class="w"> </span>--help
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>usage:<span class="w"> </span>isoslam<span class="w"> </span>process<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-b<span class="w"> </span>BAM_FILE<span class="o">]</span><span class="w"> </span><span class="o">[</span>-g<span class="w"> </span>GTF_FILE<span class="o">]</span><span class="w"> </span><span class="o">[</span>-d<span class="w"> </span>BED_FILE<span class="o">]</span><span class="w"> </span><span class="o">[</span>-v<span class="w"> </span>VCF_FILE<span class="o">]</span><span class="w"> </span><span class="o">[</span>-u<span class="w"> </span>UPPER_PAIRS_LIMIT<span class="o">]</span><span class="w"> </span><span class="o">[</span>-f<span class="w"> </span>FIRST_MATCHED_LIMIT<span class="o">]</span><span class="w"> </span><span class="o">[</span>--delim<span class="w"> </span>DELIM<span class="o">]</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">                       </span><span class="o">[</span>--output-file<span class="w"> </span>OUTPUT_FILE<span class="o">]</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Process<span class="w"> </span>all<span class="w"> </span>files<span class="w"> </span>and<span class="w"> </span>run<span class="w"> </span>all<span class="w"> </span>summary<span class="w"> </span>plotting<span class="w"> </span>and<span class="w"> </span>statistics.
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>options:
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>-h,<span class="w"> </span>--help<span class="w">            </span>show<span class="w"> </span>this<span class="w"> </span><span class="nb">help</span><span class="w"> </span>message<span class="w"> </span>and<span class="w"> </span><span class="nb">exit</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>-b,<span class="w"> </span>--bam-file<span class="w"> </span>BAM_FILE
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">                        </span>Path<span class="w"> </span>to<span class="w"> </span><span class="s1">&#39;.bam&#39;</span><span class="w"> </span>file<span class="w"> </span>that<span class="w"> </span>has<span class="w"> </span>undergone<span class="w"> </span><span class="nb">read</span><span class="w"> </span>assignment<span class="w"> </span>with<span class="w"> </span><span class="s1">&#39;featureCount&#39;</span>.
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>-g,<span class="w"> </span>--gtf-file<span class="w"> </span>GTF_FILE
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">                        </span>Path<span class="w"> </span>to<span class="w"> </span><span class="s1">&#39;.gtf&#39;</span><span class="w"> </span>transcript<span class="w"> </span>assembly<span class="w"> </span>file.
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>-d,<span class="w"> </span>--bed-file<span class="w"> </span>BED_FILE
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">                        </span>Path<span class="w"> </span>to<span class="w"> </span><span class="s1">&#39;.bed&#39;</span><span class="w"> </span>utron<span class="w"> </span>file.<span class="w"> </span>Must<span class="w"> </span>be<span class="w"> </span>bed6<span class="w"> </span>format.
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>-v,<span class="w"> </span>--vcf-file<span class="w"> </span>VCF_FILE
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">                        </span>Path<span class="w"> </span>to<span class="w"> </span><span class="s1">&#39;.vcf.gz&#39;</span><span class="w"> </span>file.
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span>-u,<span class="w"> </span>--upper-pairs-limit<span class="w"> </span>UPPER_PAIRS_LIMIT
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">                        </span>Upper<span class="w"> </span>limit<span class="w"> </span>of<span class="w"> </span>pairs<span class="w"> </span>to<span class="w"> </span>be<span class="w"> </span>processed.
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">  </span>-f,<span class="w"> </span>--first-matched-limit<span class="w"> </span>FIRST_MATCHED_LIMIT
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">                        </span>Limit<span class="w"> </span>of<span class="w"> </span>matches.
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">  </span>--delim<span class="w"> </span>DELIM<span class="w">         </span>Delimiter<span class="w"> </span>to<span class="w"> </span>use<span class="w"> </span><span class="k">in</span><span class="w"> </span>output.
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">  </span>--output-file<span class="w"> </span>OUTPUT_FILE
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">                        </span>File<span class="w"> </span>to<span class="w"> </span>write<span class="w"> </span>results<span class="w"> </span>to.
+</span></code></pre></div>
+<p>It is important to remember that the <code>.bam</code> file requires pre-processing and instructions on how to do that can be found
+below.</p>
+<p>Three additional input files are required.</p>
+<ul>
+<li><code>.gtf</code> : DESCRIPTION</li>
+<li><code>.bed</code> : DESCRIPTION</li>
+<li><code>.vcf</code> : DESCRIPTION</li>
+</ul>
+<p>By default output is written to the <code>./output</code> directory which will be created if it does not exist and the default
+output file is <code>results.parquet</code> which is in <a href="https://parquet.apache.org/docs/file-format/">Parquet</a> format. The output directory is configurable, as is the
+output file name. If you would rather your output is saved as ASCII delimited file it is easy to do so by specifying the
+<code>--delim ,</code> (for comma-delimited) or <code>--delim \t</code> (for tab-delimited) and using the appropriate file extension in the
+<code>--output-file</code>. For example the following outputs to <code>new_results</code> directory in a file <code>output_20250213.csv</code></p>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>❱<span class="w"> </span>isoslam<span class="w"> </span>--output-dir<span class="w"> </span>new_results<span class="w"> </span>process<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">         </span>--bam-file<span class="w"> </span>d0_no4sU_EKRN230046545-1A_HFWGNDSX7_L4.star.bam<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">         </span>--gtf-file<span class="w"> </span>test_wash1.gtf<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">         </span>--bed-file<span class="w"> </span>test_coding_introns.bed<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">         </span>--vcf-file<span class="w"> </span>d0.vcf.gz<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">         </span>--delim<span class="w"> </span><span class="s2">&quot;,&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">         </span>--output-file<span class="w"> </span>output_20250213.csv
+</span></code></pre></div>
+<h3 id="configuration-file">Configuration File</h3>
+<p>It is possible to place all configuration options in a <a href="https://yaml.org/">YAML</a> configuration file. A sample configuration file can
+be generated using the <code>isoslam create-config</code> command and there are options to specify the output filename, the default
+is <code>config.yaml</code> in the current directory (see <code>isoslam create-config --help</code> for all options).</p>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>❱<span class="w"> </span>isoslam<span class="w"> </span>create-config<span class="w"> </span>--help
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>usage:<span class="w"> </span>isoslam<span class="w"> </span>create-config<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-f<span class="w"> </span>FILENAME<span class="o">]</span><span class="w"> </span><span class="o">[</span>-o<span class="w"> </span>OUTPUT_DIR<span class="o">]</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Create<span class="w"> </span>a<span class="w"> </span>configuration<span class="w"> </span>file<span class="w"> </span>using<span class="w"> </span>the<span class="w"> </span>defaults.
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>options:
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>-h,<span class="w"> </span>--help<span class="w">            </span>show<span class="w"> </span>this<span class="w"> </span><span class="nb">help</span><span class="w"> </span>message<span class="w"> </span>and<span class="w"> </span><span class="nb">exit</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>-f,<span class="w"> </span>--filename<span class="w"> </span>FILENAME
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">                        </span>Name<span class="w"> </span>of<span class="w"> </span>YAML<span class="w"> </span>file<span class="w"> </span>to<span class="w"> </span>save<span class="w"> </span>configuration<span class="w"> </span>to<span class="w"> </span><span class="o">(</span>default<span class="w"> </span><span class="s1">&#39;config.yaml&#39;</span><span class="o">)</span>.
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span>-o,<span class="w"> </span>--output-dir<span class="w"> </span>OUTPUT_DIR
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">                        </span>Path<span class="w"> </span>to<span class="w"> </span>where<span class="w"> </span>the<span class="w"> </span>YAML<span class="w"> </span>file<span class="w"> </span>should<span class="w"> </span>be<span class="w"> </span>saved<span class="w"> </span><span class="o">(</span>default<span class="w"> </span><span class="s1">&#39;./&#39;</span><span class="w"> </span>the<span class="w"> </span>current<span class="w"> </span>directory<span class="o">)</span>.
+</span></code></pre></div>
+<p>Once created you can edit the <code>config.yaml</code> to specify all fields and parameters and then invoke processing using this
+file.</p>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>❱<span class="w"> </span>isoslam<span class="w"> </span>--config-file<span class="w"> </span>config.yaml<span class="w"> </span>process
+</span></code></pre></div>
+<p>Any command line options given such as the <code>--upper-pairs-limit</code> or <code>--first-matched-limit</code> will override those details
+in the custom <code>config.yaml</code>. This means it is particularly useful for usage in the full pipeline as <code>.gtf</code>, <code>.bed</code> and
+<code>.vcf</code> files are often common and it is the <code>.bam</code> input file that changes between runs. Thus you can specify the common
+files in your configuration file and then use the <code>--bam-file &lt;file_path&gt;</code> to override the field in the configuration
+file.</p>
+<h2 id="ruffuscgat-pipeline">Ruffus/CGAT pipeline</h2>
+<p>Typically <code>isoslam</code> is part of a workflow pipeline that processes a large number of files. As such <a href="http://www.ruffus.org.uk/">ruffus</a> is
+used to keep track of tasks.</p>
+<p>EXPAND THIS SECTION WITH WORKED EXAMPLES BASED ON EXISTING SCRIPTS.</p>
 
 
 
@@ -724,7 +978,7 @@
     <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.f13b1293.min.js"></script>
+      <script src="../assets/javascripts/bundle.f1b6f286.min.js"></script>
       
     
   </body>
