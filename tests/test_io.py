@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any, TextIO
 
 import pandas as pd
+import polars as pl
 import pysam
 import pytest
 
@@ -333,6 +334,39 @@ def test_load_files(pattern: str, expected: dict[str, pd.DataFrame]) -> None:
 
 
 @pytest.mark.parametrize(
+    ("data", "outfile", "separator"),
+    [
+        pytest.param(pd.DataFrame({"test1": [0, 1], "test2": [2, 3]}), "results.parquet", ",", id="Pandas to parquet"),
+        pytest.param(pd.DataFrame({"test1": [0, 1], "test2": [2, 3]}), "results.tsv", "\t", id="Pandas to tsv"),
+        pytest.param(pd.DataFrame({"test1": [0, 1], "test2": [2, 3]}), "results.csv", ",", id="Pandas to csv"),
+        pytest.param(pl.DataFrame({"test1": [0, 1], "test2": [2, 3]}), "results.parquet", ",", id="Polars to parquet"),
+        pytest.param(pl.DataFrame({"test1": [0, 1], "test2": [2, 3]}), "results.tsv", "\t", id="Polars to tsv"),
+        pytest.param(pl.DataFrame({"test1": [0, 1], "test2": [2, 3]}), "results.csv", ",", id="Polars to csv"),
+    ],
+)
+def test_data_frame_to_file(data: pd.DataFrame | pl.DataFrame, outfile: str, separator: str, tmp_path: Path) -> None:
+    """Test data_frame_to_file() for different formats."""
+    io.data_frame_to_file(data, output_dir=tmp_path, outfile=outfile, sep=separator)
+    outdir_file = tmp_path / outfile
+    assert outdir_file.is_file()
+
+
+@pytest.mark.parametrize(
+    ("not_dataframe"),
+    [
+        pytest.param("string", id="string"),
+        pytest.param(10, id="int"),
+        pytest.param([1, 2, 3], id="list"),
+        pytest.param((1, 2, 3), id="tuple"),
+    ],
+)
+def test_data_frame_to_file_typeerror(not_dataframe: Any, tmp_path: Path) -> None:
+    """Test TypeError is raised by data_frame_to_file() when data is not Polars or Pandas DataFrame."""
+    with pytest.raises(TypeError):
+        io.data_frame_to_file(data=not_dataframe, output_dir=tmp_path, outfile="test.csv", sep=",")
+
+
+@pytest.mark.parametrize(
     ("assigned_conversions", "coverage_counts", "read_uid", "assignment", "delim", "expected"),
     [
         pytest.param(
@@ -385,3 +419,25 @@ def test_write_assigned_conversions(  # pylint: disable=too-many-positional-argu
     # Ensure order is consistent with expected order
     result.sort_values(1, ascending=False, inplace=True, ignore_index=True)
     pd.testing.assert_frame_equal(result, expected)
+
+
+@pytest.mark.parametrize(
+    ("raw_dict", "expected"),
+    [
+        pytest.param({"string": "str"}, {"string": str}, id="string"),
+        pytest.param({"int": "int"}, {"int": int}, id="int"),
+        pytest.param({"float": "float"}, {"float": float}, id="float"),
+        pytest.param({"dict": "dict"}, {"dict": dict}, id="dict"),
+        pytest.param({"list": "list"}, {"list": list}, id="list"),
+        pytest.param({"tuple": "tuple"}, {"tuple": tuple}, id="tuple"),
+        pytest.param(
+            {"string": "str", "int": "int", "float": "float", "dict": "dict", "list": "list", "tuple": "tuple"},
+            {"string": str, "int": int, "float": float, "dict": dict, "list": list, "tuple": tuple},
+            id="multiple",
+        ),
+    ],
+)
+def test_type_schema(raw_dict: dict[str, str], expected: dict[str, type]) -> None:
+    """Test conversion of schema with strings to types."""
+    converted = io._type_schema(raw_dict)
+    assert converted == expected

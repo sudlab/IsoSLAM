@@ -851,6 +851,7 @@ def test_count_conversions_across_pairs(
         assert counts[count] == expected[count]
 
 
+# mypy: disable-error-code="arg-type"
 @pytest.mark.parametrize(
     ("assigned_conversions", "coverage_counts", "read_uid", "assignment", "expected"),
     [

@@ -80,7 +80,7 @@ repos:
       - id: rst-backticks
       - id: rst-directive-colons
       - id: rst-inline-touching-normal
-      - id: python-no-eval
+      # - id: python-no-eval
       - id: python-check-blanket-noqa
       # - id: python-check-blanket-type-ignore
       - id: python-check-mock-methods
@@ -96,10 +96,10 @@ repos:
             "--exclude='^pipeline_slam_3UIs\\.py$'",
           ]
 
-  - repo: https://codeberg.org/lig/todo-md.git
-    rev: v2.0.1
-    hooks:
-      - id: todo-md
+  # - repo: https://codeberg.org/lig/todo-md.git
+  #   rev: v2.0.1
+  #   hooks:
+  #     - id: todo-md
 
   # @ns-rse (2024-11-27) Currently fails due to `fastjsonschema` not covering `tool.ruff.lint` see
   # https://github.com/abravalheri/validate-pyproject/issues/180

@@ -91,6 +91,7 @@ def extract_segment_pairs(bam_file: str | Path) -> Generator[AlignedSegment]:
     pair: list[AlignedSegment] = []
     for read in io.load_file(bam_file):
         # Return pairs of reads, i.e. not on first pass, nor if query_name matches the previous read
+        # Can lead to len(pair) be > 2
         if previous_read is not None and previous_read != read.query_name:
             yield pair
             pair = []
@@ -206,7 +207,7 @@ def zip_blocks(read: AlignedSegment) -> Iterator[tuple[Any, ...]]:
 
 def filter_within_introns(
     pair_features: dict[str, dict[str, Any]],
-    blocks: dict[str, dict[str, set[int]]],
+    blocks: dict[str, dict[str, tuple[Any, ...]]],
     read: str = "read1",
 ) -> dict[str, tuple[Any]]:
     """
@@ -254,7 +255,7 @@ def filter_within_introns(
 
 def filter_spliced_utrons(
     pair_features: dict[str, dict[str, Any]],
-    blocks: dict[str, dict[str, set[int]]],
+    blocks: dict[str, dict[str, tuple[Any, ...]]],
     read: str = "read1",
 ) -> dict[str, list[Any]]:
     """
@@ -285,8 +286,8 @@ def filter_spliced_utrons(
 
 
 def unique_conversions(
-    reads1: dict[str, list[Any]],
-    reads2: dict[str, list[Any]],
+    reads1: dict[str, Any],
+    reads2: dict[str, Any],
 ) -> frozenset[list[Any]]:
     """
     Create a unique set of conversions that are to be retained.
@@ -311,7 +312,9 @@ def unique_conversions(
     return frozenset(flat1 + flat2)  # type: ignore[arg-type]
 
 
-def remove_common_reads(retained: set[list[Any]], spliced: set[list[Any]]) -> tuple[set[list[Any]], set[list[Any]]]:
+def remove_common_reads(
+    retained: frozenset[list[Any]], spliced: frozenset[list[Any]]
+) -> tuple[frozenset[list[Any]], frozenset[list[Any]]]:
     """
     Remove reads that are common to both retained and spliced sets.
 
@@ -461,7 +464,7 @@ def count_conversions_across_pairs(
 
 
 def append_data(  # pylint: disable=too-many-positional-arguments
-    assigned_conversions: set[list[Any]],
+    assigned_conversions: frozenset[list[Any]],
     coverage_counts: dict[str, int],
     read_uid: int,
     assignment: str,
