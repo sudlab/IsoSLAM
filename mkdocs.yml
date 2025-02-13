@@ -21,6 +21,7 @@ nav:
       - Processing: api/processing.md
       - Summary: api/summary.md
       - Utils: api/utils.md
+  - Links: links.md
 
 extra:
   version:
