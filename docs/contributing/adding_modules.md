@@ -25,7 +25,45 @@ options loaded from the configuration dictionary and updated from the command li
 ## Configuration
 
 Configuration options should be added to `isoslam/default_config.yaml`. A section should be defined for the module you
-are adding, in this worked example
+are adding, in this worked example we are creating the `plot_conversions` and so we would add a section that
+corresponds to the arguments required for plotting. The function name is the top-level and options for this module are
+nested within.
+
+```yaml
+plot_conversions:
+  group_by: "read"
+  theme: "classic"
+```
+
+### Validation
+
+There is a validation module in place [`isoslam.validation`][validation] which checks that the parameters in the
+`default_config.yaml`, a user supplied configuration or command line options are of the expected type. You need to add
+the options you have added to `isoslam/default_config.yaml` to the `DEFAULT_CONFIG_SCHEMA` that is defined in the
+[`isoslam.validation`][validation] module. The examples there should be informative for writing/adding new dictionary
+entries. The keys are the fields expected in the configuration, the values are the expected types or the `schema.Or()`
+function which states the type(s)/values that are permitted and lists an `error="<error message>"` that is displayed if
+the condition is not met. For the above additional configuration you would add the following to the
+`DEFAULT_CONFIG_SCHEMA`, nesting the options as reflected in the configuration structure.
+
+```python
+DEFAULT_CONFIG_SCHEMA = Schema(
+    {
+        "plot_conversions": {
+            "group_by": Or(
+                "read",
+                "pair",
+                error="Invalid value in config for plot.conversions.group_by, valid values are 'read' or 'pair'",
+            ),
+            "theme": Or(
+                "classic",
+                "bw",
+                error="Invalid value in config for plot.theme, valid values are 'classic' or 'bw'",
+            ),
+        }
+    }
+)
+```
 
 ## Entry Points
 
@@ -55,12 +93,12 @@ def create_parser() -> arg.ArgumentParser:
     ...
 
     # Plot conversions per read
-    plot_conversions_per_read = subparsers.add_parser(
+    plot_conversions = subparsers.add_parser(
         "plot-conversions-per-read",
         description="Plot the conversions per read.",
         help="Plot the conversions per read.",
     )
-    plot_conversions_per_read_parser.add_argument(
+    plot_conversions_parser.add_argument(
         "--file-pattern",
         dest="file_pattern",
         type=str,
@@ -68,15 +106,15 @@ def create_parser() -> arg.ArgumentParser:
         default="*_summarized.tsv",
         help="Regular expression for summarized files to process.",
     )
-    plot_conversions_per_read_parser.add_argument(
+    plot_conversions_parser.add_argument(
         "--outfile",
         dest="outfile",
         type=Path,
         required=False,
-        default="conversions_per_read.png",
+        default="conversions.png",
         help="Output filename to save results to, will be nested under 'output_dir'.",
     )
-    plot_conversions_per_read_parser.add_argument(
+    plot_conversions_parser.add_argument(
         "--separator",
         dest="sep",
         type=str,
@@ -84,30 +122,30 @@ def create_parser() -> arg.ArgumentParser:
         default="\t",
         help="Field separator to use in output file, default is '\t' but other values (e.g. ',' are allowed).",
     )
-    plot_conversions_per_read.set_defaults(func=plot_conversions_per_read)
+    plot_conversions.set_defaults(func=plot_conversions)
 ```
 
-This setups the subparser `plot_conversions_per_read_parser` which has three optional arguments to specify the
+This sets up the subparser `plot_conversions_parser` which has three optional arguments to specify the
 `file_pattern` to be searched for and subsequently loaded, the `outfile` name which will be nested under the
 `output_dir` (which is an argument to the `isoslam` entry point) and the `separator` that is used in the files. Finally
-a default function is set, in this case `plot_conversions_per_read`.
+a default function is set, in this case `plot_conversions`.
 
-The `plot_conversions_per_read()` function, which we will define within the processing module does the work of calling
+The `plot_conversions()` function, which we will define within the processing module does the work of calling
 the module you have added. The only argument it needs is `args` which will be the `arguments.Namespace` that is created
 by the argument parser. These are used to update the default options which read from the `isoslam/default_config.yaml`
-with values the user enters.
+with values the user enters which is the validated with a call to `validation.validate_config()`.
 
-The task of plotting conversions per reads requires that we first load a series of files, combine them and summarise
+The task of plotting conversions requires that we first load a series of files, combine them and summarise
 them which are the first set of steps taken, including some subsetting of configuration options. This data is then
 summarized and plotted using the functions defined and imported from the `isoslam.summary` module and the
 `isoslam.plotting` modules.
 
 ```python
 from isoslam import plotting as plot
-from isoslam import summary
+from isoslam import summary, validation
 
 
-def plot_conversions_per_read(args: arg.Namespace | None) -> None:
+def plot_conversions(args: arg.Namespace | None) -> None:
     """
     Take a set of output files and summarise the number of conversions.
 
@@ -130,11 +168,17 @@ def plot_conversions_per_read(args: arg.Namespace | None) -> None:
         logging.setup(level=vars(args)["log_level"])
     else:
         logging.setup(level=config["log_level"])
+    # Validate the configuration
+    validation.validate_config(
+        config=config,
+        schema=validation.DEFAULT_CONFIG_SCHEMA,
+        config_type="configuration",
+    )
     # Load and summarise the data
-    conversions_per_read_config = config["conversions_per_read"]
+    plot_conversions_config = config["plot_conversions"]
     output_config = summary_counts_config.pop("output")
     output_config["output_dir"] = config["output_dir"]
-    plot.conversions_per_read(**conversions_per_read_config)
+    plot.conversions(**plot_conversions_config)
     logger.info(
         f"Conversions per read plotted to : {output_config['output_dir]}/{output_config['outfile]}"
     )
