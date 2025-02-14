@@ -1,0 +1,4 @@
+# Commit hashes listed in this file are ignored by 'git blame', this is useful when undertaking linting and minor
+# refactoring for which there is no benefit in changing the author.
+#
+# For more information see : https://blog.nshephard.dev/posts/whos_to_blame/

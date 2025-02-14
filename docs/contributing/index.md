@@ -76,6 +76,16 @@ followed by the issue number and a short description of the work being undertake
 `ns-rse/31-merge-slam-3uis` as this allows others to know who has been undertaking the work, what issue the work relates
 to and has an informative name as to the nature of that work.
 
+### Ignoring Revisions
+
+If you make small stylistic changes to code, e.g. during linting, and you wish the [git blame][gitblame] to attribute
+the code to the original author you can ignore your commit by adding it to the repositories `.git-blame-ignore-revs`
+file and enabling the use of it in your repositories configuration with the following command.
+
+```bash
+git config blame.ignoreRevsFile .git-blame-ignore-revs
+```
+
 ## Linting
 
 [Linting][linting] is the practice of following a consistent coding style. For Python that style is defined in
@@ -179,6 +189,7 @@ Pull Requests will be reviewed in a timely and hopefully constructive manner.
 [gh-pr]: https://github.com/sudlab/IsoSLAM/pulls
 [isoslam-issue]: https://github.com/sudlab/IsoSLAM/issues/
 [git]: https://git-scm.com
+[gitblame]: https://www.git-scm.com/docs/git-blame
 [git-rebase]: https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History
 [linting]: https://en.wikipedia.org/wiki/Lint_(software)
 [markdownlint-cli2]: https://github.com/DavidAnson/markdownlint-cli2
