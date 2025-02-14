@@ -44,6 +44,7 @@ dependencies = [
   "polars",
   "pysam",
   "ruamel.yaml",
+  "schema",
   "sqlalchemy",
 ]
 
@@ -194,6 +195,7 @@ lint.ignore = [
   "B905",
   "E501",
   "S101",
+  "S307",
   "S403",
 ]
 # Allow autofix for all enabled rules (when `--fix`) is provided.
@@ -282,6 +284,7 @@ module = [
   "polars",
   "pysam",
   "ruamel.yaml",
+  "schema",
 ]
 ignore_missing_imports = true
 

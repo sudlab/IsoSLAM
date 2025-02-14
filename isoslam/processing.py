@@ -8,7 +8,7 @@ from typing import Any
 import polars as pl
 from loguru import logger
 
-from isoslam import __version__, io, isoslam, logging, summary
+from isoslam import __version__, io, isoslam, logging, summary, validation
 
 # pylint: disable=too-many-locals
 # pylint: disable=too-many-branches
@@ -229,6 +229,7 @@ def process(
         logging.setup(level=vars(args)["log_level"])
     else:
         logging.setup(level=config["log_level"])
+    validation.validate_config(config=config, schema=validation.DEFAULT_CONFIG_SCHEMA, config_type="configuration")
 
     # Load files...
     vcffile = io.load_file(config["vcf_file"])

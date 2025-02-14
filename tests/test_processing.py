@@ -195,20 +195,24 @@ def test_entry_point_process(options: list, outfile: str, tmp_path: Path) -> Non
         pytest.param(
             {
                 "config_file": Path("isoslam") / "default_config.yaml",
-                "bam_file": "tests/resources/bam/sorted_assigned/d0_no4sU_filtered_remapped_sorted.sorted.assigned.bam",
-                "gtf_file": "tests/resources/gtf/test_wash1.gtf",
-                "bed_file": "tests/resources/bed/test_coding_introns.bed",
-                "vcf_file": "tests/resources/vcf/d0.vcf.gz",
+                "bam_file": Path(
+                    "tests/resources/bam/sorted_assigned/d0_no4sU_filtered_remapped_sorted.sorted.assigned.bam"
+                ),
+                "gtf_file": Path("tests/resources/gtf/test_wash1.gtf"),
+                "bed_file": Path("tests/resources/bed/test_coding_introns.bed"),
+                "vcf_file": Path("tests/resources/vcf/d0.vcf.gz"),
             },
             id="no4sU",
         ),
         pytest.param(
             {
                 "config_file": Path("isoslam") / "default_config.yaml",
-                "bam_file": "tests/resources/bam/sorted_assigned/d0_0hr1_filtered_remapped_sorted.sorted.assigned.bam",
-                "gtf_file": "tests/resources/gtf/test_wash1.gtf",
-                "bed_file": "tests/resources/bed/test_coding_introns.bed",
-                "vcf_file": "tests/resources/vcf/d0.vcf.gz",
+                "bam_file": Path(
+                    "tests/resources/bam/sorted_assigned/d0_0hr1_filtered_remapped_sorted.sorted.assigned.bam"
+                ),
+                "gtf_file": Path("tests/resources/gtf/test_wash1.gtf"),
+                "bed_file": Path("tests/resources/bed/test_coding_introns.bed"),
+                "vcf_file": Path("tests/resources/vcf/d0.vcf.gz"),
             },
             id="0hr1",
         ),
