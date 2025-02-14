@@ -516,6 +516,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#ignoring-revisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ignoring Revisions
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -987,6 +996,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#ignoring-revisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ignoring Revisions
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1122,6 +1140,12 @@ what the branch is for beyond simply "<code>adding-feature-x</code>". You should
 followed by the issue number and a short description of the work being undertaken. For example
 <code>ns-rse/31-merge-slam-3uis</code> as this allows others to know who has been undertaking the work, what issue the work relates
 to and has an informative name as to the nature of that work.</p>
+<h3 id="ignoring-revisions">Ignoring Revisions</h3>
+<p>If you make small stylistic changes to code, e.g. during linting, and you wish the <a href="https://www.git-scm.com/docs/git-blame">git blame</a> to attribute
+the code to the original author you can ignore your commit by adding it to the repositories <code>.git-blame-ignore-revs</code>
+file and enabling the use of it in your repositories configuration with the following command.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>git<span class="w"> </span>config<span class="w"> </span>blame.ignoreRevsFile<span class="w"> </span>.git-blame-ignore-revs
+</span></code></pre></div>
 <h2 id="linting">Linting</h2>
 <p><a href="https://en.wikipedia.org/wiki/Lint_(software)">Linting</a> is the practice of following a consistent coding style. For Python that style is defined in
 <a href="https://peps.python.org/pep-0008/">PEP8</a>. By following a consistent style across a code base it is easier to read and understand the code written by
@@ -1144,12 +1168,12 @@ automatically build the web-pages for that section.</p>
 <p>Style checks are made using the <a href="https://pre-commit.com/">pre-commit</a> framework which is one of the development dependencies and
 should have been installed in the previous step. You can check if its is installed in your virtual environment with <code>pip
 show pre-commit</code>. If you have pre-commit installed install the hook using...</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pre-commit<span class="w"> </span>install
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pre-commit<span class="w"> </span>install
 </span></code></pre></div>
 <p>This adds a file to <code>.git/hooks/pre-commit</code> that will run all of the hooks specified in <code>.pre-commit-config.yaml</code>. The
 first time these are run it will take a little while as a number of virtual environments are downloaded for the first
 time. It might be a good time to run these manually on the code base you have just cloned which should pass all checks.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
 </span></code></pre></div>
 <p>These should all pass. Now whenever you try to make a <code>git commit</code> these checks will run <em>before</em> the commit is made and
 if any fail you will be advised of what has failed. Some of the linters such as <a href="https://black.readthedocs.io/en/stable/index.html">Black</a> and <a href="https://docs.astral.sh/ruff">Ruff</a> will
@@ -1175,7 +1199,7 @@ to code to ensure the Continuous Integration tests pass.</p>
 <a href="#pre-commit">pre-commit</a> hook so that only the tests affected by the changes that are being committed are run. This
 requires that on first installing the package you create a local database of the state of the tests by running the
 following...</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>pytest<span class="w"> </span>--test-mon
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>pytest<span class="w"> </span>--test-mon
 </span></code></pre></div>
 <p>This creates the files <code>.testmondata</code> which stores the current state of tests. Once created commits will only run
 affected tests. However if your environment has changed, such as adding new packages or updating installed packages you
