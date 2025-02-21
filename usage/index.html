@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.4">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.5">
     
     
       
@@ -367,6 +367,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#preparing-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Preparing files
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ruffuscgat-pipeline" class="md-nav__link">
     <span class="md-ellipsis">
       Ruffus/CGAT pipeline
@@ -474,6 +483,28 @@
   
   <span class="md-ellipsis">
     Adding Modules
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Profiling contributing/profiling.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    None
     
   </span>
   
@@ -790,6 +821,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#preparing-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Preparing files
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ruffuscgat-pipeline" class="md-nav__link">
     <span class="md-ellipsis">
       Ruffus/CGAT pipeline
@@ -925,9 +965,59 @@ in the custom <code>config.yaml</code>. This means it is particularly useful for
 <code>.vcf</code> files are often common and it is the <code>.bam</code> input file that changes between runs. Thus you can specify the common
 files in your configuration file and then use the <code>--bam-file &lt;file_path&gt;</code> to override the field in the configuration
 file.</p>
+<h2 id="preparing-files">Preparing files</h2>
+<p>Assuming there are two <code>.bam</code> input files, a <code>.gtf</code> and Fasta file with the names shown below the following steps must
+be performed on the files prior to processing.</p>
+<ul>
+<li><code>d0_no4sU_file1.bam</code></li>
+<li><code>d0_0hr1_file2.bam</code></li>
+<li><code>test_wash1.gtf</code></li>
+<li><code>hg38_noalt.fa</code></li>
+</ul>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Sort both files via read name (insert _sorted before .bam in file name)</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>samtools<span class="w"> </span>sort<span class="w"> </span>-n<span class="w"> </span>d0_no4sU_file1.bam<span class="w"> </span>-o<span class="w"> </span>d0_no4sU_file1_sorted.bam
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>samtools<span class="w"> </span>sort<span class="w"> </span>-n<span class="w"> </span>d0_0hr1_file2.bam<span class="w"> </span>-o<span class="w"> </span>d0_ohr1_file2_sorted.bam
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Add XT tag to indicate trnascript reads map to and XS tag for which strand the gene is transcribed from</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># The -p flag explicitly says to assume libraries contain paired-end reads</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>mkdir<span class="w"> </span>counts
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>featureCounts<span class="w"> </span>-p<span class="w"> </span>-a<span class="w"> </span>test_wash1.gtf<span class="w"> </span>-o<span class="w"> </span>counts/d0_no4sU_counts.txt<span class="w"> </span>-T2<span class="w"> </span>-R<span class="w"> </span>BAM<span class="w"> </span>d0_no4sU_file1_sorted.bam
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>mv<span class="w"> </span>counts/d0_no4sU_file1_sorted.bam.featureCounts.bam<span class="w"> </span>d0_no4sU_file1_sorted_assigned.bam
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>featureCounts<span class="w"> </span>-p<span class="w"> </span>-a<span class="w"> </span>test_wash1.gtf<span class="w"> </span>-o<span class="w"> </span>counts/d0_0hr1_counts.txt<span class="w"> </span>-T2<span class="w"> </span>-R<span class="w"> </span>BAM<span class="w"> </span>d0_0hr1_file2_sorted.bam
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>mv<span class="w"> </span>counts/d0_0hr1_file2_sorted.bam.featureCounts.bam<span class="w"> </span>d0_0hr1_file2_sorted_assigned.bam
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Resort the files</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>samtools<span class="w"> </span>sort<span class="w"> </span>-n<span class="w"> </span>d0_no4sU_file1_sorted_assigned.bam<span class="w"> </span>-o<span class="w"> </span>d0_no4sU_file1_sorted_assigned_sorted.bam
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>samtools<span class="w"> </span>sort<span class="w"> </span>-n<span class="w"> </span>d0_0hr1_file2_sorted_assigned.bam<span class="w"> </span>-o<span class="w"> </span>d0_0hr1_file2_sorted_assigned_sorted.bam
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c1"># Take just the negative control (no4sU) and create a SNP VCF file using Varscan</span>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>samtools<span class="w"> </span>mpileup<span class="w"> </span>-B<span class="w"> </span>-A<span class="w"> </span>-f<span class="w"> </span>hg38_noalt.fa<span class="w"> </span>d0_no4sU_file_sorted_assigned_sorted.bam<span class="w"> </span><span class="p">|</span>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">  </span>varscan<span class="w"> </span>mpileup2snp<span class="w"> </span>--variants<span class="w"> </span><span class="m">1</span><span class="w"> </span>--output-vcf<span class="w"> </span><span class="m">1</span><span class="w"> </span>&gt;<span class="w"> </span>snp.vcf<span class="w"> </span><span class="o">&amp;&amp;</span>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">  </span>bcftools<span class="w"> </span>view<span class="w"> </span>snp.vcf<span class="w"> </span>-Oz<span class="w"> </span>-o<span class="w"> </span>snp.vcf.gz
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="c1"># Index the VCF file for reading by PySam</span>
+</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>tabix<span class="w"> </span>-p<span class="w"> </span>vcf<span class="w"> </span>snp.vcf.gz
+</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>
+</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="c1"># Run isoslam on the two files</span>
+</span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>isoslam<span class="w"> </span>process<span class="w"> </span>--bam-file<span class="w"> </span>d0_no4sU_file1_sorted_assigned_sorted.bam<span class="w"> </span>--bed<span class="w"> </span>test_coding_introns.bed<span class="w"> </span>--gtf<span class="w"> </span>test_wash1.gtf<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="w">  </span>--vcf-file<span class="w"> </span>snp.vcf.gz
+</span><span id="__span-5-28"><a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>isoslam<span class="w"> </span>process<span class="w"> </span>--bam-file<span class="w"> </span>d0_0hr1_file2_sorted_assigned_sorted.bam<span class="w"> </span>--bed<span class="w"> </span>test_coding_introns.bed<span class="w"> </span>--gtf<span class="w"> </span>test_wash1.gtf<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-29"><a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="w">  </span>--vcf-file<span class="w"> </span>snp.vcf.gz
+</span></code></pre></div>
 <h2 id="ruffuscgat-pipeline">Ruffus/CGAT pipeline</h2>
-<p>Typically <code>isoslam</code> is part of a workflow pipeline that processes a large number of files. As such <a href="http://www.ruffus.org.uk/">ruffus</a> is
-used to keep track of tasks.</p>
+<p>Typically <code>isoslam</code> is part of a workflow pipeline that processes a large number of files. The example below uses the
+<a href="http://www.ruffus.org.uk/">ruffus</a> package to control the pipeline but workflow software could be used such as <a href="https://www.nextflow.io/docs/latest/index.html">Nextflow</a>.</p>
+<p>Ruffus uses <a href="https://realpython.com/primer-on-python-decorators/">decorators</a> that control the input and output of functions at each step. Several are
+used in this example pipeline.</p>
+<ul>
+<li><a href="http://www.ruffus.org.uk/decorators/follows.html#follows"><code>@ruffus.follows()</code></a> : ensures that the task, or list of tasks specified are run before the current
+  function is run. Includes the ability to <code>mkdir("dir_name")</code> to create directories if they don't already exist.</li>
+<li><a href="http://www.ruffus.org.uk/decorators/transform_ex.html"><code>@ruffus.transforms()</code></a> : Takes input from a previous task/function, applies a filter which is
+  typically a regular expression of some description to identify one or more files, and produces corresponding output
+  for each matched file.</li>
+</ul>
+<p>This allows multiple files to be processed in parallel on HPC systems using the <a href="https://slurm.schedmd.com/documentation.html">Slurm</a> workload manager without
+having to explicitly specify any Slurm jobs or calls.</p>
 <p>EXPAND THIS SECTION WITH WORKED EXAMPLES BASED ON EXISTING SCRIPTS.</p>
 
 
