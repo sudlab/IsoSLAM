@@ -12,7 +12,7 @@ nav:
   - Contributing:
       - Development: contributing/index.md
       - Adding Modules: contributing/adding_modules.md
-      - Profiling contributing/profiling.md
+      - Profiling: contributing/profiling.md
   - Extending: extending.md
   - API:
       - IO: api/io.md
