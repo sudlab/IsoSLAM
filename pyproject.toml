@@ -71,6 +71,7 @@ dev = [
   "black",
   "ipython",
   "mypy",
+  "parquet_tools",
   "pre-commit",
   "pylint",
   "pyupgrade",
@@ -78,6 +79,7 @@ dev = [
   "pytest-icdiff",
   "pytest-testmon",
   "pytest-xdist",
+  "snakeviz",
 ]
 pypi = [
   "build",
@@ -285,6 +287,7 @@ module = [
   "pysam",
   "ruamel.yaml",
   "schema",
+  "snakeviz"
 ]
 ignore_missing_imports = true
 

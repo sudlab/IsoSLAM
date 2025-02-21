@@ -127,13 +127,72 @@ in the custom `config.yaml`. This means it is particularly useful for usage in t
 files in your configuration file and then use the `--bam-file <file_path>` to override the field in the configuration
 file.
 
+## Preparing files
+
+Assuming there are two `.bam` input files, a `.gtf` and Fasta file with the names shown below the following steps must
+be performed on the files prior to processing.
+
+- `d0_no4sU_file1.bam`
+- `d0_0hr1_file2.bam`
+- `test_wash1.gtf`
+- `hg38_noalt.fa`
+
+```shell
+# Sort both files via read name (insert _sorted before .bam in file name)
+samtools sort -n d0_no4sU_file1.bam -o d0_no4sU_file1_sorted.bam
+samtools sort -n d0_0hr1_file2.bam -o d0_ohr1_file2_sorted.bam
+
+# Add XT tag to indicate trnascript reads map to and XS tag for which strand the gene is transcribed from
+# The -p flag explicitly says to assume libraries contain paired-end reads
+mkdir counts
+featureCounts -p -a test_wash1.gtf -o counts/d0_no4sU_counts.txt -T2 -R BAM d0_no4sU_file1_sorted.bam
+mv counts/d0_no4sU_file1_sorted.bam.featureCounts.bam d0_no4sU_file1_sorted_assigned.bam
+featureCounts -p -a test_wash1.gtf -o counts/d0_0hr1_counts.txt -T2 -R BAM d0_0hr1_file2_sorted.bam
+mv counts/d0_0hr1_file2_sorted.bam.featureCounts.bam d0_0hr1_file2_sorted_assigned.bam
+
+# Resort the files
+samtools sort -n d0_no4sU_file1_sorted_assigned.bam -o d0_no4sU_file1_sorted_assigned_sorted.bam
+samtools sort -n d0_0hr1_file2_sorted_assigned.bam -o d0_0hr1_file2_sorted_assigned_sorted.bam
+
+# Take just the negative control (no4sU) and create a SNP VCF file using Varscan
+samtools mpileup -B -A -f hg38_noalt.fa d0_no4sU_file_sorted_assigned_sorted.bam |
+  varscan mpileup2snp --variants 1 --output-vcf 1 > snp.vcf &&
+  bcftools view snp.vcf -Oz -o snp.vcf.gz
+
+# Index the VCF file for reading by PySam
+tabix -p vcf snp.vcf.gz
+
+# Run isoslam on the two files
+isoslam process --bam-file d0_no4sU_file1_sorted_assigned_sorted.bam --bed test_coding_introns.bed --gtf test_wash1.gtf \
+  --vcf-file snp.vcf.gz
+isoslam process --bam-file d0_0hr1_file2_sorted_assigned_sorted.bam --bed test_coding_introns.bed --gtf test_wash1.gtf \
+  --vcf-file snp.vcf.gz
+```
+
 ## Ruffus/CGAT pipeline
 
-Typically `isoslam` is part of a workflow pipeline that processes a large number of files. As such [ruffus][ruffus] is
-used to keep track of tasks.
+Typically `isoslam` is part of a workflow pipeline that processes a large number of files. The example below uses the
+[ruffus][ruffus] package to control the pipeline but workflow software could be used such as [Nextflow][nextflow].
+
+Ruffus uses [decorators][python_decorators] that control the input and output of functions at each step. Several are
+used in this example pipeline.
+
+- [`@ruffus.follows()`][ruffus_follows] : ensures that the task, or list of tasks specified are run before the current
+  function is run. Includes the ability to `mkdir("dir_name")` to create directories if they don't already exist.
+- [`@ruffus.transforms()`][ruffus_transforms] : Takes input from a previous task/function, applies a filter which is
+  typically a regular expression of some description to identify one or more files, and produces corresponding output
+  for each matched file.
+
+This allows multiple files to be processed in parallel on HPC systems using the [Slurm][slurm] workload manager without
+having to explicitly specify any Slurm jobs or calls.
 
 EXPAND THIS SECTION WITH WORKED EXAMPLES BASED ON EXISTING SCRIPTS.
 
+[nextflow]: https://www.nextflow.io/docs/latest/index.html
 [parquet]: https://parquet.apache.org/docs/file-format/
+[python_decorators]: https://realpython.com/primer-on-python-decorators/
 [ruffus]: http://www.ruffus.org.uk/
+[ruffus_follows]: http://www.ruffus.org.uk/decorators/follows.html#follows
+[ruffus_transforms]: http://www.ruffus.org.uk/decorators/transform_ex.html
+[slurm]: https://slurm.schedmd.com/documentation.html
 [yaml]: https://yaml.org/
