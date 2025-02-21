@@ -22,7 +22,6 @@ def validate_config(config: dict[str, Any], schema: Schema, config_type: str) ->
     config_type : str
         Description of configuration being validated.
     """
-    print(f"{config=}")
     try:
         schema.validate(config)
         logger.info(f"The {config_type} is valid.")
