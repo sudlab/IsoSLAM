@@ -17,18 +17,18 @@ cd IsoSLAM
 pip install -e .[dev]
 ```
 
-We now make a `tmp/test-YYYY-MM-DD` directory and copy the necessary files here.
+We now make a `tmp/test-YYYYMMDD` directory and copy the necessary files here.
 
 ```shell
 mkdir -p tmp/test-$(date +%Y%m%d)                            # Uses the current date
 cp -r tests/resources/{bam,gtf,bed,vcf} tmp/test-20250221    # Modify to reflect the current date
 ```
 
-We can now run profiling on these samples using the following which writes the profiling to `isoslam.prof`.
+We can run profiling on these samples using the following which writes the profiling to `isoslam-YYYYMMDD.prof`.
 
 ```shell
 cd tmp/test-20250221
-python -m cProfile -o isoslam.prof $(isoslam process \
+python -m cProfile -o isoslam-$(date +%Y%m%d).prof $(isoslam process \
    --bam-file bam/sorted_assigned/d0_no4sU_filtered_remapped_sorted.sorted.assigned.bam \
    --gtf-file gtf/test_wash1.gtf \
    --bed-file bed/test_coding_introns.bed \
@@ -52,7 +52,7 @@ head isoslam.prof
 To visualise the results of profiling you can invoke `snakeviz` with the `.prof` file that has been generated.
 
 ```shell
-snakeviz isoslam.prof
+snakeviz isoslam-<YYYYMMDD>.prof
 ```
 
 This should launch a new browser tab with the [icicle][snakevizicicle] where the amount of time spent within a function
