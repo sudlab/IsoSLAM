@@ -1,61 +1,67 @@
 """Functions for summarising output."""
 
-import pandas as pd
+from pathlib import Path
+
+import polars as pl
 
 from isoslam import io
 
 
-def append_files(pattern: str = "**/*.tsv", separator: str = "\t") -> pd.DataFrame:
+def append_files(
+    file_ext: str = ".tsv", directory: str | Path | None = None, columns: list[str] | None = None
+) -> pl.DataFrame:
     """
-    Append a set of files into a Pandas DataFrames.
+    Append a set of files into a Polars DataFrame.
 
     Parameters
     ----------
-    pattern : str
-        File name pattern to search for.
-    separator : str
-        Separator/delimiter used in files.
+    file_ext : str
+        File extension to search for results to summarise.
+    directory : str | Path | None
+        Path on which to search for files with ''file_ext'', if ''None'' then current working directory is used.
+    columns : list[str]
+        Columns to load from data files.
 
     Returns
     -------
-    pd.DataFrame
-        A Pandas DataFrames of each file found.
+    pl.DataFrame
+        A Polars DataFrames of each file found.
     """
-    _data = io.load_files(pattern, separator)
-    all_data = [data.assign(filename=key) for key, data in _data.items()]
-    return pd.concat(all_data)
+    _data = io.load_output_files(file_ext, directory, columns)
+    all_data = [data.with_columns(filename=pl.lit(key)) for key, data in _data.items()]
+    return pl.concat(all_data)
 
 
 def summary_counts(
-    file_pattern: str = "**/*.tsv",
-    separator: str = "\t",
+    file_ext: str = ".tsv",
+    directory: str | Path | None = None,
+    columns: list[str] | None = None,
     groupby: list[str] | None = None,
-    dropna: bool = True,
-) -> pd.DataFrame:
+) -> pl.DataFrame:
     """
-    Count the number of assigned read pairs.
-
-    Groups the data by
+    Count the number of conversions across multiple files.
 
     Parameters
     ----------
-    file_pattern : str
-        File name pattern to search for.
-    separator : str
-        Separator/delimiter used in files.
+    file_ext : str
+        File extension to search for results to summarise.
+    directory : str | Path | None
+        Path on which to search for files with ''file_ext'', if ''None'' then current working directory is used.
+    columns : list[str]
+        Columns to load from data files.
     groupby : list[str]
-        List of variables to group the counts by.
-    dropna : book
-        Whether to drop rows with ``NA`` values.
+        List of variables to group the counts by, if ''None'' then groups the data by ''Transcript_id'', ''Chr'',
+        ''Strand'', ''Start'', ''End'', ''Assignment'', ''Conversions'', and   ''filename''.
 
     Returns
     -------
-    pd.DataFrame
-        A Pandas DataFrames of each file found.
+    pl.DataFrame
+        A Polars DataFrame of the number of reads with one or more conversion across multiple files.
     """
     if groupby is None:
         groupby = ["Transcript_id", "Chr", "Strand", "Start", "End", "Assignment", "Conversions", "filename"]
-    _data = append_files(file_pattern, separator)
-    _data["one_or_more_conversion"] = _data["Conversions"] >= 1
+    df = append_files(file_ext, directory, columns)
+    # df["one_or_more_conversion"] = df["Conversions"] >= 1
+    df = df.with_columns([(pl.col("Conversions") >= 1).alias("one_or_more_conversion")])
     groupby.append("one_or_more_conversion")
-    return _data.value_counts(subset=groupby, dropna=dropna).reset_index()
+    return df.group_by(groupby).len(name="count")

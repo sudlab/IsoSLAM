@@ -361,7 +361,7 @@ def _load_vcf(vcf_file: str | Path) -> pysam.libcbcf.VariantFile:
         raise e
 
 
-def _find_files(pattern: str = "**/*.tsv") -> Generator:  # type: ignore[type-arg]
+def _find_files(pattern: str = "**/*.tsv", directory: str | Path | None = None) -> Generator:  # type: ignore[type-arg]
     """
     Find files that match the given pattern.
 
@@ -369,33 +369,67 @@ def _find_files(pattern: str = "**/*.tsv") -> Generator:  # type: ignore[type-ar
     ----------
     pattern : str
         Pattern (regular expression) of files to search for.
+    directory : str | Path | None
+        Directory to search for files, if ''None'' the current working directory is used.
 
     Returns
     -------
     Generator[_P, None, None]
         A generator of files found that match the given pattern.
     """
-    pwd = Path.cwd()
-    return pwd.rglob(pattern)
+    if directory is None:
+        directory = Path.cwd()
+    return Path(directory).rglob(pattern)
 
 
-def load_files(pattern: str = "**/*.tsv", sep: str = "\t") -> dict[str, pd.DataFrame]:
+def load_output_files(
+    file_ext: str = ".tsv", directory: str | Path | None = None, columns: list[str] | None = None
+) -> dict[str, pl.DataFrame]:
     """
-    Read a set of files into a list of Pandas DataFrames.
+    Read a set of files into a list of Polars DataFrames.
+
+    Supports reading ''.parquet'', ''.tsv'' and ``.csv``.
 
     Parameters
     ----------
-    pattern : str
+    file_ext : str
         File name pattern to search for.
-    sep : str
-        Separator/delimiter used in files.
+    directory : str | Path | None
+        Directory to search for files.
+    columns : list[str]
+        List of column names to load, defaults will be set if ''None''.
 
     Returns
     -------
-    list[pd.DataFrame]
-        A list of Pandas DataFrames of each file found.
+    list[pl.DataFrame]
+        A list of Polars DataFrames of each file found.
     """
-    return {x.stem: pd.read_csv(x, sep=sep) for x in _find_files(pattern)}
+    if columns is None:
+        columns = [
+            "Read_UID",
+            "Transcript_id",
+            "Start",
+            "End",
+            "Chr",
+            "Strand",
+            "Assignment",
+            "Conversions",
+            "Convertible",
+            "Coverage",
+        ]
+    pattern = f"*{file_ext}"
+    if file_ext[file_ext.rfind(".") :] == ".parquet":
+        results = {_file.stem: pl.read_parquet(_file, columns=columns) for _file in _find_files(pattern, directory)}
+    else:
+        if file_ext == ".tsv":
+            separator = "\t"
+        if file_ext == ".csv":
+            separator = ","
+        results = {
+            _file.stem: pl.read_csv(_file, columns=columns, separator=separator)
+            for _file in _find_files(pattern, directory)
+        }
+    return {key: df.with_columns(filename=pl.lit(key)) for key, df in results.items()}
 
 
 def data_frame_to_file(
@@ -410,7 +444,7 @@ def data_frame_to_file(
 
     Parameters
     ----------
-    data : pd.DataFrame
+    data : pd.DataFrame | pl.DataFrame
         Pandas DataFrame to write to disk.
     output_dir : str | Path
         Location to write the output to, default is ''./output''.capitalize.
