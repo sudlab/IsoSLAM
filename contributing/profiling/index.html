@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.5">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.7">
     
     
       
@@ -806,13 +806,13 @@ development dependencies.</p>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>IsoSLAM
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.<span class="o">[</span>dev<span class="o">]</span>
 </span></code></pre></div>
-<p>We now make a <code>tmp/test-YYYY-MM-DD</code> directory and copy the necessary files here.</p>
+<p>We now make a <code>tmp/test-YYYYMMDD</code> directory and copy the necessary files here.</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>tmp/test-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="w">                            </span><span class="c1"># Uses the current date</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>cp<span class="w"> </span>-r<span class="w"> </span>tests/resources/<span class="o">{</span>bam,gtf,bed,vcf<span class="o">}</span><span class="w"> </span>tmp/test-20250221<span class="w">    </span><span class="c1"># Modify to reflect the current date</span>
 </span></code></pre></div>
-<p>We can now run profiling on these samples using the following which writes the profiling to <code>isoslam.prof</code>.</p>
+<p>We can run profiling on these samples using the following which writes the profiling to <code>isoslam-YYYYMMDD.prof</code>.</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">cd</span><span class="w"> </span>tmp/test-20250221
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>python<span class="w"> </span>-m<span class="w"> </span>cProfile<span class="w"> </span>-o<span class="w"> </span>isoslam.prof<span class="w"> </span><span class="k">$(</span>isoslam<span class="w"> </span>process<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>python<span class="w"> </span>-m<span class="w"> </span>cProfile<span class="w"> </span>-o<span class="w"> </span>isoslam-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.prof<span class="w"> </span><span class="k">$(</span>isoslam<span class="w"> </span>process<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">   </span>--bam-file<span class="w"> </span>bam/sorted_assigned/d0_no4sU_filtered_remapped_sorted.sorted.assigned.bam<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">   </span>--gtf-file<span class="w"> </span>gtf/test_wash1.gtf<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">   </span>--bed-file<span class="w"> </span>bed/test_coding_introns.bed<span class="w"> </span><span class="se">\</span>
@@ -826,7 +826,7 @@ development dependencies.</p>
 </span></code></pre></div>
 <h2 id="visualisation-of-profiling">Visualisation of Profiling</h2>
 <p>To visualise the results of profiling you can invoke <code>snakeviz</code> with the <code>.prof</code> file that has been generated.</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>snakeviz<span class="w"> </span>isoslam.prof
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>snakeviz<span class="w"> </span>isoslam-&lt;YYYYMMDD&gt;.prof
 </span></code></pre></div>
 <p>This should launch a new browser tab with the <a href="https://jiffyclub.github.io/snakeviz/#interpreting-results">icicle</a> where the amount of time spent within a function
 is proportional to the size of the bar.</p>
@@ -879,7 +879,7 @@ is proportional to the size of the bar.</p>
     <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.f1b6f286.min.js"></script>
+      <script src="../../assets/javascripts/bundle.c8b220af.min.js"></script>
       
     
   </body>

@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.5">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.7">
     
     
       
@@ -880,7 +880,7 @@ processing pipeline uses Python these steps are undertaken using <a href="https:
 that linting and pre-commit hooks will run locally, shortening the development feedback loop.</p>
 <h2 id="organising-modules">Organising Modules</h2>
 <p>Typically the functionality that is likely to be added will be some aspect that summarises or plots the post-processing
-results. To which end there is the <a class="autorefs autorefs-internal" href="../../api/summary/#summary"><code>isoslam.summary</code></a> and <a class="autorefs autorefs-internal" href="../../api/plotting/#plotting"><code>isoslam.plotting</code></a> modules to which
+results. To which end there is the <a class="autorefs autorefs-internal" title="Summary" href="../../api/summary/#summary"><code>isoslam.summary</code></a> and <a class="autorefs autorefs-internal" title="Plotting" href="../../api/plotting/#plotting"><code>isoslam.plotting</code></a> modules to which
 functionality should be added. There is no harm in adding a new module, particularly if there are a large number of
 functions that are required but you may wish to consider adding the entry point function to one of these modules.</p>
 <h3 id="parameters">Parameters</h3>
@@ -898,10 +898,10 @@ nested within.</p>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">theme</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;classic&quot;</span>
 </span></code></pre></div>
 <h3 id="validation">Validation</h3>
-<p>There is a validation module in place <a class="autorefs autorefs-internal" href="#validation"><code>isoslam.validation</code></a> which checks that the parameters in the
+<p>There is a validation module in place <a class="autorefs autorefs-internal" title="Validation" href="#validation"><code>isoslam.validation</code></a> which checks that the parameters in the
 <code>default_config.yaml</code>, a user supplied configuration or command line options are of the expected type. You need to add
 the options you have added to <code>isoslam/default_config.yaml</code> to the <code>DEFAULT_CONFIG_SCHEMA</code> that is defined in the
-<a class="autorefs autorefs-internal" href="#validation"><code>isoslam.validation</code></a> module. The examples there should be informative for writing/adding new dictionary
+<a class="autorefs autorefs-internal" title="Validation" href="#validation"><code>isoslam.validation</code></a> module. The examples there should be informative for writing/adding new dictionary
 entries. The keys are the fields expected in the configuration, the values are the expected types or the <code>schema.Or()</code>
 function which states the type(s)/values that are permitted and lists an <code>error="&lt;error message&gt;"</code> that is displayed if
 the condition is not met. For the above additional configuration you would add the following to the
@@ -927,7 +927,7 @@ the condition is not met. For the above additional configuration you would add t
 <p>To make the module available at the command line, and in turn possible to integrate into the CGAT pipeline with you need
 what is known in Python packaging as an <a href="https://setuptools.pypa.io/en/latest/userguide/entry_point.html">entry point</a>. This is a method of providing a simple
 command line interface to access your program and sub-modules so that they do not need prefixing with <code>python -m</code>. The
-module where this is setup is <a class="autorefs autorefs-internal" href="../../usage/#processing"><code>isoslam.processing</code></a> where you will see there is a <code>create_config()</code>
+module where this is setup is <a class="autorefs autorefs-internal" title="Processing" href="../../usage/#processing"><code>isoslam.processing</code></a> where you will see there is a <code>create_config()</code>
 function which creates an argument parser along with sub-parsers. The new function you are adding will be added as a
 sub-parser, in the example below we add a sub-parser for plotting the number of conversions per read.</p>
 <p>There should be one argument for every configuration option defined in <code>default_config.yaml</code>, which in turn mirrors the
@@ -1081,7 +1081,7 @@ summarized and plotted using the functions defined and imported from the <code>i
     <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.f1b6f286.min.js"></script>
+      <script src="../../assets/javascripts/bundle.c8b220af.min.js"></script>
       
     
   </body>
