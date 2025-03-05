@@ -65,3 +65,30 @@ def summary_counts(
     df = df.with_columns([(pl.col("Conversions") >= 1).alias("one_or_more_conversion")])
     groupby.append("one_or_more_conversion")
     return df.group_by(groupby).len(name="count")
+
+
+def extract_day_hour_and_replicate(
+    df: pl.DataFrame, column: str = "filename", regex: str = r"^d(\w+)_(\w+)hr(\w+)_"
+) -> pl.DataFrame:
+    r"""
+    Extract the hour and replicate from the filename stored in a dataframes column.
+
+    Parameters
+    ----------
+    df : pl.DataFrame
+        Polars DataFrame.
+    column : str
+        The name of the column that holds the filename, default ''filename''.
+    regex : Pattern
+        Regular expression pattern to extract the hour and replicate from, default ''r"^d(\w+)_(\w+)hr(\w+)_"''.
+
+    Returns
+    -------
+    pl.DataFrame
+        Polars DataFrame augmented with the hour and replicate extracted from the filename.
+    """
+    return df.with_columns(
+        (pl.col(column).str.extract(regex, group_index=1).alias("day")),
+        (pl.col(column).str.extract(regex, group_index=2).alias("hour")),
+        (pl.col(column).str.extract(regex, group_index=3).alias("replicate")),
+    )

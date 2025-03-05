@@ -1,6 +1,7 @@
 """Tests of the summary module."""
 
 from pathlib import Path
+from re import Pattern
 
 import polars as pl
 import pytest
@@ -188,3 +189,194 @@ def test_summary_counts(file_ext: str, directory: Path, expected: set, count_max
     assert set(summary_counts["filename"].unique()) == expected
     assert summary_counts["count"].max() == count_max
     assert summary_counts["count"].min() == count_min
+
+
+@pytest.mark.parametrize(
+    ("df", "column", "regex", "expected"),
+    [
+        pytest.param(
+            pl.DataFrame(
+                {
+                    "filename": [
+                        "d0_0hr1",
+                        "d0_0hr2",
+                        "d0_0hr3",
+                        "d0_0hr4",
+                        "d0_12hr1",
+                        "d0_12hr2",
+                        "d0_12hr3",
+                        "d0_12hr4",
+                        "d0_3hr1",
+                        "d0_3hr2",
+                        "d0_3hr3",
+                        "d0_3hr4",
+                        "d0_no4sU",
+                        "d16_0hr1",
+                        "d16_0hr2",
+                        "d16_0hr3",
+                        "d16_12hr1",
+                        "d16_12hr3",
+                    ]
+                }
+            ),
+            "filename",
+            r"^d(\w+)_(\w+)hr(\w+)",
+            pl.DataFrame(
+                {
+                    "filename": [
+                        "d0_0hr1",
+                        "d0_0hr2",
+                        "d0_0hr3",
+                        "d0_0hr4",
+                        "d0_12hr1",
+                        "d0_12hr2",
+                        "d0_12hr3",
+                        "d0_12hr4",
+                        "d0_3hr1",
+                        "d0_3hr2",
+                        "d0_3hr3",
+                        "d0_3hr4",
+                        "d0_no4sU",
+                        "d16_0hr1",
+                        "d16_0hr2",
+                        "d16_0hr3",
+                        "d16_12hr1",
+                        "d16_12hr3",
+                    ],
+                    "day": [
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        None,
+                        "16",
+                        "16",
+                        "16",
+                        "16",
+                        "16",
+                    ],
+                    "hour": [
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "12",
+                        "12",
+                        "12",
+                        "12",
+                        "3",
+                        "3",
+                        "3",
+                        "3",
+                        None,
+                        "0",
+                        "0",
+                        "0",
+                        "12",
+                        "12",
+                    ],
+                    "replicate": [
+                        "1",
+                        "2",
+                        "3",
+                        "4",
+                        "1",
+                        "2",
+                        "3",
+                        "4",
+                        "1",
+                        "2",
+                        "3",
+                        "4",
+                        None,
+                        "1",
+                        "2",
+                        "3",
+                        "1",
+                        "3",
+                    ],
+                }
+            ),
+            id="simple",
+        ),
+        pytest.param(
+            pl.DataFrame(
+                {
+                    "filename": [
+                        "d0_0hr1_EKRN230046546-1A_HFWGNDSX7_L2",
+                        "d0_0hr2_EKRN230046547-1A_HFWGNDSX7_L2",
+                        "d0_0hr3_EKRN230046548-1A_HFWGNDSX7_L2",
+                        "d0_0hr4_EKRN230046549-1A_HFWGNDSX7_L2",
+                        "d0_12hr1_EKRN230046554-1A_HFWGNDSX7_L2",
+                        "d0_12hr2_EKRN230046555-1A_HFWGNDSX7_L2",
+                        "d0_12hr3_EKRN230046556-1A_HFWGNDSX7_L2",
+                        "d0_12hr4_EKRN230046557-1A_HFWGNDSX7_L2",
+                        "d0_no4sU_EKRN230046554-1A_HFWGNDSX7_L2",
+                    ]
+                }
+            ),
+            "filename",
+            r"^d(\w+)_(\w+)hr(\w+)_",
+            pl.DataFrame(
+                {
+                    "filename": [
+                        "d0_0hr1_EKRN230046546-1A_HFWGNDSX7_L2",
+                        "d0_0hr2_EKRN230046547-1A_HFWGNDSX7_L2",
+                        "d0_0hr3_EKRN230046548-1A_HFWGNDSX7_L2",
+                        "d0_0hr4_EKRN230046549-1A_HFWGNDSX7_L2",
+                        "d0_12hr1_EKRN230046554-1A_HFWGNDSX7_L2",
+                        "d0_12hr2_EKRN230046555-1A_HFWGNDSX7_L2",
+                        "d0_12hr3_EKRN230046556-1A_HFWGNDSX7_L2",
+                        "d0_12hr4_EKRN230046557-1A_HFWGNDSX7_L2",
+                        "d0_no4sU_EKRN230046554-1A_HFWGNDSX7_L2",
+                    ],
+                    "day": [
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        None,
+                    ],
+                    "hour": [
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "12",
+                        "12",
+                        "12",
+                        "12",
+                        None,
+                    ],
+                    "replicate": [
+                        "1",
+                        "2",
+                        "3",
+                        "4",
+                        "1",
+                        "2",
+                        "3",
+                        "4",
+                        None,
+                    ],
+                }
+            ),
+            id="realistic",
+        ),
+    ],
+)
+def test_extract_hour_and_replicate(df: pl.DataFrame, column: str, regex: Pattern, expected: pl.DataFrame) -> None:
+    """Test extraction of hour and replicate from filename."""
+    pl.testing.assert_frame_equal(summary.extract_day_hour_and_replicate(df, column, regex), expected)
