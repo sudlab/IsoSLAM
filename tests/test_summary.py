@@ -126,14 +126,20 @@ def test_append_files(
 
 
 @pytest.mark.parametrize(
-    ("file_ext", "directory", "expected", "count_max", "count_min"),
+    ("file_ext", "directory", "expected_files", "expected_numbers"),
     [
         pytest.param(
             ".tsv",
             RESOURCES / "results",
             {"d0_0hr1_filtered_remapped_sorted", "d0_no4sU_filtered_remapped_sorted"},
-            180,
-            1,
+            {
+                "count_max": 180,
+                "count_min": 1,
+                "total_max": 267,
+                "total_min": 1,
+                "percent_max": 1.0,
+                "percent_min": 0.026490066225165563,
+            },
             id="tsv",
         ),
         pytest.param(
@@ -176,19 +182,29 @@ def test_append_files(
                 "d2_3hr4",
                 "d2_no4sU",
             },
-            5,
-            1,
+            {
+                "count_max": 5,
+                "count_min": 1,
+                "total_max": 6,
+                "total_min": 1,
+                "percent_max": 1.0,
+                "percent_min": 0.16666666666666666,
+            },
             id="parquet",
         ),
     ],
 )
-def test_summary_counts(file_ext: str, directory: Path, expected: set, count_max: int, count_min: int) -> None:
+def test_summary_counts(file_ext: str, directory: Path, expected_files: set, expected_numbers) -> None:
     """Test summary counts are correctly calculated."""
     summary_counts = summary.summary_counts(file_ext, directory)
     assert isinstance(summary_counts, pl.DataFrame)
-    assert set(summary_counts["filename"].unique()) == expected
-    assert summary_counts["count"].max() == count_max
-    assert summary_counts["count"].min() == count_min
+    assert set(summary_counts["filename"].unique()) == expected_files
+    assert summary_counts["conversion_count"].max() == expected_numbers["count_max"]
+    assert summary_counts["conversion_count"].min() == expected_numbers["count_min"]
+    assert summary_counts["conversion_total"].max() == expected_numbers["total_max"]
+    assert summary_counts["conversion_total"].min() == expected_numbers["total_min"]
+    assert summary_counts["conversion_percent"].max() == expected_numbers["percent_max"]
+    assert summary_counts["conversion_percent"].min() == expected_numbers["percent_min"]
 
 
 @pytest.mark.parametrize(
