@@ -2,6 +2,7 @@
 
 from pathlib import Path
 from re import Pattern
+from typing import Any
 
 import polars as pl
 import pytest
@@ -396,3 +397,128 @@ def test_summary_counts(file_ext: str, directory: Path, expected_files: set, exp
 def test_extract_hour_and_replicate(df: pl.DataFrame, column: str, regex: Pattern, expected: pl.DataFrame) -> None:
     """Test extraction of hour and replicate from filename."""
     pl.testing.assert_frame_equal(summary.extract_day_hour_and_replicate(df, column, regex), expected)
+
+
+@pytest.mark.parametrize(
+    (
+        "file_ext",
+        "directory",
+        "columns",
+        "groupby",
+        "conversions_var",
+        "conversions_threshold",
+        "test_file",
+        "expected_numbers",
+    ),
+    [
+        pytest.param(
+            ".tsv",
+            RESOURCES / "tsv",
+            [
+                "Read_UID",
+                "Transcript_id",
+                "Start",
+                "End",
+                "Chr",
+                "Strand",
+                "Assignment",
+                "Conversions",
+                "Convertible",
+                "Coverage",
+            ],
+            [
+                "Transcript_id",
+                "Start",
+                "End",
+                "Chr",
+                "Strand",
+                "Assignment",
+                "filename",
+            ],
+            "Conversions",
+            1,
+            "no4sU",
+            {
+                "shape": (6647, 14),
+                "count_max": 5,
+                "count_min": 1,
+                "total_max": 6,
+                "total_min": 1,
+                "percent_max": 1.0,
+                "percent_min": 0.16666666666666666,
+                "unique_files": 35,
+            },
+            id="tsv",
+        ),
+        pytest.param(
+            ".parquet",
+            RESOURCES / "parquet",
+            [
+                "Read_UID",
+                "Transcript_id",
+                "Start",
+                "End",
+                "Chr",
+                "Strand",
+                "Assignment",
+                "Conversions",
+                "Convertible",
+                "Coverage",
+            ],
+            [
+                "Transcript_id",
+                "Start",
+                "End",
+                "Chr",
+                "Strand",
+                "Assignment",
+                "filename",
+            ],
+            "Conversions",
+            1,
+            "no4sU",
+            {
+                "shape": (6647, 14),
+                "count_max": 5,
+                "count_min": 1,
+                "total_max": 6,
+                "total_min": 1,
+                "percent_max": 1.0,
+                "percent_min": 0.16666666666666666,
+                "unique_files": 35,
+            },
+            id="parquet",
+        ),
+    ],
+)
+def test_statistics_class(
+    file_ext: str,
+    directory: str,
+    columns: list[str],
+    groupby: list[str],
+    conversions_var: str,
+    conversions_threshold: int,
+    test_file: str,
+    expected_numbers: dict[str, Any],
+) -> None:
+    """Test instantiation of statistics class."""
+    statistics = summary.Statistics(
+        file_ext, directory, columns, groupby, conversions_var, conversions_threshold, test_file
+    )
+    assert statistics.file_ext == file_ext
+    assert statistics.directory == directory
+    assert statistics.columns == columns
+    assert statistics.groupby == groupby
+    assert statistics.conversions_var == conversions_var
+    assert statistics.conversions_threshold == conversions_threshold
+    assert statistics.test_file == test_file
+    # Check the data frame
+    assert isinstance(statistics.data, pl.DataFrame)
+    assert statistics.shape == expected_numbers["shape"]
+    assert statistics.data["conversion_count"].max() == expected_numbers["count_max"]
+    assert statistics.data["conversion_count"].min() == expected_numbers["count_min"]
+    assert statistics.data["conversion_total"].max() == expected_numbers["total_max"]
+    assert statistics.data["conversion_total"].min() == expected_numbers["total_min"]
+    assert statistics.data["conversion_percent"].max() == expected_numbers["percent_max"]
+    assert statistics.data["conversion_percent"].min() == expected_numbers["percent_min"]
+    assert statistics.unique == expected_numbers["unique_files"]

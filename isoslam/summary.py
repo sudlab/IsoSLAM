@@ -1,5 +1,6 @@
 """Functions for summarising output."""
 
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import polars as pl
@@ -117,3 +118,245 @@ def extract_day_hour_and_replicate(
         (pl.col(column).str.extract(regex, group_index=2).alias("hour")),
         (pl.col(column).str.extract(regex, group_index=3).alias("replicate")),
     )
+
+
+# mypy: disable-error-code="no-redef"
+
+
+@dataclass()
+class Statistics:  # pylint: disable=too-many-instance-attributes
+    """Staistical summary of results."""
+
+    # Initialised attributes
+    file_ext: str
+    directory: str | Path
+    columns: list[str] | None
+    groupby: list[str] | None
+    conversions_var: str | None
+    conversions_threshold: int
+    test_file: str | None
+
+    # Generated atrtibute
+    data: pl.DataFrame = field(init=False)
+
+    def __post_init__(self) -> None:
+        """After initialisation the files are loaded and prepared for analysis."""
+        self.data = summary_counts(
+            file_ext=self._file_ext,
+            directory=self._directory,
+            columns=self._columns,
+            groupby=self._groupby,
+            conversions_var=self._conversions_var,
+            conversions_threshold=self._conversions_threshold,
+            test_file=self._test_file,
+        )
+
+    @property
+    def file_ext(self) -> str:
+        """
+        Getter method for ''file_ext''.
+
+        Returns
+        -------
+        str
+            File extension that is loaded.
+        """
+        return self._file_ext
+
+    @file_ext.setter
+    def file_ext(self, value: str) -> None:
+        """
+        Setter for the file extension.
+
+        Parameters
+        ----------
+        value : str
+            File extension to load data.
+        """
+        self._file_ext = value
+
+    @property
+    def directory(self) -> str:
+        """
+        Getter method for ''directory''.
+
+        Returns
+        -------
+        str
+            Directory from which output files are loaded.
+        """
+        return self._directory
+
+    @directory.setter
+    def directory(self, value: str) -> None:
+        """
+        Setter for the file extension.
+
+        Parameters
+        ----------
+        value : str
+            Directory from which files are loaded.
+        """
+        self._directory = value
+
+    @property
+    def columns(self) -> list[str]:
+        """
+        Getter method for ''columns''.
+
+        Returns
+        -------
+        list[str]
+            List of columns that are loaded from output.
+        """
+        return self._columns
+
+    @columns.setter
+    def columns(self, value: list[str]) -> None:
+        """
+        Setter for the file extension.
+
+        Parameters
+        ----------
+        value : str
+            Columns that to load from the data.
+        """
+        self._columns = value
+
+    @property
+    def groupby(self) -> list[str]:
+        """
+        Getter method for ''groupby''.
+
+        Returns
+        -------
+        list[str]
+            List of variables to groupby.
+        """
+        return self._groupby
+
+    @groupby.setter
+    def groupby(self, value: list[str]) -> None:
+        """
+        Setter for the file extension.
+
+        Parameters
+        ----------
+        value : list[str]
+            Variables to group data by.
+        """
+        self._groupby = value
+
+    @property
+    def conversions_var(self) -> str:
+        """
+        Getter method for ''conversions_var''.
+
+        Returns
+        -------
+        str
+            The conversions variable.
+        """
+        return self._conversions_var
+
+    @conversions_var.setter
+    def conversions_var(self, value: str) -> None:
+        """
+        Setter for the file extension.
+
+        Parameters
+        ----------
+        value : list[str]
+            Variables to group data by.
+        """
+        self._conversions_var = value
+
+    @property
+    def conversions_threshold(self) -> int:
+        """
+        Getter method for ''conversions_threshold''.
+
+        Returns
+        -------
+        int
+            The conversion threshold for counting.
+        """
+        return self._conversions_threshold
+
+    @conversions_threshold.setter
+    def conversions_threshold(self, value: int) -> None:
+        """
+        Setter for the ''conversions_threshold''.
+
+        Parameters
+        ----------
+        value : int
+            Threshold value for counting conversions.
+        """
+        self._conversions_threshold = value
+
+    @property
+    def test_file(self) -> str:
+        """
+        Getter method for ''test_file''.
+
+        Returns
+        -------
+        str
+            String pattern of test filename for excluding test file data.
+        """
+        return self._test_file
+
+    @test_file.setter
+    def test_file(self, value: str) -> None:
+        """
+        Setter for the ''test_file'' value.
+
+        Parameters
+        ----------
+        value : str
+            Value of ''test_file''.
+        """
+        self._test_file = value
+
+    @property
+    def shape(self) -> tuple[int, int]:
+        """
+        Getter for the shape of the dataframe.
+
+        Returns
+        -------
+        tuple[int, int]
+            Shape of the Polars dataframe.
+        """
+        return self.data.shape  # type: ignore[no-any-return]
+
+    @property
+    def unique(self) -> int:
+        """
+        Getter for the number of unique files loaded.
+
+        Returns
+        -------
+        int
+            Number of unique rows.
+        """
+        return self.unique_rows()
+
+    def unique_rows(self, columns: list[str] | None = None) -> int:
+        """
+        Identify unique rows in the data for a given set of columns.
+
+        Parameters
+        ----------
+        columns : list[str]
+            Columns to use for identifying unique observations. If ''None'' defaults to ''filename'' which returns the
+            number of unique files loaded from the ''directory'' with ''file_ext''.
+
+        Returns
+        -------
+        int
+            Number of unique rows for the given set of variables.
+        """
+        columns = ["filename"] if columns is None else columns
+        return len(self.data.unique(subset=columns))
