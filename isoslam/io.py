@@ -404,6 +404,7 @@ def load_output_files(
     list[pl.DataFrame]
         A list of Polars DataFrames of each file found.
     """
+    # This function could be refactored into a factory method with submethods for each file type
     if columns is None:
         columns = [
             "Read_UID",
