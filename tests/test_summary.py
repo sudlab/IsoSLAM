@@ -195,7 +195,9 @@ def test_append_files(
         ),
     ],
 )
-def test_summary_counts(file_ext: str, directory: Path, regex: Pattern, expected_files: set, expected_numbers) -> None:
+def test_summary_counts(
+    file_ext: str, directory: Path, regex: Pattern, expected_files: set, expected_numbers, regtest
+) -> None:
     """Test summary counts are correctly calculated."""
     summary_counts = summary.summary_counts(file_ext, directory, regex=regex)
     assert isinstance(summary_counts, pl.DataFrame)
@@ -206,10 +208,11 @@ def test_summary_counts(file_ext: str, directory: Path, regex: Pattern, expected
     assert summary_counts["conversion_total"].min() == expected_numbers["total_min"]
     assert summary_counts["conversion_percent"].max() == expected_numbers["percent_max"]
     assert summary_counts["conversion_percent"].min() == expected_numbers["percent_min"]
+    print(summary_counts.to_pandas().to_string(float_format="{:.4e}".format), file=regtest)
 
 
 @pytest.mark.parametrize(
-    ("df", "column", "regex", "expected"),
+    ("df", "column", "regex"),
     [
         pytest.param(
             pl.DataFrame(
@@ -238,90 +241,6 @@ def test_summary_counts(file_ext: str, directory: Path, regex: Pattern, expected
             ),
             "filename",
             r"^d(\w+)_(\w+)hr(\w+)",
-            pl.DataFrame(
-                {
-                    "filename": [
-                        "d0_0hr1",
-                        "d0_0hr2",
-                        "d0_0hr3",
-                        "d0_0hr4",
-                        "d0_12hr1",
-                        "d0_12hr2",
-                        "d0_12hr3",
-                        "d0_12hr4",
-                        "d0_3hr1",
-                        "d0_3hr2",
-                        "d0_3hr3",
-                        "d0_3hr4",
-                        "d0_no4sU",
-                        "d16_0hr1",
-                        "d16_0hr2",
-                        "d16_0hr3",
-                        "d16_12hr1",
-                        "d16_12hr3",
-                    ],
-                    "day": [
-                        "0",
-                        "0",
-                        "0",
-                        "0",
-                        "0",
-                        "0",
-                        "0",
-                        "0",
-                        "0",
-                        "0",
-                        "0",
-                        "0",
-                        None,
-                        "16",
-                        "16",
-                        "16",
-                        "16",
-                        "16",
-                    ],
-                    "hour": [
-                        "0",
-                        "0",
-                        "0",
-                        "0",
-                        "12",
-                        "12",
-                        "12",
-                        "12",
-                        "3",
-                        "3",
-                        "3",
-                        "3",
-                        None,
-                        "0",
-                        "0",
-                        "0",
-                        "12",
-                        "12",
-                    ],
-                    "replicate": [
-                        "1",
-                        "2",
-                        "3",
-                        "4",
-                        "1",
-                        "2",
-                        "3",
-                        "4",
-                        "1",
-                        "2",
-                        "3",
-                        "4",
-                        None,
-                        "1",
-                        "2",
-                        "3",
-                        "1",
-                        "3",
-                    ],
-                }
-            ),
             id="simple",
         ),
         pytest.param(
@@ -342,61 +261,161 @@ def test_summary_counts(file_ext: str, directory: Path, regex: Pattern, expected
             ),
             "filename",
             r"^d(\w+)_(\w+)hr(\w+)_",
-            pl.DataFrame(
-                {
-                    "filename": [
-                        "d0_0hr1_EKRN230046546-1A_HFWGNDSX7_L2",
-                        "d0_0hr2_EKRN230046547-1A_HFWGNDSX7_L2",
-                        "d0_0hr3_EKRN230046548-1A_HFWGNDSX7_L2",
-                        "d0_0hr4_EKRN230046549-1A_HFWGNDSX7_L2",
-                        "d0_12hr1_EKRN230046554-1A_HFWGNDSX7_L2",
-                        "d0_12hr2_EKRN230046555-1A_HFWGNDSX7_L2",
-                        "d0_12hr3_EKRN230046556-1A_HFWGNDSX7_L2",
-                        "d0_12hr4_EKRN230046557-1A_HFWGNDSX7_L2",
-                        "d0_no4sU_EKRN230046554-1A_HFWGNDSX7_L2",
-                    ],
-                    "day": [
-                        "0",
-                        "0",
-                        "0",
-                        "0",
-                        "0",
-                        "0",
-                        "0",
-                        "0",
-                        None,
-                    ],
-                    "hour": [
-                        "0",
-                        "0",
-                        "0",
-                        "0",
-                        "12",
-                        "12",
-                        "12",
-                        "12",
-                        None,
-                    ],
-                    "replicate": [
-                        "1",
-                        "2",
-                        "3",
-                        "4",
-                        "1",
-                        "2",
-                        "3",
-                        "4",
-                        None,
-                    ],
-                }
-            ),
             id="realistic",
         ),
     ],
 )
-def test_extract_hour_and_replicate(df: pl.DataFrame, column: str, regex: Pattern, expected: pl.DataFrame) -> None:
+def test_extract_hour_and_replicate(df: pl.DataFrame, column: str, regex: Pattern, regtest) -> None:
     """Test extraction of hour and replicate from filename."""
-    pl.testing.assert_frame_equal(summary.extract_day_hour_and_replicate(df, column, regex), expected)
+    summary_counts = summary.extract_day_hour_and_replicate(df, column, regex)
+    print(summary_counts.to_pandas().to_string(float_format="{:.4e}".format), file=regtest)
+
+
+@pytest.mark.parametrize(
+    ("df", "groupby", "converted"),
+    [
+        pytest.param(
+            pl.DataFrame(
+                {
+                    "transcript_id": ["a", "a", "b", "b", "c", "d", "d", "e"],
+                    "chr": ["chr1", "chr1", "chr2", "chr2", "chr3", "chr4", "chr4", "chr5"],
+                    "conversion": [True, False, True, False, False, False, True, True],
+                    "n": [1, 2, 3, 4, 5, 6, 7, 8],
+                }
+            ),
+            ["transcript_id", "chr"],
+            "conversion",
+            id="missing conversion True for transcript_id on chr 3",
+        ),
+        pytest.param(
+            "sample_data_summary_counts",
+            [
+                "Transcript_id",
+                "Strand",
+                "Start",
+                "End",
+                "Assignment",
+                "day",
+                "hour",
+                "replicate",
+            ],
+            "one_or_more_conversion",
+            id="real data",
+        ),
+    ],
+)
+def test_aggregate_conversions(
+    df: pl.DataFrame | str,
+    groupby: list[str],
+    converted: str,
+    request: pytest.FixtureRequest,
+    regtest,
+) -> None:
+    """Test derivation on non-captured dataset."""
+    df = request.getfixturevalue(df) if isinstance(df, str) else df
+    aggregated_conversions = summary._aggregate_conversions(df, groupby, converted)
+    print(aggregated_conversions.to_pandas().to_string(float_format="{:.4e}".format), file=regtest)
+
+
+@pytest.mark.parametrize(
+    ("df", "groupby", "converted"),
+    [
+        pytest.param(
+            pl.DataFrame(
+                {
+                    "transcript_id": ["a", "b", "c", "d", "e"],
+                    "chr": ["chr1", "chr2", "chr3", "chr4", "chr5"],
+                    "len": [2, 2, 1, 2, 1],
+                    "conversion": [True, True, False, True, True],
+                },
+                schema={
+                    "transcript_id": pl.datatypes.String,
+                    "chr": pl.datatypes.String,
+                    "len": pl.datatypes.UInt32,
+                    "conversion": pl.datatypes.Boolean,
+                },
+            ),
+            ["transcript_id", "chr"],
+            "conversion",
+            id="missing conversion True for transcript_id on chr 3",
+        ),
+        pytest.param(
+            "sample_data_summary_counts",
+            None,
+            "one_or_more_conversion",
+            id="real data",
+        ),
+    ],
+)
+def test_filter_no_conversions(
+    df: pl.DataFrame | str,
+    groupby: list[str],
+    converted: str,
+    request: pytest.FixtureRequest,
+    regtest,
+) -> None:
+    """Test filtering of non conversions."""
+    df = request.getfixturevalue(df) if isinstance(df, str) else df
+    filtered_no_conversions = summary._filter_no_conversions(df, groupby, converted)
+    print(filtered_no_conversions.to_pandas().to_string(float_format="{:.4e}".format), file=regtest)
+
+
+@pytest.mark.parametrize(
+    ("df", "groupby", "converted", "expected"),
+    [
+        pytest.param(
+            pl.DataFrame(
+                {
+                    "transcript_id": ["a", "b", "c", "d", "e"],
+                    "chr": ["chr1", "chr2", "chr3", "chr4", "chr5"],
+                    "Converted": [True, True, False, True, True],
+                    "conversion_count": [1, 2, 3, 4, 5],
+                    "conversion_percent": [0.1, 0.2, 0.3, 0.4, 0.5],
+                },
+                schema={
+                    "transcript_id": pl.datatypes.String,
+                    "chr": pl.datatypes.String,
+                    "Converted": pl.datatypes.Boolean,
+                    "conversion_count": pl.datatypes.UInt32,
+                    "conversion_percent": pl.datatypes.Float64,
+                },
+            ),
+            ["transcript_id", "chr"],
+            "Converted",
+            pl.DataFrame(
+                {
+                    "transcript_id": ["a", "b", "c", "d", "e"],
+                    "chr": ["chr1", "chr2", "chr3", "chr4", "chr5"],
+                    "Converted": [True, True, True, True, True],
+                    "conversion_count": [1, 2, 0, 4, 5],
+                    "conversion_percent": [0.1, 0.2, 0.0, 0.4, 0.5],
+                },
+                schema={
+                    "transcript_id": pl.datatypes.String,
+                    "chr": pl.datatypes.String,
+                    "Converted": pl.datatypes.Boolean,
+                    "conversion_count": pl.datatypes.UInt32,
+                    "conversion_percent": pl.datatypes.Float64,
+                },
+            ),
+            id="simple - missing conversion True for transcript_id on chr 3",
+        ),
+    ],
+)
+def test_inner_join_no_conversions(
+    df: pl.DataFrame, groupby: list[str], converted: str, expected: pl.DataFrame, request: pytest.FixtureRequest
+) -> None:
+    """Test that inner_join_no_conversions returns the correct subset."""
+    if isinstance(df, str):
+        _df = request.getfixturevalue(df)
+        _expected = request.getfixturevalue(expected)
+    else:
+        _df = df
+        _expected = expected
+    joined = summary._inner_join_no_conversions(_df, groupby, converted)
+    print(f"\n{joined=}\n")
+    print(f"\n{expected=}\n")
+    pl.testing.assert_frame_equal(joined, expected)
 
 
 @pytest.mark.parametrize(
@@ -534,188 +553,3 @@ def test_statistics_class(
     assert statistics.data["conversion_percent"].max() == expected_numbers["percent_max"]
     assert statistics.data["conversion_percent"].min() == expected_numbers["percent_min"]
     assert statistics.unique == expected_numbers["unique_files"]
-
-
-@pytest.mark.parametrize(
-    ("df", "groupby", "converted", "expected"),
-    [
-        pytest.param(
-            pl.DataFrame(
-                {
-                    "transcript_id": ["a", "a", "b", "b", "c", "d", "d", "e"],
-                    "chr": ["chr1", "chr1", "chr2", "chr2", "chr3", "chr4", "chr4", "chr5"],
-                    "conversion": [True, False, True, False, False, False, True, True],
-                    "n": [1, 2, 3, 4, 5, 6, 7, 8],
-                }
-            ),
-            ["transcript_id", "chr"],
-            "conversion",
-            pl.DataFrame(
-                {
-                    "transcript_id": ["a", "b", "c", "d", "e"],
-                    "chr": ["chr1", "chr2", "chr3", "chr4", "chr5"],
-                    "len": [2, 2, 1, 2, 1],
-                    "conversion": [False, False, False, False, True],
-                },
-                schema={
-                    "transcript_id": pl.datatypes.String,
-                    "chr": pl.datatypes.String,
-                    "len": pl.datatypes.UInt32,
-                    "conversion": pl.datatypes.Boolean,
-                },
-            ),
-            id="missing conversion True for transcript_id on chr 3",
-        ),
-        pytest.param(
-            "sample_data_summary_counts",
-            [
-                "Transcript_id",
-                "Strand",
-                "Start",
-                "End",
-                "Assignment",
-                "day",
-                "hour",
-                "replicate",
-            ],
-            "one_or_more_conversion",
-            "test_aggregate_conversions_expected",
-            id="real data",
-        ),
-    ],
-)
-def test_aggregate_conversions(
-    df: pl.DataFrame | str,
-    groupby: list[str],
-    converted: str,
-    expected: pl.DataFrame | str,
-    request: pytest.FixtureRequest,
-) -> None:
-    """Test derivation on non-captured dataset."""
-    if isinstance(df, str):
-        _df = request.getfixturevalue(df)
-        _expected = request.getfixturevalue(expected)
-    else:
-        _df = df
-        _expected = expected
-    aggregated_conversions = summary._aggregate_conversions(_df, groupby, converted)
-    pl.testing.assert_frame_equal(aggregated_conversions, _expected)
-
-
-@pytest.mark.parametrize(
-    ("df", "groupby", "converted", "expected"),
-    [
-        pytest.param(
-            pl.DataFrame(
-                {
-                    "transcript_id": ["a", "b", "c", "d", "e"],
-                    "chr": ["chr1", "chr2", "chr3", "chr4", "chr5"],
-                    "len": [2, 2, 1, 2, 1],
-                    "conversion": [True, True, False, True, True],
-                },
-                schema={
-                    "transcript_id": pl.datatypes.String,
-                    "chr": pl.datatypes.String,
-                    "len": pl.datatypes.UInt32,
-                    "conversion": pl.datatypes.Boolean,
-                },
-            ),
-            ["transcript_id", "chr"],
-            "conversion",
-            pl.DataFrame(
-                {
-                    "transcript_id": ["c"],
-                    "chr": ["chr3"],
-                    "conversion": [False],
-                },
-                schema={
-                    "transcript_id": pl.datatypes.String,
-                    "chr": pl.datatypes.String,
-                    "conversion": pl.datatypes.Boolean,
-                },
-            ),
-            id="missing conversion True for transcript_id on chr 3",
-        ),
-        pytest.param(
-            "sample_data_summary_counts",
-            None,
-            "one_or_more_conversion",
-            "test_filter_no_conversions_expected",
-            id="real data",
-        ),
-    ],
-)
-def test_filter_no_conversions(
-    df: pl.DataFrame | str,
-    groupby: list[str],
-    converted: str,
-    expected: pl.DataFrame | str,
-    request: pytest.FixtureRequest,
-) -> None:
-    """Test filtering of non conversions."""
-    if isinstance(df, str):
-        _df = request.getfixturevalue(df)
-        _expected = request.getfixturevalue(expected)
-    else:
-        _df = df
-        _expected = expected
-    filtered_no_conversions = summary._filter_no_conversions(_df, groupby, converted)
-    pl.testing.assert_frame_equal(filtered_no_conversions, _expected)
-
-
-@pytest.mark.parametrize(
-    ("df", "groupby", "converted", "expected"),
-    [
-        pytest.param(
-            pl.DataFrame(
-                {
-                    "transcript_id": ["a", "b", "c", "d", "e"],
-                    "chr": ["chr1", "chr2", "chr3", "chr4", "chr5"],
-                    "len": [2, 2, 1, 2, 1],
-                    "Converted": [True, True, False, True, True],
-                    "conversion_count": [1, 2, 3, 4, 5],
-                    "conversion_percent": [0.1, 0.2, 0.3, 0.4, 0.5],
-                },
-                schema={
-                    "transcript_id": pl.datatypes.String,
-                    "chr": pl.datatypes.String,
-                    "len": pl.datatypes.UInt32,
-                    "Converted": pl.datatypes.Boolean,
-                    "conversion_count": pl.datatypes.Int32,
-                    "conversion_percent": pl.datatypes.Float64,
-                },
-            ),
-            ["transcript_id", "chr"],
-            "Converted",
-            pl.DataFrame(
-                {
-                    "transcript_id": ["a", "b", "c", "d", "e"],
-                    "chr": ["chr1", "chr2", "chr3", "chr4", "chr5"],
-                    "Converted": [True, True, True, True, True],
-                    "conversion_count": [1, 2, 0, 4, 5],
-                    "conversion_percent": [0.1, 0.2, 0.0, 0.4, 0.5],
-                },
-                schema={
-                    "transcript_id": pl.datatypes.String,
-                    "chr": pl.datatypes.String,
-                    "Converted": pl.datatypes.Boolean,
-                    "conversion_count": pl.datatypes.Int32,
-                    "conversion_percent": pl.datatypes.Float64,
-                },
-            ),
-            id="simple - missing conversion True for transcript_id on chr 3",
-        ),
-    ],
-)
-def test_inner_join_no_conversions(
-    df: pl.DataFrame, groupby: list[str], converted: str, expected: pl.DataFrame, request: pytest.FixtureRequest
-) -> None:
-    """Test that inner_join_no_conversions returns the correct subset."""
-    if isinstance(df, str):
-        _df = request.getfixturevalue(df)
-        _expected = request.getfixturevalue(expected)
-    else:
-        _df = df
-        _expected = expected
-    joined = summary._inner_join_no_conversions(_df, groupby, converted)
-    pl.testing.assert_frame_equal(joined, expected)

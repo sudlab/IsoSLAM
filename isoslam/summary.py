@@ -104,8 +104,8 @@ def summary_counts(  # pylint: disable=too-many-positional-arguments
     )
     df_count_conversions = extract_day_hour_and_replicate(df_count_conversions, filename_col, regex)
     # Sort the data and remove tests (where day is null)
-    sort = groupby + ["day", "hour", "replicate"]
-    df_count_conversions = df_count_conversions.sort(sort)
+    sort = groupby + ["day", "hour", "replicate", "one_or_more_conversion"]
+    df_count_conversions = df_count_conversions.sort(sort, maintain_order=True)
     return df_count_conversions.filter(~pl.col("day").is_null())
 
 
@@ -130,9 +130,9 @@ def extract_day_hour_and_replicate(
         Polars DataFrame augmented with the hour and replicate extracted from the filename.
     """
     return df.with_columns(
-        (pl.col(column).str.extract(regex, group_index=1).alias("day")),
-        (pl.col(column).str.extract(regex, group_index=2).alias("hour")),
-        (pl.col(column).str.extract(regex, group_index=3).alias("replicate")),
+        (pl.col(column).str.extract(regex, group_index=1).str.to_integer().alias("day")),
+        (pl.col(column).str.extract(regex, group_index=2).str.to_integer().alias("hour")),
+        (pl.col(column).str.extract(regex, group_index=3).str.to_integer().alias("replicate")),
     )
 
 
