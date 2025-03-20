@@ -361,61 +361,23 @@ def test_filter_no_conversions(
 
 
 @pytest.mark.parametrize(
-    ("df", "groupby", "converted", "expected"),
+    ("df", "groupby", "converted"),
     [
         pytest.param(
-            pl.DataFrame(
-                {
-                    "transcript_id": ["a", "b", "c", "d", "e"],
-                    "chr": ["chr1", "chr2", "chr3", "chr4", "chr5"],
-                    "Converted": [True, True, False, True, True],
-                    "conversion_count": [1, 2, 3, 4, 5],
-                    "conversion_percent": [0.1, 0.2, 0.3, 0.4, 0.5],
-                },
-                schema={
-                    "transcript_id": pl.datatypes.String,
-                    "chr": pl.datatypes.String,
-                    "Converted": pl.datatypes.Boolean,
-                    "conversion_count": pl.datatypes.UInt32,
-                    "conversion_percent": pl.datatypes.Float64,
-                },
-            ),
-            ["transcript_id", "chr"],
-            "Converted",
-            pl.DataFrame(
-                {
-                    "transcript_id": ["a", "b", "c", "d", "e"],
-                    "chr": ["chr1", "chr2", "chr3", "chr4", "chr5"],
-                    "Converted": [True, True, True, True, True],
-                    "conversion_count": [1, 2, 0, 4, 5],
-                    "conversion_percent": [0.1, 0.2, 0.0, 0.4, 0.5],
-                },
-                schema={
-                    "transcript_id": pl.datatypes.String,
-                    "chr": pl.datatypes.String,
-                    "Converted": pl.datatypes.Boolean,
-                    "conversion_count": pl.datatypes.UInt32,
-                    "conversion_percent": pl.datatypes.Float64,
-                },
-            ),
-            id="simple - missing conversion True for transcript_id on chr 3",
+            "sample_data_summary_counts",
+            None,
+            "one_or_more_conversion",
+            id="real data groupby none",
         ),
     ],
 )
-def test_inner_join_no_conversions(
-    df: pl.DataFrame, groupby: list[str], converted: str, expected: pl.DataFrame, request: pytest.FixtureRequest
+def test_get_one_or_more_conversion(
+    df: pl.DataFrame, groupby: list[str], converted: str, request: pytest.FixtureRequest, regtest
 ) -> None:
     """Test that inner_join_no_conversions returns the correct subset."""
-    if isinstance(df, str):
-        _df = request.getfixturevalue(df)
-        _expected = request.getfixturevalue(expected)
-    else:
-        _df = df
-        _expected = expected
-    joined = summary._inner_join_no_conversions(_df, groupby, converted)
-    print(f"\n{joined=}\n")
-    print(f"\n{expected=}\n")
-    pl.testing.assert_frame_equal(joined, expected)
+    df = request.getfixturevalue(df) if isinstance(df, str) else df
+    one_or_more_conversions = summary._get_one_or_more_conversion(df, groupby, converted)
+    print(one_or_more_conversions.to_pandas().to_string(float_format="{:.4e}".format), file=regtest)
 
 
 @pytest.mark.parametrize(
