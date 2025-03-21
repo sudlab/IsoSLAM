@@ -8,7 +8,7 @@ import pysam
 import pytest
 from pysam import AlignedSegment, AlignmentFile, VariantFile
 
-from isoslam import io, isoslam
+from isoslam import io, isoslam, summary
 
 BASE_DIR = Path.cwd()
 TEST_DIR = BASE_DIR / "tests"
@@ -18,6 +18,13 @@ BED_DIR = RESOURCES / "bed"
 VCF_DIR = RESOURCES / "vcf"
 BAM_DIR = RESOURCES / "bam"
 BAM_SORTED_ASSIGNED_DIR = BAM_DIR / "sorted_assigned"
+TSV_DIR = RESOURCES / "tsv"
+TSV_OUTPUT_DIR = TSV_DIR / "output"
+CSV_DIR = RESOURCES / "csv"
+CSV_OUTPUT_DIR = CSV_DIR / "output"
+PARQUET_DIR = RESOURCES / "parquet"
+PARQUET_OUTPUT_DIR = PARQUET_DIR / "output"
+OUTPUT_DIR = RESOURCES / "output"
 
 # pylint: disable=redefined-outer-name
 
@@ -362,3 +369,27 @@ def pl_schema() -> dict[str, type]:
 def pl_results(pl_schema: dict[str, type]) -> pl.DataFrame:
     """Polars dataframe for use with tests."""
     return pl.DataFrame(schema=pl_schema)
+
+
+@pytest.fixture()
+def sample_data_raw(pl_schema: dict[str, type]) -> pl.DataFrame:
+    """Load an example dataset."""
+    return pl.load_parquet(PARQUET_OUTPUT_DIR / "d0_0hr1.parquet", schema=pl_schema)
+
+
+@pytest.fixture()
+def sample_data_summary_counts() -> pl.DataFrame:
+    """Summary counts of a single file."""
+    return summary.summary_counts(file_ext=".parquet", directory=PARQUET_OUTPUT_DIR, regex=r"^d(\w+)_(\w+)hr(\w+)")
+
+
+@pytest.fixture()
+def test_aggregate_conversions_expected() -> pl.DataFrame:
+    """Expected data frame for test_aggregate_conversions()."""
+    return pl.read_parquet(OUTPUT_DIR / "test_aggregate_conversions.parquet")
+
+
+@pytest.fixture()
+def test_filter_no_conversions_expected() -> pl.DataFrame:
+    """Expected data frame for test_filter_no_conversions()."""
+    return pl.read_parquet(OUTPUT_DIR / "test_filter_no_conversions.parquet")

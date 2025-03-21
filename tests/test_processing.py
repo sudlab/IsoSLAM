@@ -8,6 +8,9 @@ import pytest
 
 from isoslam import io, processing
 
+BASE_DIR = Path.cwd()
+RESOURCES = BASE_DIR / "tests" / "resources"
+
 
 @pytest.mark.parametrize(
     ("option", "help_message"),
@@ -119,21 +122,23 @@ def test_entry_point_sub_parsers(options: str, expected_function: Callable, expe
 
 
 @pytest.mark.parametrize(
-    ("file_pattern", "separator", "outfile"),
+    ("file_ext", "separator", "outfile"),
     [
-        pytest.param("tests/**/*.tsv", "\t", "test.tsv", id="Tab-delimited output."),
-        pytest.param("tests/**/*.tsv", ",", "test.csv", id="CSV-delimited output."),
+        pytest.param(".tsv", "\t", "test.tsv", id="Tab-delimited output."),
+        pytest.param(".csv", ",", "test.csv", id="CSV-delimited output."),
     ],
 )
-def test_summary_counts(file_pattern: str, separator: str, outfile: str, tmp_path: Path) -> None:
+def test_summary_counts(file_ext: str, separator: str, outfile: str, tmp_path: Path) -> None:
     """Test the summary_counts entry point."""
     processing.entry_point(
         manually_provided_args=[
             "--output-dir",
             str(tmp_path),
             "summary-counts",
-            "--file-pattern",
-            file_pattern,
+            "--file-ext",
+            file_ext,
+            "--directory",
+            str(RESOURCES / "results"),
             "--outfile",
             outfile,
             "--separator",

@@ -166,12 +166,54 @@ def create_parser() -> arg.ArgumentParser:
         help="Summarise the counts.",
     )
     summary_counts_parser.add_argument(
-        "--file-pattern",
-        dest="file_pattern",
+        "--file-ext",
+        dest="file_ext",
         type=str,
         required=False,
-        default="*_summarized.tsv",
-        help="Regular expression for summarized files to process.",
+        default=".tsv",
+        help="File extension of summarized files to process.",
+    )
+    summary_counts_parser.add_argument(
+        "--directory",
+        dest="directory",
+        type=Path,
+        required=False,
+        help="Directory to search for input files.",
+    )
+    summary_counts_parser.add_argument(
+        "--conversions-var",
+        dest="conversions_var",
+        type=str,
+        required=False,
+        help="Name of column that holds details of conversions.",
+    )
+    summary_counts_parser.add_argument(
+        "--conversions-threshold",
+        dest="conversions_threshold",
+        type=int,
+        required=False,
+        help="Minimum number of conversions.",
+    )
+    summary_counts_parser.add_argument(
+        "--test-file",
+        dest="test_file",
+        type=str,
+        required=False,
+        help="Pattern used in test file names.",
+    )
+    summary_counts_parser.add_argument(
+        "--filename-var",
+        dest="filename_var",
+        type=str,
+        required=False,
+        help="Name of column that holds file names.",
+    )
+    summary_counts_parser.add_argument(
+        "--regex",
+        dest="regex",
+        type=str,
+        required=False,
+        help="Regular expression for extracting day/hour/replication from filenames.",
     )
     summary_counts_parser.add_argument(
         "--outfile",
@@ -403,7 +445,7 @@ def summarise_counts(args: arg.Namespace | None) -> None:
     output_config = summary_counts_config.pop("output")
     output_config["output_dir"] = config["output_dir"]
     summary_counts = summary.summary_counts(**summary_counts_config)
-    summary_counts.sort_values(by=["Chr", "Transcript_id", "Start"], inplace=True)
+    summary_counts = summary_counts.sort(by=["Chr", "Transcript_id", "Start"])
     io.data_frame_to_file(summary_counts, **output_config)
     logger.info(f"Summary counts file written to : {output_config['output_dir']}/{output_config['outfile']}")
 

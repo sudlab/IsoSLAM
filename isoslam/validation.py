@@ -95,15 +95,21 @@ DEFAULT_CONFIG_SCHEMA = Schema(
             "coverage": Or(type(eval("int")), error="Invalid value in config for schema.coverage, should be 'int'"),
         },
         "summary_counts": {
-            "file_pattern": Or(
-                str, error="Invalid value in config for summary_counts.file_pattern, should be str/glob"
-            ),
-            "separator": Or("\t", ",", ";", error="Invalid value in config for delim, should be '\t', ',' or ';'"),
+            "file_ext": Or(str, error="Invalid value in config for summary_counts.file_ext, should be str"),
+            "directory": Or(str, error="Invalid value in config for summary_counts.directory, should be str"),
             "groupby": Or([str], error="Invalid value in config for summary_counts.groupby, should be list of str"),
+            "conversions_var": Or(
+                str, error="Invalid value in config for summary_counts.conversions_var should be str"
+            ),
+            "conversions_threshold": Or(
+                int, error="Invalid value in config for summary_counts.conversions_threshold should be int"
+            ),
+            "test_file": Or(str, error="Invalid value in config for summary_counts.test_file should be str"),
+            "filename_var": Or(str, error="Invalid value in config for summary_counts.test_file should be str"),
+            "regex": Or(str, error="Invalid value in config for summary_counts.regex should be Pattern[str]"),
             "output": {
                 "outfile": Or(str, error="Invalid value in config for summary_counts.output.outfile, should be str"),
                 "sep": Or("\t", ",", ";", error="Invalid value in config for delim, should be '\t', ',' or ';'"),
-                "index": bool,
             },
         },
         "plot": bool,
