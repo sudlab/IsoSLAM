@@ -27,8 +27,8 @@ schema:
   convertible: "int"
   coverage: "int"
 summary_counts:
-  file_pattern: "**/*.tsv"
-  separator: "\t"
+  file_ext: ".tsv"
+  directory: "output"
   groupby:
     - Transcript_id
     - Chr
@@ -41,5 +41,4 @@ summary_counts:
   output:
     outfile: summary_counts.tsv
     sep: "\t"
-    index: false
 plot: false
