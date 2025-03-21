@@ -382,9 +382,7 @@ def _find_files(pattern: str = "**/*.tsv", directory: str | Path | None = None) 
     return Path(directory).rglob(pattern)
 
 
-def load_output_files(
-    file_ext: str = ".tsv", directory: str | Path | None = None, columns: list[str] | None = None
-) -> dict[str, pl.DataFrame]:
+def load_output_files(file_ext: str = ".tsv", directory: str | Path | None = None) -> dict[str, pl.DataFrame]:
     """
     Read a set of files into a list of Polars DataFrames.
 
@@ -396,8 +394,6 @@ def load_output_files(
         File name pattern to search for.
     directory : str | Path | None
         Directory to search for files.
-    columns : list[str]
-        List of column names to load, defaults will be set if ''None''.
 
     Returns
     -------
@@ -405,31 +401,15 @@ def load_output_files(
         A list of Polars DataFrames of each file found.
     """
     # This function could be refactored into a factory method with submethods for each file type
-    if columns is None:
-        columns = [
-            "Read_UID",
-            "Transcript_id",
-            "Start",
-            "End",
-            "Chr",
-            "Strand",
-            "Assignment",
-            "Conversions",
-            "Convertible",
-            "Coverage",
-        ]
     pattern = f"*{file_ext}"
     if file_ext[file_ext.rfind(".") :] == ".parquet":
-        results = {_file.stem: pl.read_parquet(_file, columns=columns) for _file in _find_files(pattern, directory)}
+        results = {_file.stem: pl.read_parquet(_file) for _file in _find_files(pattern, directory)}
     else:
         if file_ext == ".tsv":
             separator = "\t"
         if file_ext == ".csv":
             separator = ","
-        results = {
-            _file.stem: pl.read_csv(_file, columns=columns, separator=separator)
-            for _file in _find_files(pattern, directory)
-        }
+        results = {_file.stem: pl.read_csv(_file, separator=separator) for _file in _find_files(pattern, directory)}
     return {key: df.with_columns(filename=pl.lit(key)) for key, df in results.items()}
 
 

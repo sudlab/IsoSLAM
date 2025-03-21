@@ -14,9 +14,7 @@ GROUPBY_DAY_HR_REP = ["Transcript_id", "Strand", "Start", "End", "Assignment", "
 # pylint: disable=too-many-positional-arguments
 
 
-def append_files(
-    file_ext: str = ".tsv", directory: str | Path | None = None, columns: list[str] | None = None
-) -> pl.DataFrame:
+def append_files(file_ext: str = ".tsv", directory: str | Path | None = None) -> pl.DataFrame:
     """
     Append a set of files into a Polars DataFrame.
 
@@ -26,15 +24,13 @@ def append_files(
         File extension to search for results to summarise.
     directory : str | Path | None
         Path on which to search for files with ''file_ext'', if ''None'' then current working directory is used.
-    columns : list[str]
-        Columns to load from data files.
 
     Returns
     -------
     pl.DataFrame
         A Polars DataFrames of each file found.
     """
-    _data = io.load_output_files(file_ext, directory, columns)
+    _data = io.load_output_files(file_ext, directory)
     all_data = [data.with_columns(filename=pl.lit(key)) for key, data in _data.items()]
     return pl.concat(all_data)
 
@@ -42,7 +38,6 @@ def append_files(
 def summary_counts(
     file_ext: str = ".tsv",
     directory: str | Path | None = None,
-    columns: list[str] | None = None,
     groupby: list[str] | None = None,
     conversions_var: str = "Conversions",
     conversions_threshold: int = 1,
@@ -62,8 +57,6 @@ def summary_counts(
         File extension to search for results to summarise.
     directory : str | Path | None
         Path on which to search for files with ''file_ext'', if ''None'' then current working directory is used.
-    columns : list[str]
-        Columns to load from data files.
     groupby : list[str]
         List of variables to group the counts by, if ''None'' then groups the data by ''Transcript_id'',
         ''Strand'', ''Start'', ''End'', ''Assignment'', and   ''filename''.
@@ -89,7 +82,7 @@ def summary_counts(
         filename_col = "filename"
     if regex is None:
         regex = r"^d(\w+)_(\w+)hr(\w+)_"
-    df = append_files(file_ext, directory, columns)
+    df = append_files(file_ext, directory)
     if test_file is not None:
         df = df.filter(pl.col(filename_col) != test_file)
     df = df.with_columns([(pl.col(conversions_var) >= conversions_threshold).alias("one_or_more_conversion")])
@@ -262,7 +255,6 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
     # Initialised attributes
     file_ext: str
     directory: str | Path
-    columns: list[str] | None
     groupby: list[str] | None
     conversions_var: str | None
     conversions_threshold: int
@@ -277,7 +269,6 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
         self.data = summary_counts(
             file_ext=self._file_ext,
             directory=self._directory,
-            columns=self._columns,
             regex=self._regex,
             groupby=self._groupby,
             conversions_var=self._conversions_var,
@@ -332,30 +323,6 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
             Directory from which files are loaded.
         """
         self._directory = value
-
-    @property
-    def columns(self) -> list[str]:
-        """
-        Getter method for ''columns''.
-
-        Returns
-        -------
-        list[str]
-            List of columns that are loaded from output.
-        """
-        return self._columns
-
-    @columns.setter
-    def columns(self, value: list[str]) -> None:
-        """
-        Setter for the file extension.
-
-        Parameters
-        ----------
-        value : str
-            Columns that to load from the data.
-        """
-        self._columns = value
 
     @property
     def regex(self) -> str:

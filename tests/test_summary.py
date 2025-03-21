@@ -18,24 +18,12 @@ RESOURCES = BASE_DIR / "tests" / "resources"
 
 
 @pytest.mark.parametrize(
-    ("file_ext", "directory", "shape", "columns", "unique_filenames", "start_min", "start_max", "end_min", "end_max"),
+    ("file_ext", "directory", "shape", "unique_filenames", "start_min", "start_max", "end_min", "end_max"),
     [
         pytest.param(
             ".tsv",
             RESOURCES / "results",
             (1696, 11),
-            {
-                "Read_UID",
-                "Transcript_id",
-                "Start",
-                "End",
-                "Chr",
-                "Strand",
-                "Assignment",
-                "Conversions",
-                "Convertible",
-                "Coverage",
-            },
             {"d0_0hr1_filtered_remapped_sorted", "d0_no4sU_filtered_remapped_sorted"},
             14940,
             25004,
@@ -46,18 +34,7 @@ RESOURCES = BASE_DIR / "tests" / "resources"
         pytest.param(
             ".parquet",
             RESOURCES / "parquet",
-            (7000, 10),
-            {
-                "Read_UID",
-                "Transcript_id",
-                "Start",
-                "End",
-                "Chr",
-                "Strand",
-                "Assignment",
-                "Conversions",
-                "Convertible",
-            },
+            (7000, 11),
             {
                 "d0_0hr1",
                 "d0_0hr2",
@@ -107,7 +84,6 @@ def test_append_files(
     file_ext: str,
     directory: Path,
     shape: tuple[int, int],
-    columns: list[str],
     unique_filenames: list[str],
     start_min: int,
     start_max: int,
@@ -115,11 +91,9 @@ def test_append_files(
     end_max: int,
 ) -> None:
     """Test appending of files."""
-    all_files = summary.append_files(file_ext, directory, list(columns))
+    all_files = summary.append_files(file_ext, directory)
     assert isinstance(all_files, pl.DataFrame)
     assert all_files.shape == shape
-    columns.add("filename")
-    assert set(all_files.columns) == columns
     assert set(all_files["filename"].unique()) == unique_filenames
     assert all_files["Start"].min() == start_min
     assert all_files["Start"].max() == start_max
@@ -384,7 +358,6 @@ def test_get_one_or_more_conversion(
     (
         "file_ext",
         "directory",
-        "columns",
         "groupby",
         "conversions_var",
         "conversions_threshold",
@@ -396,18 +369,6 @@ def test_get_one_or_more_conversion(
         pytest.param(
             ".tsv",
             RESOURCES / "tsv",
-            [
-                "Read_UID",
-                "Transcript_id",
-                "Start",
-                "End",
-                "Chr",
-                "Strand",
-                "Assignment",
-                "Conversions",
-                "Convertible",
-                "Coverage",
-            ],
             [
                 "Transcript_id",
                 "Start",
@@ -436,18 +397,6 @@ def test_get_one_or_more_conversion(
         pytest.param(
             ".parquet",
             RESOURCES / "parquet",
-            [
-                "Read_UID",
-                "Transcript_id",
-                "Start",
-                "End",
-                "Chr",
-                "Strand",
-                "Assignment",
-                "Conversions",
-                "Convertible",
-                "Coverage",
-            ],
             [
                 "Transcript_id",
                 "Start",
@@ -478,7 +427,6 @@ def test_get_one_or_more_conversion(
 def test_statistics_class(
     file_ext: str,
     directory: str,
-    columns: list[str],
     groupby: list[str],
     conversions_var: str,
     conversions_threshold: int,
@@ -490,7 +438,6 @@ def test_statistics_class(
     statistics = summary.Statistics(
         file_ext=file_ext,
         directory=directory,
-        columns=columns,
         groupby=groupby,
         conversions_var=conversions_var,
         conversions_threshold=conversions_threshold,
@@ -499,7 +446,6 @@ def test_statistics_class(
     )
     assert statistics.file_ext == file_ext
     assert statistics.directory == directory
-    assert statistics.columns == columns
     assert statistics.regex == regex
     assert statistics.groupby == groupby
     assert statistics.conversions_var == conversions_var
