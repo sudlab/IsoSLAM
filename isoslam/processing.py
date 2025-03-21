@@ -181,6 +181,41 @@ def create_parser() -> arg.ArgumentParser:
         help="Directory to search for input files.",
     )
     summary_counts_parser.add_argument(
+        "--conversions-var",
+        dest="conversions_var",
+        type=str,
+        required=False,
+        help="Name of column that holds details of conversions.",
+    )
+    summary_counts_parser.add_argument(
+        "--conversions-threshold",
+        dest="conversions_threshold",
+        type=int,
+        required=False,
+        help="Minimum number of conversions.",
+    )
+    summary_counts_parser.add_argument(
+        "--test-file",
+        dest="test_file",
+        type=str,
+        required=False,
+        help="Pattern used in test file names.",
+    )
+    summary_counts_parser.add_argument(
+        "--filename-var",
+        dest="filename_var",
+        type=str,
+        required=False,
+        help="Name of column that holds file names.",
+    )
+    summary_counts_parser.add_argument(
+        "--regex",
+        dest="regex",
+        type=str,
+        required=False,
+        help="Regular expression for extracting day/hour/replication from filenames.",
+    )
+    summary_counts_parser.add_argument(
         "--outfile",
         dest="outfile",
         type=Path,

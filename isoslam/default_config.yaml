@@ -38,6 +38,11 @@ summary_counts:
     - Assignment
     - Conversions
     - filename
+  conversions_var: "Conversions"
+  conversions_threshold: 1
+  test_file: "no4sU"
+  filename_var: "filename"
+  regex: ^d(\w+)_(\w+)hr(\w+)_
   output:
     outfile: summary_counts.tsv
     sep: "\t"

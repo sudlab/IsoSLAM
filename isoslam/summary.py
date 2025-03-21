@@ -42,7 +42,7 @@ def summary_counts(
     conversions_var: str = "Conversions",
     conversions_threshold: int = 1,
     test_file: str | None = "no4sU",
-    filename_col: str | None = None,
+    filename_var: str | None = None,
     regex: str | None = None,
 ) -> pl.DataFrame:
     r"""
@@ -66,7 +66,7 @@ def summary_counts(
         Threshold for counting conversions, default ''1''.
     test_file : str | None
         Unique identifier for test file, files with this string in their names are removed.
-    filename_col : str | NOne
+    filename_var : str | NOne
         Column that holds filename.
     regex : str
         Regular expression pattern to extract the hour and replicate from, default ''r"^d(\w+)_(\w+)hr(\w+)_"''.
@@ -78,13 +78,13 @@ def summary_counts(
     """
     if groupby is None:
         groupby = GROUPBY_FILENAME
-    if filename_col is None:
-        filename_col = "filename"
+    if filename_var is None:
+        filename_var = "filename"
     if regex is None:
         regex = r"^d(\w+)_(\w+)hr(\w+)_"
     df = append_files(file_ext, directory)
     if test_file is not None:
-        df = df.filter(pl.col(filename_col) != test_file)
+        df = df.filter(pl.col(filename_var) != test_file)
     df = df.with_columns([(pl.col(conversions_var) >= conversions_threshold).alias("one_or_more_conversion")])
     # Get counts by variables, including one_or_more_conversion
     groupby.append("one_or_more_conversion")
@@ -97,7 +97,7 @@ def summary_counts(
     df_count_conversions = df_count_conversions.with_columns(
         (pl.col("conversion_count") / pl.col("conversion_total")).alias("conversion_percent")
     )
-    df_count_conversions = extract_day_hour_and_replicate(df_count_conversions, filename_col, regex)
+    df_count_conversions = extract_day_hour_and_replicate(df_count_conversions, filename_var, regex)
     # Sort the data and remove tests (where day is null)
     sort = groupby + ["day", "hour", "replicate", "one_or_more_conversion"]
     df_count_conversions = df_count_conversions.sort(sort, maintain_order=True)
