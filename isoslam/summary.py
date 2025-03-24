@@ -278,6 +278,30 @@ def _average_replicates(df: pl.DataFrame, groupby: list[str] | None, average: st
     raise ValueError(f"Invalid value for average (supported values are 'mean' / 'median') : {average}")
 
 
+def _select_base_levels(df: pl.DataFrame, base_day: int = 0, base_hour: int = 0) -> pl.DataFrame:
+    """
+    Select the base level reference across all data.
+
+    This allows selecting the base level of totals and percents which are used for normalising values. Will drop the
+    column ''replicate'' from the data frame.
+
+    Parameters
+    ----------
+    df : pl.DataFrame
+        Polars Dataframe of conversions.
+    base_day : int
+        Day to be used for reference, default is ''0'' and is unlikely to need changing.
+    base_hour : int
+        Hour to be used for reference, default is ''0'' and is unlikely to need changing.
+
+    Returns
+    -------
+    pl.DataFrame
+        Subset of data with values at baseline (default ''day == 0 & hour == 0'').
+    """
+    return df.filter((pl.col("day") == base_day) & (pl.col("hour") == base_hour)).drop("replicate")
+
+
 # mypy: disable-error-code="no-redef"
 
 

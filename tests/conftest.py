@@ -388,3 +388,9 @@ def sample_data_summary_counts() -> pl.DataFrame:
 def test_average_replicates() -> pl.DataFrame:
     """One or more conversions as input for test_average_replicates()."""
     return pl.read_csv(CSV_INPUT_DIR / "one_or_more_conversions.csv")
+
+
+@pytest.fixture()
+def test_baseline_mean() -> pl.DataFrame:
+    """Baseline means for test_select_base_levels()."""
+    return pl.read_csv(CSV_INPUT_DIR / "baseline_means.csv")

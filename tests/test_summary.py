@@ -434,7 +434,7 @@ def test_get_one_or_more_conversion(
     ],
 )
 def test_average_replicates(
-    df: pl.DataFrame, groupby: list[str], average: str, request: pytest.FixtureRequest, regtest
+    df: pl.DataFrame | str, groupby: list[str], average: str, request: pytest.FixtureRequest, regtest
 ) -> None:
     """Test the _average_replicate() function."""
     df = request.getfixturevalue(df) if isinstance(df, str) else df
@@ -446,6 +446,39 @@ def test_average_replicates_valueerror() -> None:
     """Test raising of ValueError if invalid ''average'' parameter is passed."""
     with pytest.raises(ValueError, match="Invalid value for average"):
         summary._average_replicates(pl.DataFrame({"a": [1, 2]}), groupby=["a"], average="mode")
+
+
+@pytest.mark.parametrize(
+    ("df", "base_day", "base_hour"),
+    [
+        pytest.param(
+            pl.DataFrame(
+                {
+                    "day": [0, 0, 1, 1],
+                    "hour": [0, 8, 0, 16],
+                    "replicate": [1, 1, 1, 1],
+                    "conversion_total": [8.0, 2.5, 25.0, 0.25],
+                    "conversion_percent": [10.0, 6.5, 25.0, 0.675],
+                }
+            ),
+            0,
+            0,
+            id="simple",
+        ),
+        pytest.param("test_baseline_mean", 0, 0, id="real"),
+    ],
+)
+def test_select_base_levels(
+    df: pl.DataFrame | str,
+    base_day: int,
+    base_hour: int,
+    request: pytest.FixtureRequest,
+    regtest,
+) -> None:
+    """Test subsetting of data for baseline values."""
+    df = request.getfixturevalue(df) if isinstance(df, str) else df
+    baseline = summary._select_base_levels(df, base_day, base_hour)
+    print(baseline.write_csv(), file=regtest)
 
 
 @pytest.mark.parametrize(
