@@ -182,7 +182,7 @@ def test_summary_counts(
     assert summary_counts["conversion_total"].min() == expected_numbers["total_min"]
     assert summary_counts["conversion_percent"].max() == expected_numbers["percent_max"]
     assert summary_counts["conversion_percent"].min() == expected_numbers["percent_min"]
-    print(summary_counts.to_pandas().to_string(float_format="{:.4e}".format), file=regtest)
+    print(summary_counts.write_csv(), file=regtest)
 
 
 @pytest.mark.parametrize(
@@ -242,7 +242,7 @@ def test_summary_counts(
 def test_extract_hour_and_replicate(df: pl.DataFrame, column: str, regex: Pattern, regtest) -> None:
     """Test extraction of hour and replicate from filename."""
     summary_counts = summary.extract_day_hour_and_replicate(df, column, regex)
-    print(summary_counts.to_pandas().to_string(float_format="{:.4e}".format), file=regtest)
+    print(summary_counts.write_csv(), file=regtest)
 
 
 @pytest.mark.parametrize(
@@ -288,7 +288,7 @@ def test_aggregate_conversions(
     """Test derivation on non-captured dataset."""
     df = request.getfixturevalue(df) if isinstance(df, str) else df
     aggregated_conversions = summary._aggregate_conversions(df, groupby, converted)
-    print(aggregated_conversions.to_pandas().to_string(float_format="{:.4e}".format), file=regtest)
+    print(aggregated_conversions.write_csv(), file=regtest)
 
 
 @pytest.mark.parametrize(
@@ -331,7 +331,7 @@ def test_filter_no_conversions(
     """Test filtering of non conversions."""
     df = request.getfixturevalue(df) if isinstance(df, str) else df
     filtered_no_conversions = summary._filter_no_conversions(df, groupby, converted)
-    print(filtered_no_conversions.to_pandas().to_string(float_format="{:.4e}".format), file=regtest)
+    print(filtered_no_conversions.write_csv(), file=regtest)
 
 
 @pytest.mark.parametrize(
@@ -351,7 +351,8 @@ def test_get_one_or_more_conversion(
     """Test that inner_join_no_conversions returns the correct subset."""
     df = request.getfixturevalue(df) if isinstance(df, str) else df
     one_or_more_conversions = summary._get_one_or_more_conversion(df, groupby, converted)
-    print(one_or_more_conversions.to_pandas().to_string(float_format="{:.4e}".format), file=regtest)
+    print(one_or_more_conversions.write_csv(), file=regtest)
+
 
 
 @pytest.mark.parametrize(

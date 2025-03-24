@@ -447,7 +447,7 @@ def test_find_files(pattern: str, expected: list[Path]) -> None:
         ),
         pytest.param(
             ".csv",
-            RESOURCES / "csv",
+            RESOURCES / "csv" / "output",
             {
                 "d0_0hr1",
                 "d0_0hr2",

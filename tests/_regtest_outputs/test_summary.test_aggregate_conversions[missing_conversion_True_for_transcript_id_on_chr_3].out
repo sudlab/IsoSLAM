@@ -1,6 +1,7 @@
-  transcript_id   chr  len  conversion
-0             a  chr1    2       False
-1             b  chr2    2       False
-2             c  chr3    1       False
-3             d  chr4    2       False
-4             e  chr5    1        True
+transcript_id,chr,len,conversion
+a,chr1,2,false
+b,chr2,2,false
+c,chr3,1,false
+d,chr4,2,false
+e,chr5,1,true
+
