@@ -354,6 +354,99 @@ def test_get_one_or_more_conversion(
     print(one_or_more_conversions.write_csv(), file=regtest)
 
 
+@pytest.mark.parametrize(
+    ("df", "groupby", "average"),
+    [
+        pytest.param(
+            pl.DataFrame(
+                {
+                    "day": [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
+                    "hour": [0, 0, 0, 0, 8, 8, 8, 8, 0, 0, 0, 0, 16, 16, 16, 16],
+                    "replicate": [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4],
+                    "conversion_total": [8, 8, 8, 8, 1, 2, 3, 4, 10, 20, 30, 40, 0, 0, 0, 1],
+                    "conversion_percent": [
+                        10.0,
+                        10.0,
+                        10.0,
+                        10.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        10.0,
+                        20.0,
+                        30.0,
+                        40.0,
+                        0.5,
+                        0.5,
+                        0.8,
+                        0.9,
+                    ],
+                }
+            ),
+            ["day", "hour"],
+            "mean",
+            id="simple mean",
+        ),
+        pytest.param(
+            pl.DataFrame(
+                {
+                    "day": [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
+                    "hour": [0, 0, 0, 0, 8, 8, 8, 8, 0, 0, 0, 0, 16, 16, 16, 16],
+                    "replicate": [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4],
+                    "conversion_total": [8, 8, 8, 8, 1, 2, 3, 4, 10, 20, 30, 40, 0, 0, 0, 1],
+                    "conversion_percent": [
+                        10.0,
+                        10.0,
+                        10.0,
+                        10.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        10.0,
+                        20.0,
+                        30.0,
+                        40.0,
+                        0.5,
+                        0.5,
+                        0.8,
+                        0.9,
+                    ],
+                }
+            ),
+            ["day", "hour"],
+            "median",
+            id="simple median",
+        ),
+        pytest.param(
+            "test_average_replicates",
+            None,
+            "mean",
+            id="real data mean",
+        ),
+        pytest.param(
+            "test_average_replicates",
+            None,
+            "median",
+            id="real data median",
+        ),
+    ],
+)
+def test_average_replicates(
+    df: pl.DataFrame, groupby: list[str], average: str, request: pytest.FixtureRequest, regtest
+) -> None:
+    """Test the _average_replicate() function."""
+    df = request.getfixturevalue(df) if isinstance(df, str) else df
+    df_average = summary._average_replicates(df, groupby, average)
+    print(df_average.write_csv(), file=regtest)
+
+
+def test_average_replicates_valueerror() -> None:
+    """Test raising of ValueError if invalid ''average'' parameter is passed."""
+    with pytest.raises(ValueError, match="Invalid value for average"):
+        summary._average_replicates(pl.DataFrame({"a": [1, 2]}), groupby=["a"], average="mode")
+
 
 @pytest.mark.parametrize(
     (

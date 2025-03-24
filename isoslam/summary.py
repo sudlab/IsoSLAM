@@ -245,6 +245,39 @@ def _get_one_or_more_conversion(
     return df.filter(pl.col(converted) == True).select(keep).sort(groupby)  # noqa: E712
 
 
+def _average_replicates(df: pl.DataFrame, groupby: list[str] | None, average: str) -> pl.DataFrame:
+    """
+    Average the number and percentage of conversions across replicates for each time point.
+
+    Groups data by and derives the average (mean, median or mode) for replicated experiments at each time point.
+
+    Parameters
+    ----------
+    df : pl.DataFrame
+        Polars Dataframe of conversions.
+    groupby : list[str], optional
+        Variables to ''group_by'' the data, default is ''transcript_id, start, end, assignment, day, hour''.
+    average : str
+        Type of average to calculate, supported options are ''mode'' (default) and ''median''.
+
+    Returns
+    -------
+    pl.DataFrame
+        Average (mean, median or mode depending on request) of total conversions and percentage of conversions across
+        replicates for the given transcript and day/hour.
+    """
+    if groupby is None:
+        groupby = ["Transcript_id", "Strand", "Start", "End", "Assignment", "day", "hour"]
+        _keep = groupby + ["replicate", "conversion_total", "conversion_percent"]
+    else:
+        _keep = groupby + ["conversion_total", "conversion_percent"]
+    if average == "mean":
+        return df.select(_keep).group_by(groupby, maintain_order=True).mean()
+    if average == "median":
+        return df.select(_keep).group_by(groupby, maintain_order=True).median()
+    raise ValueError(f"Invalid value for average (supported values are 'mean' / 'median') : {average}")
+
+
 # mypy: disable-error-code="no-redef"
 
 

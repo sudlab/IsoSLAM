@@ -21,6 +21,7 @@ BAM_SORTED_ASSIGNED_DIR = BAM_DIR / "sorted_assigned"
 TSV_DIR = RESOURCES / "tsv"
 TSV_OUTPUT_DIR = TSV_DIR / "output"
 CSV_DIR = RESOURCES / "csv"
+CSV_INPUT_DIR = CSV_DIR / "input"
 CSV_OUTPUT_DIR = CSV_DIR / "output"
 PARQUET_DIR = RESOURCES / "parquet"
 PARQUET_OUTPUT_DIR = PARQUET_DIR / "output"
@@ -384,12 +385,6 @@ def sample_data_summary_counts() -> pl.DataFrame:
 
 
 @pytest.fixture()
-def test_aggregate_conversions_expected() -> pl.DataFrame:
-    """Expected data frame for test_aggregate_conversions()."""
-    return pl.read_parquet(OUTPUT_DIR / "test_aggregate_conversions.parquet")
-
-
-@pytest.fixture()
-def test_filter_no_conversions_expected() -> pl.DataFrame:
-    """Expected data frame for test_filter_no_conversions()."""
-    return pl.read_parquet(OUTPUT_DIR / "test_filter_no_conversions.parquet")
+def test_average_replicates() -> pl.DataFrame:
+    """One or more conversions as input for test_average_replicates()."""
+    return pl.read_csv(CSV_INPUT_DIR / "one_or_more_conversions.csv")
