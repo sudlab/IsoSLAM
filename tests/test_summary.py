@@ -456,7 +456,6 @@ def test_average_replicates_valueerror() -> None:
                 {
                     "day": [0, 0, 1, 1],
                     "hour": [0, 8, 0, 16],
-                    "replicate": [1, 1, 1, 1],
                     "conversion_total": [8.0, 2.5, 25.0, 0.25],
                     "conversion_percent": [10.0, 6.5, 25.0, 0.675],
                 }

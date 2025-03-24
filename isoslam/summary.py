@@ -268,13 +268,21 @@ def _average_replicates(df: pl.DataFrame, groupby: list[str] | None, average: st
     """
     if groupby is None:
         groupby = ["Transcript_id", "Strand", "Start", "End", "Assignment", "day", "hour"]
-        _keep = groupby + ["replicate", "conversion_total", "conversion_percent"]
-    else:
-        _keep = groupby + ["conversion_total", "conversion_percent"]
+    _keep = groupby + ["conversion_total", "conversion_percent"]
     if average == "mean":
-        return df.select(_keep).group_by(groupby, maintain_order=True).mean()
+        return (
+            df.select(_keep)
+            .select(pl.all().name.map(lambda col_name: col_name.replace("conversion", "baseline")))
+            .group_by(groupby, maintain_order=True)
+            .mean()
+        )
     if average == "median":
-        return df.select(_keep).group_by(groupby, maintain_order=True).median()
+        return (
+            df.select(_keep)
+            .select(pl.all().name.map(lambda col_name: col_name.replace("conversion", "baseline")))
+            .group_by(groupby, maintain_order=True)
+            .median()
+        )
     raise ValueError(f"Invalid value for average (supported values are 'mean' / 'median') : {average}")
 
 
@@ -299,7 +307,8 @@ def _select_base_levels(df: pl.DataFrame, base_day: int = 0, base_hour: int = 0)
     pl.DataFrame
         Subset of data with values at baseline (default ''day == 0 & hour == 0'').
     """
-    return df.filter((pl.col("day") == base_day) & (pl.col("hour") == base_hour)).drop("replicate")
+    return df.filter((pl.col("day") == base_day) & (pl.col("hour") == base_hour))
+
 
 
 # mypy: disable-error-code="no-redef"
