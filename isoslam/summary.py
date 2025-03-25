@@ -270,19 +270,9 @@ def _average_replicates(df: pl.DataFrame, groupby: list[str] | None, average: st
         groupby = ["Transcript_id", "Strand", "Start", "End", "Assignment", "day", "hour"]
     _keep = groupby + ["conversion_total", "conversion_percent"]
     if average == "mean":
-        return (
-            df.select(_keep)
-            .select(pl.all().name.map(lambda col_name: col_name.replace("conversion", "baseline")))
-            .group_by(groupby, maintain_order=True)
-            .mean()
-        )
+        return df.select(_keep).group_by(groupby, maintain_order=True).mean()
     if average == "median":
-        return (
-            df.select(_keep)
-            .select(pl.all().name.map(lambda col_name: col_name.replace("conversion", "baseline")))
-            .group_by(groupby, maintain_order=True)
-            .median()
-        )
+        return df.select(_keep).group_by(groupby, maintain_order=True).median()
     raise ValueError(f"Invalid value for average (supported values are 'mean' / 'median') : {average}")
 
 
@@ -307,8 +297,40 @@ def _select_base_levels(df: pl.DataFrame, base_day: int = 0, base_hour: int = 0)
     pl.DataFrame
         Subset of data with values at baseline (default ''day == 0 & hour == 0'').
     """
-    return df.filter((pl.col("day") == base_day) & (pl.col("hour") == base_hour))
+    return (
+        df.select(pl.all().name.map(lambda col_name: col_name.replace("conversion", "baseline")))
+        .filter((pl.col("day") == base_day) & (pl.col("hour") == base_hour))
+        .drop(["day", "hour"])
+    )
 
+
+def _merge_average_with_baseline(
+    df_average: pl.DataFrame, df_baseline: pl.DataFrame, join_on: list[str] | None
+) -> pl.DataFrame:
+    """
+    Merge a data frame with the baseline measuerements.
+
+    Typically for this workflow this involves merging the average data frame (across replicates at each of the
+    transcripts/start/end/strand/assignments) with the average at the baseline to allow normalising the data.
+
+    Parameters
+    ----------
+    df_average : pl.DataFrame
+        Polars Dataframe of averaged data.
+    df_baseline : pl.DataFrame
+        Polars Dataframe of averaged baseline data.
+    join_on : list[str] | None
+        Variables to join the data frames on, if ''None'' (default) it is set to ''Transcript_id, Start, End,
+        Assignment, Strand''.
+
+    Returns
+    -------
+    pl.DataFrame
+        Averaged and baseline data frame merged on ''join_on''.
+    """
+    if join_on is None:
+        join_on = ["Transcript_id", "Start", "End", "Assignment", "Strand"]
+    return df_average.join(df_baseline, on=join_on)
 
 
 # mypy: disable-error-code="no-redef"
@@ -429,7 +451,7 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
     @groupby.setter
     def groupby(self, value: list[str]) -> None:
         """
-        Setter for the file extension.
+        Setter for the ''groupby'' property.
 
         Parameters
         ----------
@@ -453,7 +475,7 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
     @conversions_var.setter
     def conversions_var(self, value: str) -> None:
         """
-        Setter for the file extension.
+        Setter for the ''conversions_var'' property.
 
         Parameters
         ----------

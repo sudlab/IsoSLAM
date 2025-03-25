@@ -1,4 +1,4 @@
-Transcript_id,Strand,Start,End,Assignment,day,hour,baseline_total,baseline_percent
+Transcript_id,Strand,Start,End,Assignment,day,hour,conversion_total,conversion_percent
 ENST00000173898,+,54931031,54931203,Spl,0,12,1.0,0.0
 ENST00000203630,-,6748547,6748769,Spl,2,0,1.0,0.0
 ENST00000221413,+,49011093,49011191,Spl,0,12,1.0,0.0

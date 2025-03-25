@@ -420,13 +420,13 @@ def test_get_one_or_more_conversion(
             id="simple median",
         ),
         pytest.param(
-            "test_average_replicates",
+            "one_or_more_conversions",
             None,
             "mean",
             id="real data mean",
         ),
         pytest.param(
-            "test_average_replicates",
+            "one_or_more_conversions",
             None,
             "median",
             id="real data median",
@@ -436,7 +436,7 @@ def test_get_one_or_more_conversion(
 def test_average_replicates(
     df: pl.DataFrame | str, groupby: list[str], average: str, request: pytest.FixtureRequest, regtest
 ) -> None:
-    """Test the _average_replicate() function."""
+    """Test the summary._average_replicate() function."""
     df = request.getfixturevalue(df) if isinstance(df, str) else df
     df_average = summary._average_replicates(df, groupby, average)
     print(df_average.write_csv(), file=regtest)
@@ -454,6 +454,7 @@ def test_average_replicates_valueerror() -> None:
         pytest.param(
             pl.DataFrame(
                 {
+                    "transcript_id": "1A",
                     "day": [0, 0, 1, 1],
                     "hour": [0, 8, 0, 16],
                     "conversion_total": [8.0, 2.5, 25.0, 0.25],
@@ -464,7 +465,7 @@ def test_average_replicates_valueerror() -> None:
             0,
             id="simple",
         ),
-        pytest.param("test_baseline_mean", 0, 0, id="real"),
+        pytest.param("averaged_data", 0, 0, id="real"),
     ],
 )
 def test_select_base_levels(
@@ -478,6 +479,49 @@ def test_select_base_levels(
     df = request.getfixturevalue(df) if isinstance(df, str) else df
     baseline = summary._select_base_levels(df, base_day, base_hour)
     print(baseline.write_csv(), file=regtest)
+
+
+@pytest.mark.parametrize(
+    ("df_average", "df_baseline", "join_on"),
+    [
+        pytest.param(
+            pl.DataFrame(
+                {
+                    "transcript_id": "1A",
+                    "day": [0, 0, 1, 1],
+                    "hour": [0, 8, 0, 16],
+                    "conversion_total": [8.0, 2.5, 25.0, 0.25],
+                    "conversion_percent": [10.0, 6.5, 25.0, 0.675],
+                }
+            ),
+            pl.DataFrame(
+                {
+                    "transcript_id": "1A",
+                    "baseline_total": [8.0],
+                    "baseline_percent": [10.0],
+                }
+            ),
+            ["transcript_id"],
+            id="simple",
+        ),
+        # NB - The fixture baseline_mean
+        pytest.param(
+            "averaged_data", "baseline_mean", ["Transcript_id", "Strand", "Start", "End", "Assignment"], id="real"
+        ),
+    ],
+)
+def test_merge_average_baseline(
+    df_average: pl.DataFrame | str,
+    df_baseline: pl.DataFrame | str,
+    join_on: list[str],
+    request: pytest.FixtureRequest,
+    regtest,
+) -> None:
+    """Test merging of average and baseline data."""
+    df_average = request.getfixturevalue(df_average) if isinstance(df_average, str) else df_average
+    df_baseline = request.getfixturevalue(df_baseline) if isinstance(df_baseline, str) else df_baseline
+    combined = summary._merge_average_with_baseline(df_average, df_baseline, join_on)
+    print(combined.write_csv(), file=regtest)
 
 
 @pytest.mark.parametrize(
