@@ -470,6 +470,39 @@ def test_merge_average_baseline(
 
 
 @pytest.mark.parametrize(
+    ("df", "to_normalise", "baseline"),
+    [
+        pytest.param(
+            pl.DataFrame(
+                {
+                    "transcript_id": ["1A", "1A", "1A", "1A"],
+                    "day": [0, 0, 1, 1],
+                    "hour": [0, 8, 0, 16],
+                    "convertion_count": [8, 4, 50, 0],
+                    "conversion_total": [32, 10, 100, 4],
+                    "conversion_percent": [25.0, 40.0, 50.0, 0.0],
+                    "baselin_count": [8.0, 8.0, 8.0, 8.0],
+                    "baseline_total": [32.0, 32.0, 32.0, 32.0],
+                    "baseline_percent": [25.0, 25.0, 25.0, 25.0],
+                }
+            ),
+            "conversion_percent",
+            "baseline_percent",
+            id="simple",
+        ),
+        pytest.param("merged_average_baseline", "conversion_percent", "baseline_percent", id="real"),
+    ],
+)
+def test_normalise(
+    df: pl.DataFrame | str, to_normalise: str, baseline: str, request: pytest.FixtureRequest, regtest
+) -> None:
+    """Test the summary._normalise() function divides the target (''to_normalise'') by ''baseline''."""
+    df = request.getfixturevalue(df) if isinstance(df, str) else df
+    normalised = summary._normalise(df, to_normalise, baseline)
+    print(normalised.write_csv(), file=regtest)
+
+
+@pytest.mark.parametrize(
     (
         "file_ext",
         "directory",

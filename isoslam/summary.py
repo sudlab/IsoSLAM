@@ -339,6 +339,34 @@ def _merge_average_with_baseline(
     return df_average.join(df_baseline, on=join_on)
 
 
+def _normalise(
+    df: pl.DataFrame, to_normalise: str = "conversion_percent", baseline: str = "baseline_percent"
+) -> pl.DataFrame:
+    """
+    Normalise variables based on the baseline measurement.
+
+    Assumes that you have merged the averaged dataset with the averaged baseline variables so that the parameter of
+    interest as its related baseline measurement paired with it. Values are normalised by dividing by the baseline value
+    such that baseline will always start at ''1'' and subsequent values (time-points) are relative to this and show
+    increases or decreases. Typically these will be relative changes in the (averaged) percentage of conversions.
+
+    Parameters
+    ----------
+    df : pl.DataFrame
+        Dataframe from ''_merge_average_with_baseline''.
+    to_normalise : str
+        Variable to be normalised, default is ''conversion_percent''.
+    baseline : str
+        Variable to use for normalising, default is ''baseline_percent''.
+
+    Returns
+    -------
+    pl.DataFrame
+        Polars dataframe with normalised values.
+    """
+    return df.with_columns([(pl.col(to_normalise) / pl.col(baseline)).alias("normalised_percent")])
+
+
 # mypy: disable-error-code="no-redef"
 
 
