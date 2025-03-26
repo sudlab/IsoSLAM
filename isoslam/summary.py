@@ -245,11 +245,14 @@ def _get_one_or_more_conversion(
     return df.filter(pl.col(converted) == True).select(keep).sort(groupby)  # noqa: E712
 
 
-def _average_replicates(df: pl.DataFrame, groupby: list[str] | None, average: str) -> pl.DataFrame:
+def _weighted_mean_by_replicates(
+    df: pl.DataFrame, groupby: list[str] | None, count: str = "conversion_count", total: str = "conversion_total"
+) -> pl.DataFrame:
     """
-    Average the number and percentage of conversions across replicates for each time point.
+    Weighted mean of the percentage of conversions across replicates for each time point.
 
-    Groups data by and derives the average (mean, median or mode) for replicated experiments at each time point.
+    NB - As the raw counts and total conversions are available this is derived directly by aggregation rather than
+    weighting the percentages by the total conversions.
 
     Parameters
     ----------
@@ -257,23 +260,26 @@ def _average_replicates(df: pl.DataFrame, groupby: list[str] | None, average: st
         Polars Dataframe of conversions.
     groupby : list[str], optional
         Variables to ''group_by'' the data, default is ''transcript_id, start, end, assignment, day, hour''.
-    average : str
-        Type of average to calculate, supported options are ''mode'' (default) and ''median''.
+    count : str
+        Variable/column name holding the counts, default is ''conversion_count''.
+    total : str
+        Variable/column name holding the total number of conversions, default is ''conversion_total''.
 
     Returns
     -------
     pl.DataFrame
-        Average (mean, median or mode depending on request) of total conversions and percentage of conversions across
-        replicates for the given transcript and day/hour.
+        Weighted mean of the percentage of conversions (weighted by total conversions) across replicates for the given
+        transcript/assignment/strand/day/hour (as specified by ''groupby'').
     """
     if groupby is None:
         groupby = ["Transcript_id", "Strand", "Start", "End", "Assignment", "day", "hour"]
-    _keep = groupby + ["conversion_total", "conversion_percent"]
-    if average == "mean":
-        return df.select(_keep).group_by(groupby, maintain_order=True).mean()
-    if average == "median":
-        return df.select(_keep).group_by(groupby, maintain_order=True).median()
-    raise ValueError(f"Invalid value for average (supported values are 'mean' / 'median') : {average}")
+    _keep = groupby + [count, total]
+    return (
+        df.select(_keep)
+        .group_by(groupby, maintain_order=True)
+        .agg([pl.col(count).sum(), pl.col(total).sum()])
+        .with_columns(((pl.col(count) / pl.col(total)) * 100).alias("conversion_percent"))
+    )
 
 
 def _select_base_levels(df: pl.DataFrame, base_day: int = 0, base_hour: int = 0) -> pl.DataFrame:

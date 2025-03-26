@@ -400,3 +400,9 @@ def averaged_data() -> pl.DataFrame:
 def baseline_mean() -> pl.DataFrame:
     """Baseline means for test_select_base_levels()."""
     return pl.read_csv(CSV_INPUT_DIR / "baseline_means.csv")
+
+
+@pytest.fixture()
+def merged_average_baseline() -> pl.DataFrame:
+    """Average and baseline data frame merged with average baseline for normalising."""
+    return pl.read_csv(CSV_INPUT_DIR / "merged_average_baseline.csv")

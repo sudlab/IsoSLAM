@@ -355,7 +355,7 @@ def test_get_one_or_more_conversion(
 
 
 @pytest.mark.parametrize(
-    ("df", "groupby", "average"),
+    ("df", "groupby", "count", "total"),
     [
         pytest.param(
             pl.DataFrame(
@@ -363,89 +363,32 @@ def test_get_one_or_more_conversion(
                     "day": [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
                     "hour": [0, 0, 0, 0, 8, 8, 8, 8, 0, 0, 0, 0, 16, 16, 16, 16],
                     "replicate": [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4],
-                    "conversion_total": [8, 8, 8, 8, 1, 2, 3, 4, 10, 20, 30, 40, 0, 0, 0, 1],
-                    "conversion_percent": [
-                        10.0,
-                        10.0,
-                        10.0,
-                        10.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        10.0,
-                        20.0,
-                        30.0,
-                        40.0,
-                        0.5,
-                        0.5,
-                        0.8,
-                        0.9,
-                    ],
+                    "count": [2, 2, 2, 2, 1, 1, 1, 1, 5, 10, 15, 20, 0, 0, 0, 0],
+                    "total": [8, 8, 8, 8, 1, 2, 3, 4, 10, 20, 30, 40, 1, 1, 1, 1],
+                    "percent": [0.25, 0.25, 0.25, 0.24, 1.0, 0.5, 0.333333333, 0.25, 0.5, 0.5, 0.5, 0.5, 0, 0, 0, 0],
                 }
             ),
             ["day", "hour"],
-            "mean",
+            "count",
+            "total",
             id="simple mean",
         ),
         pytest.param(
-            pl.DataFrame(
-                {
-                    "day": [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
-                    "hour": [0, 0, 0, 0, 8, 8, 8, 8, 0, 0, 0, 0, 16, 16, 16, 16],
-                    "replicate": [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4],
-                    "conversion_total": [8, 8, 8, 8, 1, 2, 3, 4, 10, 20, 30, 40, 0, 0, 0, 1],
-                    "conversion_percent": [
-                        10.0,
-                        10.0,
-                        10.0,
-                        10.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        10.0,
-                        20.0,
-                        30.0,
-                        40.0,
-                        0.5,
-                        0.5,
-                        0.8,
-                        0.9,
-                    ],
-                }
-            ),
-            ["day", "hour"],
-            "median",
-            id="simple median",
-        ),
-        pytest.param(
             "one_or_more_conversions",
             None,
-            "mean",
+            "conversion_count",
+            "conversion_total",
             id="real data mean",
-        ),
-        pytest.param(
-            "one_or_more_conversions",
-            None,
-            "median",
-            id="real data median",
         ),
     ],
 )
-def test_average_replicates(
-    df: pl.DataFrame | str, groupby: list[str], average: str, request: pytest.FixtureRequest, regtest
+def test_weighted_mean_by_replicates(
+    df: pl.DataFrame | str, groupby: list[str], count: str, total: str, request: pytest.FixtureRequest, regtest
 ) -> None:
     """Test the summary._average_replicate() function."""
     df = request.getfixturevalue(df) if isinstance(df, str) else df
-    df_average = summary._average_replicates(df, groupby, average)
+    df_average = summary._weighted_mean_by_replicates(df, groupby, count, total)
     print(df_average.write_csv(), file=regtest)
-
-
-def test_average_replicates_valueerror() -> None:
-    """Test raising of ValueError if invalid ''average'' parameter is passed."""
-    with pytest.raises(ValueError, match="Invalid value for average"):
-        summary._average_replicates(pl.DataFrame({"a": [1, 2]}), groupby=["a"], average="mode")
 
 
 @pytest.mark.parametrize(
@@ -457,8 +400,9 @@ def test_average_replicates_valueerror() -> None:
                     "transcript_id": "1A",
                     "day": [0, 0, 1, 1],
                     "hour": [0, 8, 0, 16],
-                    "conversion_total": [8.0, 2.5, 25.0, 0.25],
-                    "conversion_percent": [10.0, 6.5, 25.0, 0.675],
+                    "conversion_count": [8, 4, 50, 0],
+                    "conversion_total": [32, 10, 100, 4],
+                    "conversion_percent": [25.0, 40.0, 50.0, 0.0],
                 }
             ),
             0,
@@ -490,21 +434,22 @@ def test_select_base_levels(
                     "transcript_id": "1A",
                     "day": [0, 0, 1, 1],
                     "hour": [0, 8, 0, 16],
-                    "conversion_total": [8.0, 2.5, 25.0, 0.25],
-                    "conversion_percent": [10.0, 6.5, 25.0, 0.675],
+                    "conversion_count": [8, 4, 50, 0],
+                    "conversion_total": [32, 10, 100, 4],
+                    "conversion_percent": [25.0, 40.0, 50.0, 0.0],
                 }
             ),
             pl.DataFrame(
                 {
                     "transcript_id": "1A",
-                    "baseline_total": [8.0],
-                    "baseline_percent": [10.0],
+                    "baseline_count": [8.0],
+                    "baseline_total": [32.0],
+                    "baseline_percent": [25.0],
                 }
             ),
             ["transcript_id"],
             id="simple",
         ),
-        # NB - The fixture baseline_mean
         pytest.param(
             "averaged_data", "baseline_mean", ["Transcript_id", "Strand", "Start", "End", "Assignment"], id="real"
         ),
