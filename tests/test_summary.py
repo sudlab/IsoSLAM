@@ -382,12 +382,12 @@ def test_get_one_or_more_conversion(
         ),
     ],
 )
-def test_weighted_mean_by_replicates(
+def test_percent_conversions_across_replicates(
     df: pl.DataFrame | str, groupby: list[str], count: str, total: str, request: pytest.FixtureRequest, regtest
 ) -> None:
     """Test the summary._average_replicate() function."""
     df = request.getfixturevalue(df) if isinstance(df, str) else df
-    df_average = summary._weighted_mean_by_replicates(df, groupby, count, total)
+    df_average = summary._percent_conversions_across_replicates(df, groupby, count, total)
     print(df_average.write_csv(), file=regtest)
 
 

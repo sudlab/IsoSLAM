@@ -23,7 +23,7 @@ def append_files(file_ext: str = ".tsv", directory: str | Path | None = None) ->
     file_ext : str
         File extension to search for results to summarise.
     directory : str | Path | None
-        Path on which to search for files with ''file_ext'', if ''None'' then current working directory is used.
+        Path on which to search for files with ``file_ext``, if ``None`` then current working directory is used.
 
     Returns
     -------
@@ -48,28 +48,28 @@ def summary_counts(
     r"""
     Group the data and count by various factors.
 
-    Typically though we want to know whether conversions have happened or not and this is based on the ''Conversions  >=
-    1'', but this is configurable via the ''conversions_var'' and ''conversions_threshold'' parameters.
+    Typically though we want to know whether conversions have happened or not and this is based on the ``Conversions  >=
+    1``, but this is configurable via the ``conversions_var`` and ``conversions_threshold`` parameters.
 
     Parameters
     ----------
     file_ext : str
         File extension to search for results to summarise.
     directory : str | Path | None
-        Path on which to search for files with ''file_ext'', if ''None'' then current working directory is used.
+        Path on which to search for files with ``file_ext``, if ``None`` then current working directory is used.
     groupby : list[str]
-        List of variables to group the counts by, if ''None'' then groups the data by ''Transcript_id'',
-        ''Strand'', ''Start'', ''End'', ''Assignment'', and   ''filename''.
+        List of variables to group the counts by, if ``None`` then groups the data by ``Transcript_id``,
+        ``Strand``, ``Start``, ``End``, ``Assignment``, and   ``filename``.
     conversions_var : str
-        The column name that holds conversions, default ''Conversions''.
+        The column name that holds conversions, default ``Conversions``.
     conversions_threshold : int
-        Threshold for counting conversions, default ''1''.
+        Threshold for counting conversions, default ``1``.
     test_file : str | None
         Unique identifier for test file, files with this string in their names are removed.
     filename_var : str | NOne
         Column that holds filename.
     regex : str
-        Regular expression pattern to extract the hour and replicate from, default ''r"^d(\w+)_(\w+)hr(\w+)_"''.
+        Regular expression pattern to extract the hour and replicate from, default ``r"^d(\w+)_(\w+)hr(\w+)_"``.
 
     Returns
     -------
@@ -115,9 +115,9 @@ def extract_day_hour_and_replicate(
     df : pl.DataFrame
         Polars DataFrame.
     column : str
-        The name of the column that holds the filename, default ''filename''.
+        The name of the column that holds the filename, default ``filename``.
     regex : str
-        Regular expression pattern to extract the hour and replicate from, default ''r"^d(\w+)_(\w+)hr(\w+)_"''.
+        Regular expression pattern to extract the hour and replicate from, default ``r"^d(\w+)_(\w+)hr(\w+)_"``.
 
     Returns
     -------
@@ -188,7 +188,7 @@ def _filter_no_conversions(
     converted : str
         Variable that contains whether conversions have been observed or not.
     test : bool
-        Whether the function is being tested or not. This will prevent a call to ''_aggregate_conversions()'' to
+        Whether the function is being tested or not. This will prevent a call to ``_aggregate_conversions()`` to
         aggregate the input and simply filter the data.
 
     Returns
@@ -208,11 +208,11 @@ def _get_one_or_more_conversion(
     """
     Extract instances where one or more conversion has occurred.
 
-    There are some cases where this isn't the case and for a given subset the ''converted'' variable, which indicates if
-    one or more conversion has occurred will only be ''False'' For such instances dummy entries are created based on the
-    ''groupby'' variable and appended to the subset of instances where this one or more conversions have been observed.
+    There are some cases where this isn't the case and for a given subset the ``converted`` variable, which indicates if
+    one or more conversion has occurred will only be ``False`` For such instances dummy entries are created based on the
+    ``groupby`` variable and appended to the subset of instances where this one or more conversions have been observed.
 
-    This function takes as input the results of ''summary_count()'' it will not work with intermediate files.
+    This function takes as input the results of ``summary_count()`` it will not work with intermediate files.
 
     Parameters
     ----------
@@ -245,31 +245,32 @@ def _get_one_or_more_conversion(
     return df.filter(pl.col(converted) == True).select(keep).sort(groupby)  # noqa: E712
 
 
-def _weighted_mean_by_replicates(
+def _percent_conversions_across_replicates(
     df: pl.DataFrame, groupby: list[str] | None, count: str = "conversion_count", total: str = "conversion_total"
 ) -> pl.DataFrame:
     """
-    Weighted mean of the percentage of conversions across replicates for each time point.
+    Percentage of conversions across replicates for each time point.
 
-    NB - As the raw counts and total conversions are available this is derived directly by aggregation rather than
-    weighting the percentages by the total conversions.
+    The raw counts and total conversions for each replicate are available. These are summed and the percentage of
+    conversions across replicates calculated. This is mathematically the same as taking the weighted mean of the
+    percentage of conversions within each replicate.
 
     Parameters
     ----------
     df : pl.DataFrame
         Polars Dataframe of conversions.
     groupby : list[str], optional
-        Variables to ''group_by'' the data, default is ''transcript_id, start, end, assignment, day, hour''.
+        Variables to ``group_by`` the data, default is ``transcript_id, start, end, assignment, day, hour``.
     count : str
-        Variable/column name holding the counts, default is ''conversion_count''.
+        Variable/column name holding the counts, default is ``conversion_count``.
     total : str
-        Variable/column name holding the total number of conversions, default is ''conversion_total''.
+        Variable/column name holding the total number of conversions, default is ``conversion_total``.
 
     Returns
     -------
     pl.DataFrame
         Weighted mean of the percentage of conversions (weighted by total conversions) across replicates for the given
-        transcript/assignment/strand/day/hour (as specified by ''groupby'').
+        transcript/assignment/strand/day/hour (as specified by ``groupby``).
     """
     if groupby is None:
         groupby = ["Transcript_id", "Strand", "Start", "End", "Assignment", "day", "hour"]
@@ -287,21 +288,21 @@ def _select_base_levels(df: pl.DataFrame, base_day: int = 0, base_hour: int = 0)
     Select the base level reference across all data.
 
     This allows selecting the base level of totals and percents which are used for normalising values. Will drop the
-    column ''replicate'' from the data frame.
+    column ``replicate`` from the data frame.
 
     Parameters
     ----------
     df : pl.DataFrame
         Polars Dataframe of conversions.
     base_day : int
-        Day to be used for reference, default is ''0'' and is unlikely to need changing.
+        Day to be used for reference, default is ``0`` and is unlikely to need changing.
     base_hour : int
-        Hour to be used for reference, default is ''0'' and is unlikely to need changing.
+        Hour to be used for reference, default is ``0`` and is unlikely to need changing.
 
     Returns
     -------
     pl.DataFrame
-        Subset of data with values at baseline (default ''day == 0 & hour == 0'').
+        Subset of data with values at baseline (default ``day == 0 & hour == 0``).
     """
     return (
         df.select(pl.all().name.map(lambda col_name: col_name.replace("conversion", "baseline")))
@@ -314,7 +315,7 @@ def _merge_average_with_baseline(
     df_average: pl.DataFrame, df_baseline: pl.DataFrame, join_on: list[str] | None
 ) -> pl.DataFrame:
     """
-    Merge a data frame with the baseline measuerements.
+    Merge a data frame with the baseline measurements.
 
     Typically for this workflow this involves merging the average data frame (across replicates at each of the
     transcripts/start/end/strand/assignments) with the average at the baseline to allow normalising the data.
@@ -326,45 +327,78 @@ def _merge_average_with_baseline(
     df_baseline : pl.DataFrame
         Polars Dataframe of averaged baseline data.
     join_on : list[str] | None
-        Variables to join the data frames on, if ''None'' (default) it is set to ''Transcript_id, Start, End,
-        Assignment, Strand''.
+        Variables to join the data frames on, if ``None`` (default) it is set to ``Transcript_id, Start, End,
+        Assignment, Strand``.
 
     Returns
     -------
     pl.DataFrame
-        Averaged and baseline data frame merged on ''join_on''.
+        Averaged and baseline data frame merged on ``join_on``.
     """
     if join_on is None:
         join_on = ["Transcript_id", "Start", "End", "Assignment", "Strand"]
     return df_average.join(df_baseline, on=join_on)
 
 
+def _conditional_merge_average_with_baseline(
+    df_average: pl.DataFrame, df_baseline: pl.DataFrame, join_on: list[str] | None
+) -> pl.DataFrame:
+    """
+    Need to work out how to do this monstrosity...
+
+    actual_data_forced_1 = actual_data %>%
+    mutate(value0 = ifelse(isoform=="Spliced", average0_spliced_weighted_mean, average0_retained_weighted_mean),
+           value = value/value0)
+
+    # we should also normalize the weighting factor so that it reflects the within-isoform differences
+    # this will be important for examples where there are loads more spliced reads than retained, or vv
+
+    total_counts_spliced = actual_data_forced_1 %>% dplyr::filter(isoform=="Spliced") %>% dplyr::select(total_counts) %>% unlist() %>% sum()
+    total_counts_retained = actual_data_forced_1 %>% dplyr::filter(isoform=="Retained") %>% dplyr::select(total_counts) %>% unlist() %>% sum()
+    actual_data_forced_1 = actual_data_forced_1 %>%
+      mutate(sum_total_counts = ifelse(isoform=="Spliced", total_counts_spliced, total_counts_retained),
+             normalized_total_counts = total_counts/sum_total_counts)
+    actual_data_forced_1$isoform = factor(actual_data_forced_1$isoform, levels=c("Spliced", "Retained"))
+
+    1. Set baseline to the spliced value if isoform is spliced, otherwise use retained
+    2. scale based on these.
+
+    Not sure whether we need to do this in my alternative approach, is this not being done because of the way the data
+    has been subset?
+    """
+
+
 def _normalise(
-    df: pl.DataFrame, to_normalise: str = "conversion_percent", baseline: str = "baseline_percent"
+    df: pl.DataFrame,
+    to_normalise: str = "conversion_percent",
+    baseline: str = "baseline_percent",
+    normalised: str = "normalised_percent",
 ) -> pl.DataFrame:
     """
     Normalise variables based on the baseline measurement.
 
     Assumes that you have merged the averaged dataset with the averaged baseline variables so that the parameter of
     interest as its related baseline measurement paired with it. Values are normalised by dividing by the baseline value
-    such that baseline will always start at ''1'' and subsequent values (time-points) are relative to this and show
+    such that baseline will always start at ``1`` and subsequent values (time-points) are relative to this and show
     increases or decreases. Typically these will be relative changes in the (averaged) percentage of conversions.
 
     Parameters
     ----------
     df : pl.DataFrame
-        Dataframe from ''_merge_average_with_baseline''.
+        Dataframe from ``_merge_average_with_baseline``.
     to_normalise : str
-        Variable to be normalised, default is ''conversion_percent''.
+        Variable to be normalised, default is ``conversion_percent``.
     baseline : str
-        Variable to use for normalising, default is ''baseline_percent''.
+        Variable to use for normalising, default is ``baseline_percent``.
+    normalised : str
+        Variable name for normalised value, default is ``normalised_percent``.
 
     Returns
     -------
     pl.DataFrame
         Polars dataframe with normalised values.
     """
-    return df.with_columns([(pl.col(to_normalise) / pl.col(baseline)).alias("normalised_percent")])
+    return df.with_columns([(pl.col(to_normalise) / pl.col(baseline)).alias(normalised)])
 
 
 # mypy: disable-error-code="no-redef"
@@ -385,6 +419,9 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
 
     # Generated atrtibute
     data: pl.DataFrame = field(init=False)
+    averages: pl.DataFrame = field(init=False)
+    baseline: pl.DataFrame = field(init=False)
+    normliased: pl.DataFrame = field(init=False)
 
     def __post_init__(self) -> None:
         """After initialisation the files are loaded and prepared for analysis."""
@@ -397,11 +434,18 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
             conversions_threshold=self._conversions_threshold,
             test_file=self._test_file,
         )
+        _df = _aggregate_conversions(self.data, self.groupby, self._conversions_var)
+        _df = _filter_no_conversions(_df, self.groupby, self._conversions_var, test=False)
+        _df = _get_one_or_more_conversion(_df, self.groupby, self._conversions_var)
+        self.averages = _weighted_mean_by_replicates(_df, self.groupby)
+        self.baseline = _select_base_levels(self.averages)
+        self.normalised = _merge_average_with_baseline(self.averages, self.baseline)
+        self.normalised = _normalise(self.normalised)
 
     @property
     def file_ext(self) -> str:
         """
-        Getter method for ''file_ext''.
+        Getter method for ``file_ext``.
 
         Returns
         -------
@@ -425,7 +469,7 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
     @property
     def directory(self) -> str:
         """
-        Getter method for ''directory''.
+        Getter method for ``directory``.
 
         Returns
         -------
@@ -449,7 +493,7 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
     @property
     def regex(self) -> str:
         """
-        Getter method for ''regex''.
+        Getter method for ``regex``.
 
         Returns
         -------
@@ -473,7 +517,7 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
     @property
     def groupby(self) -> list[str]:
         """
-        Getter method for ''groupby''.
+        Getter method for ``groupby``.
 
         Returns
         -------
@@ -485,7 +529,7 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
     @groupby.setter
     def groupby(self, value: list[str]) -> None:
         """
-        Setter for the ''groupby'' property.
+        Setter for the ``groupby`` property.
 
         Parameters
         ----------
@@ -497,7 +541,7 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
     @property
     def conversions_var(self) -> str:
         """
-        Getter method for ''conversions_var''.
+        Getter method for ``conversions_var``.
 
         Returns
         -------
@@ -509,7 +553,7 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
     @conversions_var.setter
     def conversions_var(self, value: str) -> None:
         """
-        Setter for the ''conversions_var'' property.
+        Setter for the ``conversions_var`` property.
 
         Parameters
         ----------
@@ -521,7 +565,7 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
     @property
     def conversions_threshold(self) -> int:
         """
-        Getter method for ''conversions_threshold''.
+        Getter method for ``conversions_threshold``.
 
         Returns
         -------
@@ -533,7 +577,7 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
     @conversions_threshold.setter
     def conversions_threshold(self, value: int) -> None:
         """
-        Setter for the ''conversions_threshold''.
+        Setter for the ``conversions_threshold``.
 
         Parameters
         ----------
@@ -545,7 +589,7 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
     @property
     def test_file(self) -> str:
         """
-        Getter method for ''test_file''.
+        Getter method for ``test_file``.
 
         Returns
         -------
@@ -557,12 +601,12 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
     @test_file.setter
     def test_file(self, value: str) -> None:
         """
-        Setter for the ''test_file'' value.
+        Setter for the ``test_file`` value.
 
         Parameters
         ----------
         value : str
-            Value of ''test_file''.
+            Value of ``test_file``.
         """
         self._test_file = value
 
@@ -597,8 +641,8 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
         Parameters
         ----------
         columns : list[str]
-            Columns to use for identifying unique observations. If ''None'' defaults to ''filename'' which returns the
-            number of unique files loaded from the ''directory'' with ''file_ext''.
+            Columns to use for identifying unique observations. If ``None`` defaults to ``filename`` which returns the
+            number of unique files loaded from the ``directory`` with ``file_ext``.
 
         Returns
         -------
