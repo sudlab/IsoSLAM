@@ -406,3 +406,9 @@ def baseline_mean() -> pl.DataFrame:
 def merged_average_baseline() -> pl.DataFrame:
     """Average and baseline data frame merged with average baseline for normalising."""
     return pl.read_csv(CSV_INPUT_DIR / "merged_average_baseline.csv")
+
+
+@pytest.fixture()
+def derive_weight_within_isoform() -> pl.DataFrame:
+    """Average and normalised data frame for deriving weight within transcript/isoform."""
+    return pl.read_csv(CSV_INPUT_DIR / "derive_weight_within_isoform.csv")

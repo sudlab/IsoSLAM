@@ -312,7 +312,7 @@ def _select_base_levels(df: pl.DataFrame, base_day: int = 0, base_hour: int = 0)
 
 
 def _merge_average_with_baseline(
-    df_average: pl.DataFrame, df_baseline: pl.DataFrame, join_on: list[str] | None
+    df_average: pl.DataFrame, df_baseline: pl.DataFrame, join_on: list[str] | None = None
 ) -> pl.DataFrame:
     """
     Merge a data frame with the baseline measurements.
@@ -340,32 +340,40 @@ def _merge_average_with_baseline(
     return df_average.join(df_baseline, on=join_on)
 
 
-def _conditional_merge_average_with_baseline(
-    df_average: pl.DataFrame, df_baseline: pl.DataFrame, join_on: list[str] | None
+def _derive_weight_within_isoform(
+    df: pl.DataFrame,
+    groupby: list[str] | None,
+    total: str = "conversion_total",
 ) -> pl.DataFrame:
     """
-    Need to work out how to do this monstrosity...
+    Calculate weighting used for normalised percentages within each isoform across all time points.
 
-    actual_data_forced_1 = actual_data %>%
-    mutate(value0 = ifelse(isoform=="Spliced", average0_spliced_weighted_mean, average0_retained_weighted_mean),
-           value = value/value0)
+    Where the number of total reads (across replications) is higher then we are more confident in the percentage of
+    conversions observed and so we weight the percentages at each time point by the proportion of total counts which
+    were calculated previously when deriving the percentage of conversions across replicates (with the
+    ``_percent_conversions_across_replicates()`` function).
 
-    # we should also normalize the weighting factor so that it reflects the within-isoform differences
-    # this will be important for examples where there are loads more spliced reads than retained, or vv
+    Parameters
+    ----------
+    df : pl.DataFrame
+        Dataframe for which weights are to be derived.
+    groupby : list[str]
+        Grouping for summation of total counts, defaults to ``["Transcript_id", "Strand", "Start", "End",
+        "Assignment"]``.
+    total : str
+        Variable that nolds the total number of conversions (across all replicates), default is ``conversion_total`` and
+        shouldn't need changing.
 
-    total_counts_spliced = actual_data_forced_1 %>% dplyr::filter(isoform=="Spliced") %>% dplyr::select(total_counts) %>% unlist() %>% sum()
-    total_counts_retained = actual_data_forced_1 %>% dplyr::filter(isoform=="Retained") %>% dplyr::select(total_counts) %>% unlist() %>% sum()
-    actual_data_forced_1 = actual_data_forced_1 %>%
-      mutate(sum_total_counts = ifelse(isoform=="Spliced", total_counts_spliced, total_counts_retained),
-             normalized_total_counts = total_counts/sum_total_counts)
-    actual_data_forced_1$isoform = factor(actual_data_forced_1$isoform, levels=c("Spliced", "Retained"))
-
-    1. Set baseline to the spliced value if isoform is spliced, otherwise use retained
-    2. scale based on these.
-
-    Not sure whether we need to do this in my alternative approach, is this not being done because of the way the data
-    has been subset?
+    Returns
+    -------
+    pl.DataFrame
+        DataFrame with two new columns, the sum of total conversions across replicates and time points
+        (``conversion_total_all_time_points``) and the weight of conversions at each time point (``conversion_weight``).
     """
+    groupby = ["Transcript_id", "Strand", "Start", "End", "Assignment"] if groupby is None else groupby
+    counts_across_isoform = df.group_by(groupby).agg([pl.col(total).sum().alias("conversion_total_all_time_points")])
+    df = df.join(counts_across_isoform, on=groupby, how="inner")
+    return df.with_columns((pl.col(total) / pl.col("conversion_total_all_time_points")).alias("conversion_weight"))
 
 
 def _normalise(
@@ -437,10 +445,15 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
         _df = _aggregate_conversions(self.data, self.groupby, self._conversions_var)
         _df = _filter_no_conversions(_df, self.groupby, self._conversions_var, test=False)
         _df = _get_one_or_more_conversion(_df, self.groupby, self._conversions_var)
-        self.averages = _weighted_mean_by_replicates(_df, self.groupby)
+        self.averages = _percent_conversions_across_replicates(_df, self.groupby)
         self.baseline = _select_base_levels(self.averages)
         self.normalised = _merge_average_with_baseline(self.averages, self.baseline)
-        self.normalised = _normalise(self.normalised)
+        # Normalise mean conversion percent change by baseline
+        self.normalised = _normalise(
+            self.normalised, to_normalise="conversion_percent", baseline="baseline_percent", normalised="normalised"
+        )
+        # Derive weights within transcript/isoform based on total counts
+        self.normalised = _derive_weight_within_isoform(self.normalised, groupby=None, total="conversion_total")
 
     @property
     def file_ext(self) -> str:

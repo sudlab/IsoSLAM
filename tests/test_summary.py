@@ -503,6 +503,41 @@ def test_normalise(
 
 
 @pytest.mark.parametrize(
+    ("df", "groupby", "total"),
+    [
+        pytest.param(
+            pl.DataFrame(
+                {
+                    "transcript_id": ["a", "a", "a", "a"],
+                    "day": [0, 0, 1, 1],
+                    "hour": [0, 8, 0, 16],
+                    "count": [8, 4, 50, 0],
+                    "total": [32, 10, 100, 4],
+                    "conversion_percent": [25.0, 40.0, 50.0, 0.0],
+                }
+            ),
+            ["transcript_id"],
+            "total",
+            id="simple",
+        ),
+        pytest.param(
+            "derive_weight_within_isoform",
+            ["Transcript_id", "Strand", "Start", "End", "Assignment"],
+            "conversion_total",
+            id="real data",
+        ),
+    ],
+)
+def test_derive_weight_within_isoform(
+    df: pl.DataFrame | str, groupby: list[str], total: str, request: pytest.FixtureRequest, regtest
+) -> None:
+    """Test deriving weights within isoforms."""
+    df = request.getfixturevalue(df) if isinstance(df, str) else df
+    weights = summary._derive_weight_within_isoform(df, groupby, total)
+    print(weights.write_csv(), file=regtest)
+
+
+@pytest.mark.parametrize(
     (
         "file_ext",
         "directory",

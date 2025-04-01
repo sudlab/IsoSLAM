@@ -1,0 +1,6 @@
+transcript_id,day,hour,count,total,conversion_percent,conversion_total_all_time_points,conversion_weight
+a,0,0,8,32,25.0,146,0.2191780821917808
+a,0,8,4,10,40.0,146,0.0684931506849315
+a,1,0,50,100,50.0,146,0.684931506849315
+a,1,16,0,4,0.0,146,0.0273972602739726
+
