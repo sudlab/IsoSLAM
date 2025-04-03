@@ -438,10 +438,49 @@ ENST00000313949,+,58910081,58910333,Spl,0,2,0.0
 ENST00000313949,+,58910401,58910682,Spl,1,2,50.0
 ```
 
+#### Merge baseline with all averages
+
+Prior to normalising the data we can merge the baseline parameters (`summary._merge_average_with_baseline()`)
+
+At this stage we can also remove instances where the percentage change at baseline is zero using the
+`remove_zero_baseline` which we would typically want to do because in the next step of normalising the data a division
+by zero leads to `NaN` in the dataframe and models can not be fitted to such data.
+
+In this example the `remove_zero_baseline = False` and we can see there are a number of locations where the
+`baseline_percent` (final column) is `0.0`.
+
+```csv
+Transcript_id,Strand,Start,End,Assignment,day,hour,conversion_count,conversion_total,conversion_percent,baseline_count,baseline_total,baseline_percent
+ENST00000313949,+,58909579,58909683,Spl,0,0,0,1,0.0,0,1,0.0
+ENST00000313949,+,58909579,58909683,Spl,16,0,0,3,0.0,0,1,0.0
+ENST00000313949,+,58909579,58909683,Spl,16,3,0,1,0.0,0,1,0.0
+ENST00000313949,+,58909804,58909950,Spl,0,0,0,2,0.0,0,2,0.0
+ENST00000313949,+,58909804,58909950,Spl,0,3,1,1,100.0,0,2,0.0
+ENST00000313949,+,58909804,58909950,Spl,16,0,0,2,0.0,0,2,0.0
+ENST00000313949,+,58909804,58909950,Spl,16,3,0,1,0.0,0,2,0.0
+ENST00000313949,+,58910081,58910333,Spl,0,0,0,2,0.0,0,2,0.0
+ENST00000313949,+,58910081,58910333,Spl,16,0,0,1,0.0,0,2,0.0
+ENST00000313949,+,58910081,58910333,Spl,16,3,1,1,100.0,0,2,0.0
+ENST00000313949,+,58910401,58910682,Spl,0,0,1,2,50.0,1,2,50.0
+ENST00000313949,+,58910401,58910682,Spl,16,3,1,1,100.0,1,2,50.0
+```
+
+If we set `remove_zero_baseline = True` we get just the last instance where the percentage of conversions at baseline
+was `50.0`.
+
+```csv
+Transcript_id,Strand,Start,End,Assignment,day,hour,conversion_count,conversion_total,conversion_percent,baseline_count,baseline_total,baseline_percent
+ENST00000313949,+,58910401,58910682,Spl,0,0,1,2,50.0,1,2,50.0
+ENST00000313949,+,58910401,58910682,Spl,16,3,1,1,100.0,1,2,50.0
+```
+
 #### Normalise mean percentages
 
-We can now merge the baseline parameters (`summary._merge_average_with_baseline()`) and normalise the data
-(`summary._normalise()`).
+We can now and normalise the data (`summary._normalise()`) by dividing the percentage change the baseline value that we
+merged in.
+
+If we don't remove the instances where the percentage change at baseline was `0.0` then the `normalised_percent` is
+`NaN` if a given time point is also `0.0` and `Inf` if any other.
 
 ```csv hl_lines="5 6 7 8 9 10 11 12"
 Transcript_id,Strand,Start,End,Assignment,day,hour,conversion_count,conversion_total,conversion_percent,baseline_count,baseline_total,baseline_percent,normalised_percent
@@ -459,25 +498,37 @@ ENST00000313949,+,58910401,58910682,Spl,0,0,1,2,50.0,1,2,50.0,1.0
 ENST00000313949,+,58910401,58910682,Spl,16,3,1,1,100.0,1,2,50.0,2.0
 ```
 
+If we have already filtered out instances where the percentage change at baseline was `0.0` then we only have genuine
+normalised values.
+
+```csv hl_lines="2 3"
+Transcript_id,Strand,Start,End,Assignment,day,hour,conversion_count,conversion_total,conversion_percent,baseline_count,baseline_total,baseline_percent,normalised_percent
+ENST00000313949,+,58910401,58910682,Spl,0,0,1,2,50.0,1,2,50.0,1.0
+ENST00000313949,+,58910401,58910682,Spl,16,3,1,1,100.0,1,2,50.0,2.0
+```
+
 #### Derive Weights
 
-If more reads have been observed then we have greater confidence in the percentage of conversions across replicates.
+If more reads have been observed then we have greater confidence in the percentage of conversions across replicates. We
+therefore use the total number of conversions across all time points to work out the proportion (/percentage) that are
+derived from a given time point within the grouping and set this as the `conversion_weight`.
 
-```csv hl_lines="5 6 7 8 9 10 11 12"
+In the example below we have already filtered out instances where there were no conversions observed at baseline.
+
+```csv hl_lines="2 3"
 Transcript_id,Strand,Start,End,Assignment,day,hour,conversion_count,conversion_total,conversion_percent,baseline_count,baseline_total,baseline_percent,normalised_percent,conversion_total_all_time_points,conversion_weight
-ENST00000313949,+,58909579,58909683,Spl,0,0,0,1,0.0,0,1,0.0,NaN,5,0.2
-ENST00000313949,+,58909579,58909683,Spl,16,0,0,3,0.0,0,1,0.0,NaN,5,0.6
-ENST00000313949,+,58909579,58909683,Spl,16,3,0,1,0.0,0,1,0.0,NaN,5,0.2
-ENST00000313949,+,58909804,58909950,Spl,0,0,0,2,0.0,0,2,0.0,NaN,6,0.3333333333333333
-ENST00000313949,+,58909804,58909950,Spl,0,3,1,1,100.0,0,2,0.0,inf,6,0.16666666666666666
-ENST00000313949,+,58909804,58909950,Spl,16,0,0,2,0.0,0,2,0.0,NaN,6,0.3333333333333333
-ENST00000313949,+,58909804,58909950,Spl,16,3,0,1,0.0,0,2,0.0,NaN,6,0.16666666666666666
-ENST00000313949,+,58910081,58910333,Spl,0,0,0,2,0.0,0,2,0.0,NaN,4,0.5
-ENST00000313949,+,58910081,58910333,Spl,16,0,0,1,0.0,0,2,0.0,NaN,4,0.25
-ENST00000313949,+,58910081,58910333,Spl,16,3,1,1,100.0,0,2,0.0,inf,4,0.25
 ENST00000313949,+,58910401,58910682,Spl,0,0,1,2,50.0,1,2,50.0,1.0,3,0.6666666666666666
 ENST00000313949,+,58910401,58910682,Spl,16,3,1,1,100.0,1,2,50.0,2.0,3,0.3333333333333333
 ```
+
+For convenience the above is shown in tabular format below. It may seem counter intuitive that the `conversion_total`
+exceed that of the `conversion_count` at baseline but it should be remembered that these are actually the total counts
+across replicates at each time point and so in one replicate there was a conversion, in another there wasn't.
+
+| Transcript_id   | Strand | Start    | End      | Assignment | day | hour | conversion_count | conversion_total | conversion_percent | baseline_count | baseline_total | baseline_percent | normalised_percent | conversion_total_all_time_points | conversion_weight  |
+| --------------- | ------ | -------- | -------- | ---------- | --- | ---- | ---------------- | ---------------- | ------------------ | -------------- | -------------- | ---------------- | ------------------ | -------------------------------- | ------------------ |
+| ENST00000313949 | +      | 58910401 | 58910682 | Spl        | 0   | 0    | 1                | 2                | 50.0               | 1              | 2              | 50.0             | 1.0                | 3                                | 0.6666666666666666 |
+| ENST00000313949 | +      | 58910401 | 58910682 | Spl        | 16  | 3    | 1                | 1                | 100.0              | 1              | 2              | 50.0             | 2.0                | 3                                | 0.3333333333333333 |
 
 [gitdiagram]: https://gitdiagram.com/sudlab/IsoSLAM
 [mermaid]: https://mermaid.js.org/

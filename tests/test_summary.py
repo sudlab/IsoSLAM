@@ -426,7 +426,7 @@ def test_select_base_levels(
 
 
 @pytest.mark.parametrize(
-    ("df_average", "df_baseline", "join_on"),
+    ("df_average", "df_baseline", "join_on", "remove_zero_baseline"),
     [
         pytest.param(
             pl.DataFrame(
@@ -448,10 +448,22 @@ def test_select_base_levels(
                 }
             ),
             ["transcript_id"],
+            False,
             id="simple",
         ),
         pytest.param(
-            "averaged_data", "baseline_mean", ["Transcript_id", "Strand", "Start", "End", "Assignment"], id="real"
+            "averaged_data",
+            "baseline_mean",
+            ["Transcript_id", "Strand", "Start", "End", "Assignment"],
+            False,
+            id="real",
+        ),
+        pytest.param(
+            "averaged_data",
+            "baseline_mean",
+            ["Transcript_id", "Strand", "Start", "End", "Assignment"],
+            True,
+            id="real remove zero baseline",
         ),
     ],
 )
@@ -459,13 +471,14 @@ def test_merge_average_baseline(
     df_average: pl.DataFrame | str,
     df_baseline: pl.DataFrame | str,
     join_on: list[str],
+    remove_zero_baseline: bool,
     request: pytest.FixtureRequest,
     regtest,
 ) -> None:
     """Test merging of average and baseline data."""
     df_average = request.getfixturevalue(df_average) if isinstance(df_average, str) else df_average
     df_baseline = request.getfixturevalue(df_baseline) if isinstance(df_baseline, str) else df_baseline
-    combined = summary._merge_average_with_baseline(df_average, df_baseline, join_on)
+    combined = summary._merge_average_with_baseline(df_average, df_baseline, join_on, remove_zero_baseline)
     print(combined.write_csv(), file=regtest)
 
 

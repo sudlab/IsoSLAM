@@ -296,10 +296,10 @@ def unique_conversions(
     ----------
     reads1 : dict[str, list[tuple[Any]]]
         A dictionary of reads mapped to transcripts (key) which overlap introns. Each read has the ''start'',  ''end'',
-       ''chromsome'' and ''strand'' recorded.
+        ''chromsome'' and ''strand'' recorded.
     reads2 : dict[str, list[tuple[Any]]]
         A dictionary of reads mapped to transcripts (key) which overlap introns. Each read has the ''start'',  ''end'',
-       ''chromsome'' and ''strand'' recorded.
+        ''chromsome'' and ''strand'' recorded.
 
     Returns
     -------
@@ -427,7 +427,7 @@ def count_conversions_across_pairs(
     -------
     tuple[int, int, int]
         Tuple of the number of convertible base pairs, the number of conversions and the coverage of the paired
-      alignments.
+        alignments.
 
     Raises
     ------

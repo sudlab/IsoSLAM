@@ -312,7 +312,10 @@ def _select_base_levels(df: pl.DataFrame, base_day: int = 0, base_hour: int = 0)
 
 
 def _merge_average_with_baseline(
-    df_average: pl.DataFrame, df_baseline: pl.DataFrame, join_on: list[str] | None = None
+    df_average: pl.DataFrame,
+    df_baseline: pl.DataFrame,
+    join_on: list[str] | None = None,
+    remove_zero_baseline: bool = True,
 ) -> pl.DataFrame:
     """
     Merge a data frame with the baseline measurements.
@@ -329,6 +332,8 @@ def _merge_average_with_baseline(
     join_on : list[str] | None
         Variables to join the data frames on, if ``None`` (default) it is set to ``Transcript_id, Start, End,
         Assignment, Strand``.
+    remove_zero_baseline : bool
+        Remove instances where the baseline percentage conversion is zero.
 
     Returns
     -------
@@ -337,6 +342,8 @@ def _merge_average_with_baseline(
     """
     if join_on is None:
         join_on = ["Transcript_id", "Start", "End", "Assignment", "Strand"]
+    if remove_zero_baseline:
+        df_baseline = df_baseline.filter(pl.col("baseline_percent") != 0.0)
     return df_average.join(df_baseline, on=join_on)
 
 
