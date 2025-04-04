@@ -416,6 +416,46 @@ def _normalise(
     return df.with_columns([(pl.col(to_normalise) / pl.col(baseline)).alias(normalised)])
 
 
+def _find_read_pairs(
+    df: pl.DataFrame, index_columns: set[str] | None = None, assignment: str | None = "Assignment"
+) -> pl.DataFrame:
+    """
+    Find instances where there are conversions for both ``Return`` and ``Splice`` assignments.
+
+    Parameters
+    ----------
+    df : pl.DataFrame
+        Polars DataFrame.
+    index_columns : set
+        List of index columns to select from the dataframe. Should include the unique identifiers, typically
+        (``Transcript_id``, ``Strand``, ``Start`` and ``End`` which are the defaults) but does not need to include the
+        ''assignment'' column.
+    assignment : str
+        Column the defines assignment of events to ``Ret`` (``Return``) or ``Spl`` (``Splice``).
+
+    Returns
+    -------
+    pl.DataFrame
+        Polars DataFrame of the ``index_columns`` where both a ``Ret`` and ``Spl`` event have been observed.
+    """
+    if assignment is None:
+        assignment = "Assignment"
+    if index_columns is None:
+        index_columns = {"Transcript_id", "Strand", "Start", "End"}
+    index_columns.add(assignment)
+    df_return = df.select(index_columns).filter(pl.col(assignment) == "Ret")
+    df_splice = df.select(index_columns).filter(pl.col(assignment) == "Spl")
+    index_columns.remove(assignment)
+    # We use sorted(index_columns, reverse=True) so that the order is consistent for testing, the reverse option roughly
+    # gets things close to the expected order of columns used in the data.
+    return (
+        df_return.join(df_splice, on=index_columns, how="inner")
+        .select(sorted(index_columns, reverse=True))
+        .unique()
+        .sort(by=sorted(index_columns, reverse=True))
+    )
+
+
 # mypy: disable-error-code="no-redef"
 
 

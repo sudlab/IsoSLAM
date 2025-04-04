@@ -551,6 +551,36 @@ def test_derive_weight_within_isoform(
 
 
 @pytest.mark.parametrize(
+    ("df", "index_columns", "assignment"),
+    [
+        pytest.param(
+            pl.DataFrame(
+                {
+                    "transcript_id": ["a", "a", "b", "b"],
+                    "strand": ["+", "+", "+", "-"],
+                    "start": [1, 1, 30, 30],
+                    "end": [20, 20, 35, 35],
+                    "assigned": ["Ret", "Spl", "Ret", "Spl"],
+                }
+            ),
+            {"transcript_id", "strand", "start", "end"},
+            "assigned",
+            id="simple",
+        ),
+        pytest.param("one_or_more_conversions", None, None, id="real"),
+    ],
+)
+def test_find_read_pairs(
+    df: pl.DataFrame, index_columns: list[str], assignment: str, request: pytest.FixtureRequest, regtest
+) -> None:
+    """Test deriving read pairs."""
+    df = request.getfixturevalue(df) if isinstance(df, str) else df
+    read_pairs = summary._find_read_pairs(df, index_columns, assignment)
+    print(read_pairs.write_csv(), file=regtest)
+
+
+@pytest.mark.skip
+@pytest.mark.parametrize(
     (
         "file_ext",
         "directory",
