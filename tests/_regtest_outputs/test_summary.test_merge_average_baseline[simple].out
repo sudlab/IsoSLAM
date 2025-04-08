@@ -1,0 +1,6 @@
+transcript_id,day,hour,conversion_count,conversion_total,conversion_percent,baseline_count,baseline_total,baseline_percent
+1A,0,0,8,32,25.0,8.0,32.0,25.0
+1A,0,8,4,10,40.0,8.0,32.0,25.0
+1A,1,0,50,100,50.0,8.0,32.0,25.0
+1A,1,16,0,4,0.0,8.0,32.0,25.0
+

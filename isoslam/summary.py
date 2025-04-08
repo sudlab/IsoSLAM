@@ -23,7 +23,7 @@ def append_files(file_ext: str = ".tsv", directory: str | Path | None = None) ->
     file_ext : str
         File extension to search for results to summarise.
     directory : str | Path | None
-        Path on which to search for files with ''file_ext'', if ''None'' then current working directory is used.
+        Path on which to search for files with ``file_ext``, if ``None`` then current working directory is used.
 
     Returns
     -------
@@ -48,28 +48,28 @@ def summary_counts(
     r"""
     Group the data and count by various factors.
 
-    Typically though we want to know whether conversions have happened or not and this is based on the ''Conversions  >=
-    1'', but this is configurable via the ''conversions_var'' and ''conversions_threshold'' parameters.
+    Typically though we want to know whether conversions have happened or not and this is based on the ``Conversions  >=
+    1``, but this is configurable via the ``conversions_var`` and ``conversions_threshold`` parameters.
 
     Parameters
     ----------
     file_ext : str
         File extension to search for results to summarise.
     directory : str | Path | None
-        Path on which to search for files with ''file_ext'', if ''None'' then current working directory is used.
+        Path on which to search for files with ``file_ext``, if ``None`` then current working directory is used.
     groupby : list[str]
-        List of variables to group the counts by, if ''None'' then groups the data by ''Transcript_id'',
-        ''Strand'', ''Start'', ''End'', ''Assignment'', and   ''filename''.
+        List of variables to group the counts by, if ``None`` then groups the data by ``Transcript_id``,
+        ``Strand``, ``Start``, ``End``, ``Assignment``, and   ``filename``.
     conversions_var : str
-        The column name that holds conversions, default ''Conversions''.
+        The column name that holds conversions, default ``Conversions``.
     conversions_threshold : int
-        Threshold for counting conversions, default ''1''.
+        Threshold for counting conversions, default ``1``.
     test_file : str | None
         Unique identifier for test file, files with this string in their names are removed.
     filename_var : str | NOne
         Column that holds filename.
     regex : str
-        Regular expression pattern to extract the hour and replicate from, default ''r"^d(\w+)_(\w+)hr(\w+)_"''.
+        Regular expression pattern to extract the hour and replicate from, default ``r"^d(\w+)_(\w+)hr(\w+)_"``.
 
     Returns
     -------
@@ -115,9 +115,9 @@ def extract_day_hour_and_replicate(
     df : pl.DataFrame
         Polars DataFrame.
     column : str
-        The name of the column that holds the filename, default ''filename''.
+        The name of the column that holds the filename, default ``filename``.
     regex : str
-        Regular expression pattern to extract the hour and replicate from, default ''r"^d(\w+)_(\w+)hr(\w+)_"''.
+        Regular expression pattern to extract the hour and replicate from, default ``r"^d(\w+)_(\w+)hr(\w+)_"``.
 
     Returns
     -------
@@ -131,8 +131,8 @@ def extract_day_hour_and_replicate(
     )
 
 
-def _aggregate_conversions(
-    df: pl.DataFrame, groupby: list[str] | None = None, converted: str | None = "one_or_more_conversion"
+def aggregate_conversions(
+    df: pl.DataFrame, groupby: str | list[str] | None = "replicate", converted: str | None = "one_or_more_conversion"
 ) -> pl.DataFrame:
     """
     Subset data where there have not been one or more conversions.
@@ -143,7 +143,7 @@ def _aggregate_conversions(
     ----------
     df : pl.DataFrame
         Summary dataframe aggregated to give counts of one or more conversion.
-    groupby : list[str], optional
+    groupby : str | list[str], optional
         Variables to group the data by.
     converted : str
         Variable that contains whether conversions have been observed or not.
@@ -153,8 +153,9 @@ def _aggregate_conversions(
     pl.DataFrame
         Aggregated dataframe.
     """
-    if groupby is None:
-        groupby = GROUPBY_DAY_HR_REP
+    # if groupby is None:
+    #     groupby = GROUPBY_DAY_HR_REP
+    groupby = get_groupby(groupby)
     # Its important to ensure that the data is not just groupby but that within that it is then sorted by the converted
     # variable. This _should_ be the case if being passed data from summary_count() but to make sure we explicitly sort
     # the data so that pl.first(converted) will _always_ get 'False' first if pl.len() == 2
@@ -168,9 +169,9 @@ def _aggregate_conversions(
     return non_captured.sort(groupby)
 
 
-def _filter_no_conversions(
+def filter_no_conversions(
     df: pl.DataFrame,
-    groupby: list[str] | None = None,
+    groupby: str | list[str] | None = "replicate",
     converted: str | None = "one_or_more_conversion",
     test: bool = False,
 ) -> pl.DataFrame:
@@ -183,12 +184,12 @@ def _filter_no_conversions(
     ----------
     df : pl.DataFrame
         Summary dataframe aggregated to give counts of one or more conversion.
-    groupby : list[str], optional
+    groupby : str | list[str], optional
         Variables to group the data by.
     converted : str
         Variable that contains whether conversions have been observed or not.
     test : bool
-        Whether the function is being tested or not. This will prevent a call to ''_aggregate_conversions()'' to
+        Whether the function is being tested or not. This will prevent a call to ``_aggregate_conversions()`` to
         aggregate the input and simply filter the data.
 
     Returns
@@ -197,28 +198,28 @@ def _filter_no_conversions(
         Aggregated dataframe.
     """
     if not test:
-        df = _aggregate_conversions(df, groupby, converted)
+        df = aggregate_conversions(df, groupby, converted)
     # pylint: disable=singleton-comparison
     return df.filter((pl.col("len") == 1) & (pl.col(converted) == False)).drop("len")  # noqa: E712
 
 
-def _get_one_or_more_conversion(
-    df: pl.DataFrame, groupby: list[str] | None = None, converted: str = "one_or_more_conversion"
+def get_one_or_more_conversion(
+    df: pl.DataFrame, groupby: str | list[str] | None = "replicate", converted: str = "one_or_more_conversion"
 ) -> pl.DataFrame:
     """
     Extract instances where one or more conversion has occurred.
 
-    There are some cases where this isn't the case and for a given subset the ''converted'' variable, which indicates if
-    one or more conversion has occurred will only be ''False'' For such instances dummy entries are created based on the
-    ''groupby'' variable and appended to the subset of instances where this one or more conversions have been observed.
+    There are some cases where this isn't the case and for a given subset the ``converted`` variable, which indicates if
+    one or more conversion has occurred will only be ``False`` For such instances dummy entries are created based on the
+    ``groupby`` variable and appended to the subset of instances where this one or more conversions have been observed.
 
-    This function takes as input the results of ''summary_count()'' it will not work with intermediate files.
+    This function takes as input the results of ``summary_count()`` it will not work with intermediate files.
 
     Parameters
     ----------
     df : pl.DataFrame
         Summary dataframe aggregated to give counts of one or more conversion.
-    groupby : list[str], optional
+    groupby : str | list[str], optional
         Variables to group the data by.
     converted : str
         Variable that contains whether conversions have been observed or not.
@@ -228,9 +229,8 @@ def _get_one_or_more_conversion(
     pl.DataFrame
         Aggregated dataframe.
     """
-    if groupby is None:
-        groupby = GROUPBY_DAY_HR_REP
-    no_conversions = _filter_no_conversions(df, groupby, converted)
+    groupby = get_groupby(groupby)
+    no_conversions = filter_no_conversions(df, groupby, converted)
     groupby.append(converted)
     no_conversions = df.join(no_conversions, on=groupby, how="inner", maintain_order="left")
     no_conversions = no_conversions.with_columns(
@@ -243,6 +243,305 @@ def _get_one_or_more_conversion(
     keep = groupby + ["conversion_count", "conversion_total", "conversion_percent"]
     # pylint: disable=singleton-comparison
     return df.filter(pl.col(converted) == True).select(keep).sort(groupby)  # noqa: E712
+
+
+def percent_conversions_across_replicates(
+    df: pl.DataFrame,
+    groupby: str | list[str] | None = "time",
+    count: str = "conversion_count",
+    total: str = "conversion_total",
+) -> pl.DataFrame:
+    """
+    Percentage of conversions across replicates for each time point.
+
+    The raw counts and total conversions for each replicate are available. These are summed and the percentage of
+    conversions across replicates calculated. This is mathematically the same as taking the weighted mean of the
+    percentage of conversions within each replicate.
+
+    Parameters
+    ----------
+    df : pl.DataFrame
+        Polars Dataframe of conversions.
+    groupby : str | list[str], optional
+        Variables to ``group_by`` the data, default is ``transcript_id, start, end, assignment, day, hour``.
+    count : str
+        Variable/column name holding the counts, default is ``conversion_count``.
+    total : str
+        Variable/column name holding the total number of conversions, default is ``conversion_total``.
+
+    Returns
+    -------
+    pl.DataFrame
+        Weighted mean of the percentage of conversions (weighted by total conversions) across replicates for the given
+        transcript/assignment/strand/day/hour (as specified by ``groupby``).
+    """
+    groupby = get_groupby(groupby)
+    _keep = groupby + [count, total]
+    return (
+        df.select(_keep)
+        .group_by(groupby, maintain_order=True)
+        .agg([pl.col(count).sum(), pl.col(total).sum()])
+        .with_columns(((pl.col(count) / pl.col(total)) * 100).alias("conversion_percent"))
+    )
+
+
+def select_base_levels(df: pl.DataFrame, base_day: int = 0, base_hour: int = 0) -> pl.DataFrame:
+    """
+    Select the base level reference across all data.
+
+    This allows selecting the base level of totals and percents which are used for normalising values. Will drop the
+    column ``replicate`` from the data frame.
+
+    Parameters
+    ----------
+    df : pl.DataFrame
+        Polars Dataframe of conversions.
+    base_day : int
+        Day to be used for reference, default is ``0`` and is unlikely to need changing.
+    base_hour : int
+        Hour to be used for reference, default is ``0`` and is unlikely to need changing.
+
+    Returns
+    -------
+    pl.DataFrame
+        Subset of data with values at baseline (default ``day == 0 & hour == 0``).
+    """
+    return (
+        df.select(pl.all().name.map(lambda col_name: col_name.replace("conversion", "baseline")))
+        .filter((pl.col("day") == base_day) & (pl.col("hour") == base_hour))
+        .drop(["day", "hour"])
+    )
+
+
+def merge_average_with_baseline(
+    df_average: pl.DataFrame,
+    df_baseline: pl.DataFrame,
+    join_on: str | list[str] | None = "assignment",
+    zero_baseline_remove: bool = True,
+) -> pl.DataFrame:
+    """
+    Merge a data frame with the baseline measurements.
+
+    Typically for this workflow this involves merging the average data frame (across replicates at each of the
+    transcripts/start/end/strand/assignments) with the average at the baseline to allow normalising the data.
+
+    Parameters
+    ----------
+    df_average : pl.DataFrame
+        Polars Dataframe of averaged data.
+    df_baseline : pl.DataFrame
+        Polars Dataframe of averaged baseline data.
+    join_on : list[str] | None
+        Variables to join the data frames on, if ``None`` (default) it is set to ``Transcript_id, Start, End,
+        Assignment, Strand``.
+    zero_baseline_remove : bool
+        Remove instances where the baseline percentage conversion is zero.
+
+    Returns
+    -------
+    pl.DataFrame
+        Averaged and baseline data frame merged on ``join_on``.
+    """
+    join_on = get_groupby(groupby=join_on)
+    if zero_baseline_remove:
+        df_baseline = df_baseline.filter(pl.col("baseline_percent") != 0.0)
+    return df_average.join(df_baseline, on=join_on)
+
+
+def derive_weight_within_isoform(
+    df: pl.DataFrame,
+    groupby: str | list[str] | None = "assignment",
+    total: str = "conversion_total",
+) -> pl.DataFrame:
+    """
+    Calculate weighting used for normalised percentages within each isoform across all time points.
+
+    Where the number of total reads (across replications) is higher then we are more confident in the percentage of
+    conversions observed and so we weight the percentages at each time point by the proportion of total counts which
+    were calculated previously when deriving the percentage of conversions across replicates (with the
+    ``_percent_conversions_across_replicates()`` function).
+
+    Parameters
+    ----------
+    df : pl.DataFrame
+        Dataframe for which weights are to be derived.
+    groupby : list[str]
+        Grouping for summation of total counts, defaults to ``["Transcript_id", "Strand", "Start", "End",
+        "Assignment"]``.
+    total : str
+        Variable that nolds the total number of conversions (across all replicates), default is ``conversion_total`` and
+        shouldn't need changing.
+
+    Returns
+    -------
+    pl.DataFrame
+        DataFrame with two new columns, the sum of total conversions across replicates and time points
+        (``conversion_total_all_time_points``) and the weight of conversions at each time point (``conversion_weight``).
+    """
+    groupby = get_groupby(groupby)
+    counts_across_isoform = df.group_by(groupby).agg([pl.col(total).sum().alias("conversion_total_all_time_points")])
+    df = df.join(counts_across_isoform, on=groupby, how="inner")
+    return df.with_columns((pl.col(total) / pl.col("conversion_total_all_time_points")).alias("conversion_weight"))
+
+
+def normalise(
+    df: pl.DataFrame,
+    to_normalise: str = "conversion_percent",
+    baseline: str = "baseline_percent",
+    normalised: str = "normalised_percent",
+) -> pl.DataFrame:
+    """
+    Normalise variables based on the baseline measurement.
+
+    Assumes that you have merged the averaged dataset with the averaged baseline variables so that the parameter of
+    interest as its related baseline measurement paired with it. Values are normalised by dividing by the baseline value
+    such that baseline will always start at ``1`` and subsequent values (time-points) are relative to this and show
+    increases or decreases. Typically these will be relative changes in the (averaged) percentage of conversions.
+
+    Parameters
+    ----------
+    df : pl.DataFrame
+        Dataframe from ``_merge_average_with_baseline``.
+    to_normalise : str
+        Variable to be normalised, default is ``conversion_percent``.
+    baseline : str
+        Variable to use for normalising, default is ``baseline_percent``.
+    normalised : str
+        Variable name for normalised value, default is ``normalised_percent``.
+
+    Returns
+    -------
+    pl.DataFrame
+        Polars dataframe with normalised values.
+    """
+    return df.with_columns([(pl.col(to_normalise) / pl.col(baseline)).alias(normalised)])
+
+
+def find_read_pairs(
+    df: pl.DataFrame, index_columns: list[str] | None = None, assignment: str | None = "Assignment"
+) -> pl.DataFrame:
+    """
+    Find instances where there are conversions for both ``Return`` and ``Splice`` assignments.
+
+    Parameters
+    ----------
+    df : pl.DataFrame
+        Polars DataFrame.
+    index_columns : list[str]
+        List of index columns to select from the dataframe. Should include the unique identifiers, typically
+        (``Transcript_id``, ``Strand``, ``Start`` and ``End`` which are the defaults) but does not need to include the
+        ''assignment'' column.
+    assignment : str
+        Column the defines assignment of events to ``Ret`` (``Return``) or ``Spl`` (``Splice``).
+
+    Returns
+    -------
+    pl.DataFrame
+        Polars DataFrame of the ``index_columns`` where both a ``Ret`` and ``Spl`` event have been observed.
+    """
+    if assignment is None:
+        assignment = "Assignment"
+    if index_columns is None:
+        index_columns = get_groupby(groupby="base")
+    index_columns.append(assignment)
+    df_return = df.select(index_columns).filter(pl.col(assignment) == "Ret")
+    df_splice = df.select(index_columns).filter(pl.col(assignment) == "Spl")
+    index_columns.remove(assignment)
+    # We use sorted(index_columns, reverse=True) so that the order is consistent for testing, the reverse option roughly
+    # gets things close to the expected order of columns used in the data.
+    return (
+        df_return.join(df_splice, on=index_columns, how="inner")
+        .select(sorted(index_columns, reverse=True))
+        .unique()
+        .sort(by=sorted(index_columns, reverse=True))
+    )
+
+
+def remove_zero_baseline(
+    df: pl.DataFrame, groupby: str | list[str] | None = "base", percent_col: str | None = None
+) -> pl.DataFrame:
+    """
+    Remove data where the percentage change at baseline is zero.
+
+    Removes all observations for a transcript/strand/start/end/assignment where the percentage change at baseline is
+    zero. Such instances need removing because the data is normalised by the baseline measurement and division by zero
+    leads to ``NaN``/``Inf`` data points which can not analysed in any meaningful way.
+
+    Typically this should be run on the data _after_ averaging across replicates since the percentage change is
+    calculated across all replicates and any observation with zero percentage changes could still contribute to the
+    total number of events. There is however nothing preventing the function from being used on data prior to averaging
+    but that would be atypical usage.
+
+    Parameters
+    ----------
+    df : pl.DataFrame
+        Polars DataFrame with percentage changes at each time point for transcript/strand/start/end/assignment.
+    groupby : str | list[str]
+        Grouping of variables to look within for baseline of zero percent change. Default is ``base`` which groups by
+        transcript_id/strand/start/end/assignment.
+    percent_col : str
+        Column name that holds the percentage, defaults to 'conversion_percent' if not specified.
+
+    Returns
+    -------
+    pl.DataFrame
+        Polars DataFrame with groups where the percent change at baseline is zero removed.
+    """
+    groupby = get_groupby(groupby)
+    percent_col = "conversion_percent" if percent_col is None else percent_col
+    df_zero_baseline = df.filter(pl.col(percent_col) == 0.0)
+    # Use an "anti" join which returns rows from the left (df) which do not have a match on the right (df_zero_basleine)
+    return df.join(df_zero_baseline, on=groupby, how="anti")
+
+
+def get_groupby(groupby: str | list[str] | None) -> list[str]:  # pylint: disable=too-many-return-statements
+    """
+    Get grouping variables.
+
+    .. csv-table:: Possible groupings
+       :header: 'Value','Grouping'
+
+    'base',','["Transcript_id", "Strand", "Start", "End"]'
+    'assignment',','["Transcript_id", "Strand", "Start", "End", "Assignment"]'
+    'filename','["Transcript_id", "Strand", "Start", "End", "Assignment", "filename"]'
+    'time','["Transcript_id", "Strand", "Start", "End", "Assignment", "day", "hour"]'
+    'replicate','["Transcript_id", "Strand", "Start", "End", "Assignment", "day", "hour", "replicate"]'
+    'None','Value of ``groupby``.'
+
+    This is typically ``["Transcript_id", "Strand", "Start", "End", "Assignment"]`` when ``groupby`` is ``None`` but
+    returns ``groupby`` otherwise.
+
+    Parameters
+    ----------
+    groupby : list[str] | None
+        Variables to groupby.
+
+    Returns
+    -------
+    list[str]
+        List of variables to group data by.
+
+    Raises
+    ------
+    ValueError
+        If invalid value string is passed.
+    """
+    if groupby is not None and not isinstance(groupby, list):
+        if groupby not in {"assignment", "base", "filename", "time", "replicate"}:
+            raise ValueError("You must specify a valid grouping or pass a list to groupby.")
+        if groupby == "base":
+            return ["Transcript_id", "Strand", "Start", "End"]
+        if groupby == "assignment":
+            return ["Transcript_id", "Strand", "Start", "End", "Assignment"]
+        if groupby == "filename":
+            return ["Transcript_id", "Strand", "Start", "End", "Assignment", "filename"]
+        if groupby == "time":
+            return ["Transcript_id", "Strand", "Start", "End", "Assignment", "day", "hour"]
+        if groupby == "replicate":
+            return ["Transcript_id", "Strand", "Start", "End", "Assignment", "day", "hour", "replicate"]
+    if groupby is None:
+        return ["Transcript_id", "Strand", "Start", "End", "Assignment"]
+    return groupby  # type: ignore[return-value]
 
 
 # mypy: disable-error-code="no-redef"
@@ -261,8 +560,11 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
     test_file: str | None
     regex: str | None
 
-    # Generated atrtibute
+    # Generated atrtibutes
     data: pl.DataFrame = field(init=False)
+    averages: pl.DataFrame = field(init=False)
+    baseline: pl.DataFrame = field(init=False)
+    normliased: pl.DataFrame = field(init=False)
 
     def __post_init__(self) -> None:
         """After initialisation the files are loaded and prepared for analysis."""
@@ -275,11 +577,23 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
             conversions_threshold=self._conversions_threshold,
             test_file=self._test_file,
         )
+        _df = aggregate_conversions(self.data, self.groupby, self._conversions_var)
+        _df = filter_no_conversions(_df, self.groupby, self._conversions_var, test=False)
+        _df = get_one_or_more_conversion(_df, self.groupby, self._conversions_var)
+        self.averages = percent_conversions_across_replicates(_df, self.groupby)
+        self.baseline = select_base_levels(self.averages)
+        self.normalised = merge_average_with_baseline(self.averages, self.baseline)
+        # Normalise mean conversion percent change by baseline
+        self.normalised = normalise(
+            self.normalised, to_normalise="conversion_percent", baseline="baseline_percent", normalised="normalised"
+        )
+        # Derive weights within transcript/isoform based on total counts
+        self.normalised = derive_weight_within_isoform(self.normalised, groupby=None, total="conversion_total")
 
     @property
     def file_ext(self) -> str:
         """
-        Getter method for ''file_ext''.
+        Getter method for ``file_ext``.
 
         Returns
         -------
@@ -303,7 +617,7 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
     @property
     def directory(self) -> str:
         """
-        Getter method for ''directory''.
+        Getter method for ``directory``.
 
         Returns
         -------
@@ -327,7 +641,7 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
     @property
     def regex(self) -> str:
         """
-        Getter method for ''regex''.
+        Getter method for ``regex``.
 
         Returns
         -------
@@ -351,7 +665,7 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
     @property
     def groupby(self) -> list[str]:
         """
-        Getter method for ''groupby''.
+        Getter method for ``groupby``.
 
         Returns
         -------
@@ -363,7 +677,7 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
     @groupby.setter
     def groupby(self, value: list[str]) -> None:
         """
-        Setter for the file extension.
+        Setter for the ``groupby`` property.
 
         Parameters
         ----------
@@ -375,7 +689,7 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
     @property
     def conversions_var(self) -> str:
         """
-        Getter method for ''conversions_var''.
+        Getter method for ``conversions_var``.
 
         Returns
         -------
@@ -387,7 +701,7 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
     @conversions_var.setter
     def conversions_var(self, value: str) -> None:
         """
-        Setter for the file extension.
+        Setter for the ``conversions_var`` property.
 
         Parameters
         ----------
@@ -399,7 +713,7 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
     @property
     def conversions_threshold(self) -> int:
         """
-        Getter method for ''conversions_threshold''.
+        Getter method for ``conversions_threshold``.
 
         Returns
         -------
@@ -411,7 +725,7 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
     @conversions_threshold.setter
     def conversions_threshold(self, value: int) -> None:
         """
-        Setter for the ''conversions_threshold''.
+        Setter for the ``conversions_threshold``.
 
         Parameters
         ----------
@@ -423,7 +737,7 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
     @property
     def test_file(self) -> str:
         """
-        Getter method for ''test_file''.
+        Getter method for ``test_file``.
 
         Returns
         -------
@@ -435,12 +749,12 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
     @test_file.setter
     def test_file(self, value: str) -> None:
         """
-        Setter for the ''test_file'' value.
+        Setter for the ``test_file`` value.
 
         Parameters
         ----------
         value : str
-            Value of ''test_file''.
+            Value of ``test_file``.
         """
         self._test_file = value
 
@@ -475,8 +789,8 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
         Parameters
         ----------
         columns : list[str]
-            Columns to use for identifying unique observations. If ''None'' defaults to ''filename'' which returns the
-            number of unique files loaded from the ''directory'' with ''file_ext''.
+            Columns to use for identifying unique observations. If ``None`` defaults to ``filename`` which returns the
+            number of unique files loaded from the ``directory`` with ``file_ext``.
 
         Returns
         -------

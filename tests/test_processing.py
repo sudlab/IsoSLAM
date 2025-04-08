@@ -226,4 +226,4 @@ def test_entry_point_process(options: list, outfile: str, tmp_path: Path) -> Non
 def test_process(config: dict, regtest) -> None:
     """Regression test of the process() function."""
     results = processing.process(arg.Namespace(**config))
-    print(results.to_pandas().to_string(float_format="{:.4e}".format), file=regtest)
+    print(results.write_csv(), file=regtest)

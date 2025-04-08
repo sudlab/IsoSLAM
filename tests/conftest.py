@@ -21,6 +21,7 @@ BAM_SORTED_ASSIGNED_DIR = BAM_DIR / "sorted_assigned"
 TSV_DIR = RESOURCES / "tsv"
 TSV_OUTPUT_DIR = TSV_DIR / "output"
 CSV_DIR = RESOURCES / "csv"
+CSV_INPUT_DIR = CSV_DIR / "input"
 CSV_OUTPUT_DIR = CSV_DIR / "output"
 PARQUET_DIR = RESOURCES / "parquet"
 PARQUET_OUTPUT_DIR = PARQUET_DIR / "output"
@@ -384,12 +385,30 @@ def sample_data_summary_counts() -> pl.DataFrame:
 
 
 @pytest.fixture()
-def test_aggregate_conversions_expected() -> pl.DataFrame:
-    """Expected data frame for test_aggregate_conversions()."""
-    return pl.read_parquet(OUTPUT_DIR / "test_aggregate_conversions.parquet")
+def one_or_more_conversions() -> pl.DataFrame:
+    """One or more conversions as input for test_average_replicates()."""
+    return pl.read_csv(CSV_INPUT_DIR / "one_or_more_conversions.csv")
 
 
 @pytest.fixture()
-def test_filter_no_conversions_expected() -> pl.DataFrame:
-    """Expected data frame for test_filter_no_conversions()."""
-    return pl.read_parquet(OUTPUT_DIR / "test_filter_no_conversions.parquet")
+def averaged_data() -> pl.DataFrame:
+    """Averaged across replicates by transcript_id/Strand/start/end/assignment."""
+    return pl.read_csv(CSV_INPUT_DIR / "averaged_data.csv")
+
+
+@pytest.fixture()
+def baseline_mean() -> pl.DataFrame:
+    """Baseline means for test_select_base_levels()."""
+    return pl.read_csv(CSV_INPUT_DIR / "baseline_means.csv")
+
+
+@pytest.fixture()
+def merged_average_baseline() -> pl.DataFrame:
+    """Average and baseline data frame merged with average baseline for normalising."""
+    return pl.read_csv(CSV_INPUT_DIR / "merged_average_baseline.csv")
+
+
+@pytest.fixture()
+def derive_weight_within_isoform() -> pl.DataFrame:
+    """Average and normalised data frame for deriving weight within transcript/isoform."""
+    return pl.read_csv(CSV_INPUT_DIR / "derive_weight_within_isoform.csv")
