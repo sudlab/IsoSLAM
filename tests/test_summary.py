@@ -579,6 +579,53 @@ def test_find_read_pairs(
     print(read_pairs.write_csv(), file=regtest)
 
 
+@pytest.mark.parametrize(
+    ("df", "groupby", "percent_col"),
+    [
+        pytest.param(
+            pl.DataFrame(
+                {
+                    "transcript": ["a", "a", "b", "b"],
+                    "start": [1, 1, 30, 30],
+                    "end": [20, 20, 124, 124],
+                    "time": [0, 10, 0, 10],
+                    "percent": [0.0, 14.1, 1.0, 2.0],
+                }
+            ),
+            ["transcript", "start", "end"],
+            "percent",
+            id="simple",
+        ),
+        pytest.param(
+            "merged_average_baseline",
+            ["Transcript_id", "Strand", "Start", "End", "Assignment"],
+            "conversion_percent",
+            id="real (conversion_percent)",
+        ),
+        pytest.param(
+            "merged_average_baseline",
+            ["Transcript_id", "Strand", "Start", "End", "Assignment"],
+            "conversion_percent",
+            id="real (baseline_percent)",
+        ),
+        pytest.param(
+            "merged_average_baseline",
+            None,
+            None,
+            id="real (no params)",
+        ),
+    ],
+)
+def test_remove_zero_baseline(
+    df: pl.DataFrame | str, groupby: list[str], percent_col: str, request: pytest.FixtureRequest, regtest
+) -> None:
+    """Test excluding groups where percent at baseline is zero."""
+    df = request.getfixturevalue(df) if isinstance(df, str) else df
+    print(f"\n{df=}\n")
+    no_zero_percent_baseline = summary._remove_zero_baseline(df, groupby, percent_col)
+    print(no_zero_percent_baseline.write_csv(), file=regtest)
+
+
 @pytest.mark.skip
 @pytest.mark.parametrize(
     (

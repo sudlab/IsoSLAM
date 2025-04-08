@@ -456,6 +456,42 @@ def _find_read_pairs(
     )
 
 
+def _remove_zero_baseline(
+    df: pl.DataFrame, groupby: list[str] | None = None, percent_col: str | None = None
+) -> pl.DataFrame:
+    """
+    Remove data where the percentage change at baseline is zero.
+
+    Removes all observations for a transcript/strand/start/end/assignment where the percentage change at baseline is
+    zero. Such instances need removing because the data is normalised by the baseline measurement and division by zero
+    leads to ``NaN``/``Inf`` data points which can not analysed in any meaningful way.
+
+    Typically this should be run on the data _after_ averaging across replicates since the percentage change is
+    calculated across all replicates and any observation with zero percentage changes could still contribute to the
+    total number of events. There is however nothing preventing the function from being used on data prior to averaging
+    but that would be atypical usage.
+
+    Parameters
+    ----------
+    df : pl.DataFrame
+        Polars DataFrame with percentage changes at each time point for transcript/strand/start/end/assignment.
+    groupby : list[str]
+        Grouping of variables to look within for baseline of zero percent change.
+    percent_col : str
+        Column name that holds the percentage, defaults to 'conversion_percent' if not specified.
+
+    Returns
+    -------
+    pl.DataFrame
+        Polars DataFrame with groups where the percent change at baseline is zero removed.
+    """
+    groupby = ["Transcript_id", "Strand", "Start", "End", "Assignment"] if groupby is None else groupby
+    percent_col = "conversion_percent" if percent_col is None else percent_col
+    df_zero_baseline = df.filter(pl.col(percent_col) == 0.0)
+    # Use an "anti" join which returns rows from the left (df) which do not have a match on the right (df_zero_basleine)
+    return df.join(df_zero_baseline, on=groupby, how="anti")
+
+
 # mypy: disable-error-code="no-redef"
 
 
@@ -472,7 +508,7 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
     test_file: str | None
     regex: str | None
 
-    # Generated atrtibute
+    # Generated atrtibutes
     data: pl.DataFrame = field(init=False)
     averages: pl.DataFrame = field(init=False)
     baseline: pl.DataFrame = field(init=False)
