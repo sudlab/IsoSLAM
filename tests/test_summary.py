@@ -263,16 +263,7 @@ def test_extract_hour_and_replicate(df: pl.DataFrame, column: str, regex: Patter
         ),
         pytest.param(
             "sample_data_summary_counts",
-            [
-                "Transcript_id",
-                "Strand",
-                "Start",
-                "End",
-                "Assignment",
-                "day",
-                "hour",
-                "replicate",
-            ],
+            "replicate",
             "one_or_more_conversion",
             id="real data",
         ),
@@ -280,14 +271,14 @@ def test_extract_hour_and_replicate(df: pl.DataFrame, column: str, regex: Patter
 )
 def test_aggregate_conversions(
     df: pl.DataFrame | str,
-    groupby: list[str],
+    groupby: str | list[str],
     converted: str,
     request: pytest.FixtureRequest,
     regtest,
 ) -> None:
     """Test derivation on non-captured dataset."""
     df = request.getfixturevalue(df) if isinstance(df, str) else df
-    aggregated_conversions = summary._aggregate_conversions(df, groupby, converted)
+    aggregated_conversions = summary.aggregate_conversions(df, groupby, converted)
     print(aggregated_conversions.write_csv(), file=regtest)
 
 
@@ -315,7 +306,7 @@ def test_aggregate_conversions(
         ),
         pytest.param(
             "sample_data_summary_counts",
-            None,
+            "replicate",
             "one_or_more_conversion",
             id="real data",
         ),
@@ -330,7 +321,7 @@ def test_filter_no_conversions(
 ) -> None:
     """Test filtering of non conversions."""
     df = request.getfixturevalue(df) if isinstance(df, str) else df
-    filtered_no_conversions = summary._filter_no_conversions(df, groupby, converted)
+    filtered_no_conversions = summary.filter_no_conversions(df, groupby, converted)
     print(filtered_no_conversions.write_csv(), file=regtest)
 
 
@@ -339,18 +330,18 @@ def test_filter_no_conversions(
     [
         pytest.param(
             "sample_data_summary_counts",
-            None,
+            "replicate",
             "one_or_more_conversion",
             id="real data groupby none",
         ),
     ],
 )
 def test_get_one_or_more_conversion(
-    df: pl.DataFrame, groupby: list[str], converted: str, request: pytest.FixtureRequest, regtest
+    df: pl.DataFrame, groupby: str | list[str], converted: str, request: pytest.FixtureRequest, regtest
 ) -> None:
     """Test that inner_join_no_conversions returns the correct subset."""
     df = request.getfixturevalue(df) if isinstance(df, str) else df
-    one_or_more_conversions = summary._get_one_or_more_conversion(df, groupby, converted)
+    one_or_more_conversions = summary.get_one_or_more_conversion(df, groupby, converted)
     print(one_or_more_conversions.write_csv(), file=regtest)
 
 
@@ -375,7 +366,7 @@ def test_get_one_or_more_conversion(
         ),
         pytest.param(
             "one_or_more_conversions",
-            None,
+            "time",
             "conversion_count",
             "conversion_total",
             id="real data mean",
@@ -385,9 +376,9 @@ def test_get_one_or_more_conversion(
 def test_percent_conversions_across_replicates(
     df: pl.DataFrame | str, groupby: list[str], count: str, total: str, request: pytest.FixtureRequest, regtest
 ) -> None:
-    """Test the summary._average_replicate() function."""
+    """Test the summary.percent_conversions_across_replicates() function."""
     df = request.getfixturevalue(df) if isinstance(df, str) else df
-    df_average = summary._percent_conversions_across_replicates(df, groupby, count, total)
+    df_average = summary.percent_conversions_across_replicates(df, groupby, count, total)
     print(df_average.write_csv(), file=regtest)
 
 
@@ -421,7 +412,7 @@ def test_select_base_levels(
 ) -> None:
     """Test subsetting of data for baseline values."""
     df = request.getfixturevalue(df) if isinstance(df, str) else df
-    baseline = summary._select_base_levels(df, base_day, base_hour)
+    baseline = summary.select_base_levels(df, base_day, base_hour)
     print(baseline.write_csv(), file=regtest)
 
 
@@ -454,14 +445,14 @@ def test_select_base_levels(
         pytest.param(
             "averaged_data",
             "baseline_mean",
-            ["Transcript_id", "Strand", "Start", "End", "Assignment"],
+            "assignment",
             False,
             id="real",
         ),
         pytest.param(
             "averaged_data",
             "baseline_mean",
-            ["Transcript_id", "Strand", "Start", "End", "Assignment"],
+            "assignment",
             True,
             id="real remove zero baseline",
         ),
@@ -478,7 +469,7 @@ def test_merge_average_baseline(
     """Test merging of average and baseline data."""
     df_average = request.getfixturevalue(df_average) if isinstance(df_average, str) else df_average
     df_baseline = request.getfixturevalue(df_baseline) if isinstance(df_baseline, str) else df_baseline
-    combined = summary._merge_average_with_baseline(df_average, df_baseline, join_on, remove_zero_baseline)
+    combined = summary.merge_average_with_baseline(df_average, df_baseline, join_on, remove_zero_baseline)
     print(combined.write_csv(), file=regtest)
 
 
@@ -509,9 +500,9 @@ def test_merge_average_baseline(
 def test_normalise(
     df: pl.DataFrame | str, to_normalise: str, baseline: str, request: pytest.FixtureRequest, regtest
 ) -> None:
-    """Test the summary._normalise() function divides the target (''to_normalise'') by ''baseline''."""
+    """Test the summary.normalise() function divides the target (''to_normalise'') by ''baseline''."""
     df = request.getfixturevalue(df) if isinstance(df, str) else df
-    normalised = summary._normalise(df, to_normalise, baseline)
+    normalised = summary.normalise(df, to_normalise, baseline)
     print(normalised.write_csv(), file=regtest)
 
 
@@ -535,18 +526,18 @@ def test_normalise(
         ),
         pytest.param(
             "derive_weight_within_isoform",
-            ["Transcript_id", "Strand", "Start", "End", "Assignment"],
+            "assignment",
             "conversion_total",
             id="real data",
         ),
     ],
 )
 def test_derive_weight_within_isoform(
-    df: pl.DataFrame | str, groupby: list[str], total: str, request: pytest.FixtureRequest, regtest
+    df: pl.DataFrame | str, groupby: str | list[str], total: str, request: pytest.FixtureRequest, regtest
 ) -> None:
     """Test deriving weights within isoforms."""
     df = request.getfixturevalue(df) if isinstance(df, str) else df
-    weights = summary._derive_weight_within_isoform(df, groupby, total)
+    weights = summary.derive_weight_within_isoform(df, groupby, total)
     print(weights.write_csv(), file=regtest)
 
 
@@ -563,7 +554,7 @@ def test_derive_weight_within_isoform(
                     "assigned": ["Ret", "Spl", "Ret", "Spl"],
                 }
             ),
-            {"transcript_id", "strand", "start", "end"},
+            ["transcript_id", "strand", "start", "end"],
             "assigned",
             id="simple",
         ),
@@ -575,7 +566,7 @@ def test_find_read_pairs(
 ) -> None:
     """Test deriving read pairs."""
     df = request.getfixturevalue(df) if isinstance(df, str) else df
-    read_pairs = summary._find_read_pairs(df, index_columns, assignment)
+    read_pairs = summary.find_read_pairs(df, index_columns, assignment)
     print(read_pairs.write_csv(), file=regtest)
 
 
@@ -621,7 +612,7 @@ def test_remove_zero_baseline(
 ) -> None:
     """Test excluding groups where percent at baseline is zero."""
     df = request.getfixturevalue(df) if isinstance(df, str) else df
-    no_zero_percent_baseline = summary._remove_zero_baseline(df, groupby, percent_col)
+    no_zero_percent_baseline = summary.remove_zero_baseline(df, groupby, percent_col)
     print(no_zero_percent_baseline.write_csv(), file=regtest)
 
 

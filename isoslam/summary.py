@@ -131,8 +131,8 @@ def extract_day_hour_and_replicate(
     )
 
 
-def _aggregate_conversions(
-    df: pl.DataFrame, groupby: list[str] | None = None, converted: str | None = "one_or_more_conversion"
+def aggregate_conversions(
+    df: pl.DataFrame, groupby: str | list[str] | None = "replicate", converted: str | None = "one_or_more_conversion"
 ) -> pl.DataFrame:
     """
     Subset data where there have not been one or more conversions.
@@ -143,7 +143,7 @@ def _aggregate_conversions(
     ----------
     df : pl.DataFrame
         Summary dataframe aggregated to give counts of one or more conversion.
-    groupby : list[str], optional
+    groupby : str | list[str], optional
         Variables to group the data by.
     converted : str
         Variable that contains whether conversions have been observed or not.
@@ -153,8 +153,9 @@ def _aggregate_conversions(
     pl.DataFrame
         Aggregated dataframe.
     """
-    if groupby is None:
-        groupby = GROUPBY_DAY_HR_REP
+    # if groupby is None:
+    #     groupby = GROUPBY_DAY_HR_REP
+    groupby = get_groupby(groupby)
     # Its important to ensure that the data is not just groupby but that within that it is then sorted by the converted
     # variable. This _should_ be the case if being passed data from summary_count() but to make sure we explicitly sort
     # the data so that pl.first(converted) will _always_ get 'False' first if pl.len() == 2
@@ -168,9 +169,9 @@ def _aggregate_conversions(
     return non_captured.sort(groupby)
 
 
-def _filter_no_conversions(
+def filter_no_conversions(
     df: pl.DataFrame,
-    groupby: list[str] | None = None,
+    groupby: str | list[str] | None = "replicate",
     converted: str | None = "one_or_more_conversion",
     test: bool = False,
 ) -> pl.DataFrame:
@@ -183,7 +184,7 @@ def _filter_no_conversions(
     ----------
     df : pl.DataFrame
         Summary dataframe aggregated to give counts of one or more conversion.
-    groupby : list[str], optional
+    groupby : str | list[str], optional
         Variables to group the data by.
     converted : str
         Variable that contains whether conversions have been observed or not.
@@ -197,13 +198,13 @@ def _filter_no_conversions(
         Aggregated dataframe.
     """
     if not test:
-        df = _aggregate_conversions(df, groupby, converted)
+        df = aggregate_conversions(df, groupby, converted)
     # pylint: disable=singleton-comparison
     return df.filter((pl.col("len") == 1) & (pl.col(converted) == False)).drop("len")  # noqa: E712
 
 
-def _get_one_or_more_conversion(
-    df: pl.DataFrame, groupby: list[str] | None = None, converted: str = "one_or_more_conversion"
+def get_one_or_more_conversion(
+    df: pl.DataFrame, groupby: str | list[str] | None = "replicate", converted: str = "one_or_more_conversion"
 ) -> pl.DataFrame:
     """
     Extract instances where one or more conversion has occurred.
@@ -218,7 +219,7 @@ def _get_one_or_more_conversion(
     ----------
     df : pl.DataFrame
         Summary dataframe aggregated to give counts of one or more conversion.
-    groupby : list[str], optional
+    groupby : str | list[str], optional
         Variables to group the data by.
     converted : str
         Variable that contains whether conversions have been observed or not.
@@ -228,9 +229,8 @@ def _get_one_or_more_conversion(
     pl.DataFrame
         Aggregated dataframe.
     """
-    if groupby is None:
-        groupby = GROUPBY_DAY_HR_REP
-    no_conversions = _filter_no_conversions(df, groupby, converted)
+    groupby = get_groupby(groupby)
+    no_conversions = filter_no_conversions(df, groupby, converted)
     groupby.append(converted)
     no_conversions = df.join(no_conversions, on=groupby, how="inner", maintain_order="left")
     no_conversions = no_conversions.with_columns(
@@ -245,8 +245,11 @@ def _get_one_or_more_conversion(
     return df.filter(pl.col(converted) == True).select(keep).sort(groupby)  # noqa: E712
 
 
-def _percent_conversions_across_replicates(
-    df: pl.DataFrame, groupby: list[str] | None, count: str = "conversion_count", total: str = "conversion_total"
+def percent_conversions_across_replicates(
+    df: pl.DataFrame,
+    groupby: str | list[str] | None = "time",
+    count: str = "conversion_count",
+    total: str = "conversion_total",
 ) -> pl.DataFrame:
     """
     Percentage of conversions across replicates for each time point.
@@ -259,7 +262,7 @@ def _percent_conversions_across_replicates(
     ----------
     df : pl.DataFrame
         Polars Dataframe of conversions.
-    groupby : list[str], optional
+    groupby : str | list[str], optional
         Variables to ``group_by`` the data, default is ``transcript_id, start, end, assignment, day, hour``.
     count : str
         Variable/column name holding the counts, default is ``conversion_count``.
@@ -272,8 +275,7 @@ def _percent_conversions_across_replicates(
         Weighted mean of the percentage of conversions (weighted by total conversions) across replicates for the given
         transcript/assignment/strand/day/hour (as specified by ``groupby``).
     """
-    if groupby is None:
-        groupby = ["Transcript_id", "Strand", "Start", "End", "Assignment", "day", "hour"]
+    groupby = get_groupby(groupby)
     _keep = groupby + [count, total]
     return (
         df.select(_keep)
@@ -283,7 +285,7 @@ def _percent_conversions_across_replicates(
     )
 
 
-def _select_base_levels(df: pl.DataFrame, base_day: int = 0, base_hour: int = 0) -> pl.DataFrame:
+def select_base_levels(df: pl.DataFrame, base_day: int = 0, base_hour: int = 0) -> pl.DataFrame:
     """
     Select the base level reference across all data.
 
@@ -311,11 +313,11 @@ def _select_base_levels(df: pl.DataFrame, base_day: int = 0, base_hour: int = 0)
     )
 
 
-def _merge_average_with_baseline(
+def merge_average_with_baseline(
     df_average: pl.DataFrame,
     df_baseline: pl.DataFrame,
-    join_on: list[str] | None = None,
-    remove_zero_baseline: bool = True,
+    join_on: str | list[str] | None = "assignment",
+    zero_baseline_remove: bool = True,
 ) -> pl.DataFrame:
     """
     Merge a data frame with the baseline measurements.
@@ -332,7 +334,7 @@ def _merge_average_with_baseline(
     join_on : list[str] | None
         Variables to join the data frames on, if ``None`` (default) it is set to ``Transcript_id, Start, End,
         Assignment, Strand``.
-    remove_zero_baseline : bool
+    zero_baseline_remove : bool
         Remove instances where the baseline percentage conversion is zero.
 
     Returns
@@ -340,16 +342,15 @@ def _merge_average_with_baseline(
     pl.DataFrame
         Averaged and baseline data frame merged on ``join_on``.
     """
-    if join_on is None:
-        join_on = ["Transcript_id", "Start", "End", "Assignment", "Strand"]
-    if remove_zero_baseline:
+    join_on = get_groupby(groupby=join_on)
+    if zero_baseline_remove:
         df_baseline = df_baseline.filter(pl.col("baseline_percent") != 0.0)
     return df_average.join(df_baseline, on=join_on)
 
 
-def _derive_weight_within_isoform(
+def derive_weight_within_isoform(
     df: pl.DataFrame,
-    groupby: list[str] | None,
+    groupby: str | list[str] | None = "assignment",
     total: str = "conversion_total",
 ) -> pl.DataFrame:
     """
@@ -377,13 +378,13 @@ def _derive_weight_within_isoform(
         DataFrame with two new columns, the sum of total conversions across replicates and time points
         (``conversion_total_all_time_points``) and the weight of conversions at each time point (``conversion_weight``).
     """
-    groupby = ["Transcript_id", "Strand", "Start", "End", "Assignment"] if groupby is None else groupby
+    groupby = get_groupby(groupby)
     counts_across_isoform = df.group_by(groupby).agg([pl.col(total).sum().alias("conversion_total_all_time_points")])
     df = df.join(counts_across_isoform, on=groupby, how="inner")
     return df.with_columns((pl.col(total) / pl.col("conversion_total_all_time_points")).alias("conversion_weight"))
 
 
-def _normalise(
+def normalise(
     df: pl.DataFrame,
     to_normalise: str = "conversion_percent",
     baseline: str = "baseline_percent",
@@ -416,8 +417,8 @@ def _normalise(
     return df.with_columns([(pl.col(to_normalise) / pl.col(baseline)).alias(normalised)])
 
 
-def _find_read_pairs(
-    df: pl.DataFrame, index_columns: set[str] | None = None, assignment: str | None = "Assignment"
+def find_read_pairs(
+    df: pl.DataFrame, index_columns: list[str] | None = None, assignment: str | None = "Assignment"
 ) -> pl.DataFrame:
     """
     Find instances where there are conversions for both ``Return`` and ``Splice`` assignments.
@@ -426,7 +427,7 @@ def _find_read_pairs(
     ----------
     df : pl.DataFrame
         Polars DataFrame.
-    index_columns : set
+    index_columns : list[str]
         List of index columns to select from the dataframe. Should include the unique identifiers, typically
         (``Transcript_id``, ``Strand``, ``Start`` and ``End`` which are the defaults) but does not need to include the
         ''assignment'' column.
@@ -441,8 +442,8 @@ def _find_read_pairs(
     if assignment is None:
         assignment = "Assignment"
     if index_columns is None:
-        index_columns = {"Transcript_id", "Strand", "Start", "End"}
-    index_columns.add(assignment)
+        index_columns = get_groupby(groupby="base")
+    index_columns.append(assignment)
     df_return = df.select(index_columns).filter(pl.col(assignment) == "Ret")
     df_splice = df.select(index_columns).filter(pl.col(assignment) == "Spl")
     index_columns.remove(assignment)
@@ -456,8 +457,8 @@ def _find_read_pairs(
     )
 
 
-def _remove_zero_baseline(
-    df: pl.DataFrame, groupby: list[str] | None = None, percent_col: str | None = None
+def remove_zero_baseline(
+    df: pl.DataFrame, groupby: str | list[str] | None = "base", percent_col: str | None = None
 ) -> pl.DataFrame:
     """
     Remove data where the percentage change at baseline is zero.
@@ -475,8 +476,9 @@ def _remove_zero_baseline(
     ----------
     df : pl.DataFrame
         Polars DataFrame with percentage changes at each time point for transcript/strand/start/end/assignment.
-    groupby : list[str]
-        Grouping of variables to look within for baseline of zero percent change.
+    groupby : str | list[str]
+        Grouping of variables to look within for baseline of zero percent change. Default is ``base`` which groups by
+        transcript_id/strand/start/end/assignment.
     percent_col : str
         Column name that holds the percentage, defaults to 'conversion_percent' if not specified.
 
@@ -485,7 +487,7 @@ def _remove_zero_baseline(
     pl.DataFrame
         Polars DataFrame with groups where the percent change at baseline is zero removed.
     """
-    groupby = ["Transcript_id", "Strand", "Start", "End", "Assignment"] if groupby is None else groupby
+    groupby = get_groupby(groupby)
     percent_col = "conversion_percent" if percent_col is None else percent_col
     df_zero_baseline = df.filter(pl.col(percent_col) == 0.0)
     # Use an "anti" join which returns rows from the left (df) which do not have a match on the right (df_zero_basleine)
@@ -575,18 +577,18 @@ class Statistics:  # pylint: disable=too-many-instance-attributes
             conversions_threshold=self._conversions_threshold,
             test_file=self._test_file,
         )
-        _df = _aggregate_conversions(self.data, self.groupby, self._conversions_var)
-        _df = _filter_no_conversions(_df, self.groupby, self._conversions_var, test=False)
-        _df = _get_one_or_more_conversion(_df, self.groupby, self._conversions_var)
-        self.averages = _percent_conversions_across_replicates(_df, self.groupby)
-        self.baseline = _select_base_levels(self.averages)
-        self.normalised = _merge_average_with_baseline(self.averages, self.baseline)
+        _df = aggregate_conversions(self.data, self.groupby, self._conversions_var)
+        _df = filter_no_conversions(_df, self.groupby, self._conversions_var, test=False)
+        _df = get_one_or_more_conversion(_df, self.groupby, self._conversions_var)
+        self.averages = percent_conversions_across_replicates(_df, self.groupby)
+        self.baseline = select_base_levels(self.averages)
+        self.normalised = merge_average_with_baseline(self.averages, self.baseline)
         # Normalise mean conversion percent change by baseline
-        self.normalised = _normalise(
+        self.normalised = normalise(
             self.normalised, to_normalise="conversion_percent", baseline="baseline_percent", normalised="normalised"
         )
         # Derive weights within transcript/isoform based on total counts
-        self.normalised = _derive_weight_within_isoform(self.normalised, groupby=None, total="conversion_total")
+        self.normalised = derive_weight_within_isoform(self.normalised, groupby=None, total="conversion_total")
 
     @property
     def file_ext(self) -> str:
