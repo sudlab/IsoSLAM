@@ -621,9 +621,45 @@ def test_remove_zero_baseline(
 ) -> None:
     """Test excluding groups where percent at baseline is zero."""
     df = request.getfixturevalue(df) if isinstance(df, str) else df
-    print(f"\n{df=}\n")
     no_zero_percent_baseline = summary._remove_zero_baseline(df, groupby, percent_col)
     print(no_zero_percent_baseline.write_csv(), file=regtest)
+
+
+@pytest.mark.parametrize(
+    ("groupby", "expected"),
+    [
+        pytest.param("base", ["Transcript_id", "Strand", "Start", "End"], id="base"),
+        pytest.param("assignment", ["Transcript_id", "Strand", "Start", "End", "Assignment"], id="assignment"),
+        pytest.param(None, ["Transcript_id", "Strand", "Start", "End", "Assignment"], id="none"),
+        pytest.param("filename", ["Transcript_id", "Strand", "Start", "End", "Assignment", "filename"], id="filename"),
+        pytest.param("time", ["Transcript_id", "Strand", "Start", "End", "Assignment", "day", "hour"], id="time"),
+        pytest.param(
+            "replicate",
+            ["Transcript_id", "Strand", "Start", "End", "Assignment", "day", "hour", "replicate"],
+            id="replicate",
+        ),
+        pytest.param(
+            ["a", "b", "c"],
+            ["a", "b", "c"],
+            id="other (list)",
+        ),
+    ],
+)
+def test_get_groupby(groupby: str | list[str], expected: list) -> None:
+    """Test summary.get_groupby() returns correct list."""
+    assert summary.get_groupby(groupby) == expected
+
+
+@pytest.mark.parametrize(
+    ("groupby"),
+    [
+        pytest.param("invalid string", id="invalid string"),
+    ],
+)
+def test_get_groupby_value_error(groupby: str | None) -> None:
+    """Test ValueError raised when invalid values passed to summary._get_groupby()."""
+    with pytest.raises(ValueError):  # noqa: PT011
+        summary.get_groupby(groupby)
 
 
 @pytest.mark.skip

@@ -492,6 +492,56 @@ def _remove_zero_baseline(
     return df.join(df_zero_baseline, on=groupby, how="anti")
 
 
+def get_groupby(groupby: str | list[str] | None) -> list[str]:  # pylint: disable=too-many-return-statements
+    """
+    Get grouping variables.
+
+    .. csv-table:: Possible groupings
+       :header: 'Value','Grouping'
+
+    'base',','["Transcript_id", "Strand", "Start", "End"]'
+    'assignment',','["Transcript_id", "Strand", "Start", "End", "Assignment"]'
+    'filename','["Transcript_id", "Strand", "Start", "End", "Assignment", "filename"]'
+    'time','["Transcript_id", "Strand", "Start", "End", "Assignment", "day", "hour"]'
+    'replicate','["Transcript_id", "Strand", "Start", "End", "Assignment", "day", "hour", "replicate"]'
+    'None','Value of ``groupby``.'
+
+    This is typically ``["Transcript_id", "Strand", "Start", "End", "Assignment"]`` when ``groupby`` is ``None`` but
+    returns ``groupby`` otherwise.
+
+    Parameters
+    ----------
+    groupby : list[str] | None
+        Variables to groupby.
+
+    Returns
+    -------
+    list[str]
+        List of variables to group data by.
+
+    Raises
+    ------
+    ValueError
+        If invalid value string is passed.
+    """
+    if groupby is not None and not isinstance(groupby, list):
+        if groupby not in {"assignment", "base", "filename", "time", "replicate"}:
+            raise ValueError("You must specify a valid grouping or pass a list to groupby.")
+        if groupby == "base":
+            return ["Transcript_id", "Strand", "Start", "End"]
+        if groupby == "assignment":
+            return ["Transcript_id", "Strand", "Start", "End", "Assignment"]
+        if groupby == "filename":
+            return ["Transcript_id", "Strand", "Start", "End", "Assignment", "filename"]
+        if groupby == "time":
+            return ["Transcript_id", "Strand", "Start", "End", "Assignment", "day", "hour"]
+        if groupby == "replicate":
+            return ["Transcript_id", "Strand", "Start", "End", "Assignment", "day", "hour", "replicate"]
+    if groupby is None:
+        return ["Transcript_id", "Strand", "Start", "End", "Assignment"]
+    return groupby  # type: ignore[return-value]
+
+
 # mypy: disable-error-code="no-redef"
 
 
