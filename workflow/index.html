@@ -9,9 +9,9 @@
 <link href="../usage/" rel="prev"/>
 <link href="../contributing/" rel="next"/>
 <link href="../assets/images/favicon.png" rel="icon"/>
-<meta content="mkdocs-1.6.1, mkdocs-material-9.6.7" name="generator"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.6.11" name="generator"/>
 <title>Workflow - IsoSLAM</title>
-<link href="../assets/stylesheets/main.8608ea7d.min.css" rel="stylesheet"/>
+<link href="../assets/stylesheets/main.4af4bdda.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
 <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
@@ -221,6 +221,98 @@
 </ul>
 </nav>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#statistical-analysis">
+<span class="md-ellipsis">
+      Statistical Analysis
+    </span>
+</a>
+<nav aria-label="Statistical Analysis" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#data-preparation">
+<span class="md-ellipsis">
+      Data Preparation
+    </span>
+</a>
+<nav aria-label="Data Preparation" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#initial-data-structure">
+<span class="md-ellipsis">
+      Initial Data Structure
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#summarise-counts">
+<span class="md-ellipsis">
+      Summarise Counts
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#aggregate-counts">
+<span class="md-ellipsis">
+      Aggregate Counts
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#filter-no-conversions">
+<span class="md-ellipsis">
+      Filter No Conversions
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#extract-one-or-more-conversions">
+<span class="md-ellipsis">
+      Extract One or More Conversions
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#calculate-percentage-of-conversions-across-replicates">
+<span class="md-ellipsis">
+      Calculate Percentage of Conversions Across Replicates
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#select-base-levels">
+<span class="md-ellipsis">
+      Select Base Levels
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#merge-baseline-with-all-averages">
+<span class="md-ellipsis">
+      Merge baseline with all averages
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#normalise-mean-percentages">
+<span class="md-ellipsis">
+      Normalise mean percentages
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#derive-weights">
+<span class="md-ellipsis">
+      Derive Weights
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
 </ul>
 </nav>
 </li>
@@ -416,6 +508,98 @@
 </ul>
 </nav>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#statistical-analysis">
+<span class="md-ellipsis">
+      Statistical Analysis
+    </span>
+</a>
+<nav aria-label="Statistical Analysis" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#data-preparation">
+<span class="md-ellipsis">
+      Data Preparation
+    </span>
+</a>
+<nav aria-label="Data Preparation" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#initial-data-structure">
+<span class="md-ellipsis">
+      Initial Data Structure
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#summarise-counts">
+<span class="md-ellipsis">
+      Summarise Counts
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#aggregate-counts">
+<span class="md-ellipsis">
+      Aggregate Counts
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#filter-no-conversions">
+<span class="md-ellipsis">
+      Filter No Conversions
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#extract-one-or-more-conversions">
+<span class="md-ellipsis">
+      Extract One or More Conversions
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#calculate-percentage-of-conversions-across-replicates">
+<span class="md-ellipsis">
+      Calculate Percentage of Conversions Across Replicates
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#select-base-levels">
+<span class="md-ellipsis">
+      Select Base Levels
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#merge-baseline-with-all-averages">
+<span class="md-ellipsis">
+      Merge baseline with all averages
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#normalise-mean-percentages">
+<span class="md-ellipsis">
+      Normalise mean percentages
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#derive-weights">
+<span class="md-ellipsis">
+      Derive Weights
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
 </ul>
 </nav>
 </div>
@@ -568,6 +752,375 @@ h3:before {
 </span><span id="__span-0-11"><a href="#__codelineno-0-11" id="__codelineno-0-11" name="__codelineno-0-11"></a>
 </span><span id="__span-0-12"><a href="#__codelineno-0-12" id="__codelineno-0-12" name="__codelineno-0-12"></a>Exon : |========|   Read alignment block:  |&gt;&gt;&gt;&gt;&gt;|
 </span></code></pre></div>
+<h2 id="statistical-analysis">Statistical Analysis</h2>
+<p>Non-linear exponential regression models are fitted for each transcript and isoform (in terms of
+<code>start</code>/<code>end</code>/<code>strand</code>/<code>assignment</code>). Because replicate analyses are performed some data preparation is required before
+fitting the model to determine the "average" percentage of conversions and to derive appropriate weights since we can
+be more confident in this percentage change when we have observed more events in total.</p>
+<h3 id="data-preparation">Data Preparation</h3>
+<p>Described below are the different steps in preparing the data. The `Statistics`` dataclass exists to which loads and
+aggregates the data and performs the necessary steps described below.</p>
+<p><strong>NB</strong> The excerpts below are from the regression test suite and can be found in the GitHub repository under
+<code>tests/_regtest_outputs</code> and correspond to the relevant test.</p>
+<style>
+body {
+    counter-reset: h4counter;
+}
+h4 {
+    counter-increment: h4counter;
+}
+h4:before {
+    content: counter(h4counter) ". ";
+}
+</style>
+<h4 id="initial-data-structure">Initial Data Structure</h4>
+<p>After initial processing with <code>isoslam</code> there are multiple files in either <code>csv</code>, <code>tsv</code> or <code>parquet</code> format with the
+columns <code>Read_UID</code>, <code>Transcript_id</code>, <code>Start</code>, <code>End</code>, <code>Chr</code>, <code>Strand</code>, <code>Assignment</code>, <code>Conversions</code>, <code>Convertible</code>,
+<code>Coverage</code>. The transcript <code>ENST00000313949</code> is shown below.</p>
+<p><strong>NB</strong> For convenience the filenames have been truncated to show only the day, hour and replicate, in real live the
+filenames contain more metadata about the experiments.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a>❱ grep -n ENST00000313949 ../resources/tsv/output/d*
+</span><span id="__span-1-2"><a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a>../resources/tsv/output/d0_0hr1.tsv:150:45      ENST00000313949    58910081        58910333        chr20   +       Spl     0       62      300\n
+</span><span id="__span-1-3"><a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a>../resources/tsv/output/d0_0hr1.tsv:156:45      ENST00000313949    58909804        58909950        chr20   +       Spl     0       62      300
+</span><span id="__span-1-4"><a href="#__codelineno-1-4" id="__codelineno-1-4" name="__codelineno-1-4"></a>../resources/tsv/output/d0_0hr1.tsv:157:45      ENST00000313949    58909579        58909683        chr20   +       Spl     0       62      300
+</span><span id="__span-1-5"><a href="#__codelineno-1-5" id="__codelineno-1-5" name="__codelineno-1-5"></a>../resources/tsv/output/d0_0hr4.tsv:52:16       ENST00000313949    58910081        58910333        chr20   +       Spl     0       69      291
+</span><span id="__span-1-6"><a href="#__codelineno-1-6" id="__codelineno-1-6" name="__codelineno-1-6"></a>../resources/tsv/output/d0_0hr4.tsv:54:16       ENST00000313949    58910401        58910682        chr20   +       Spl     0       69      291
+</span><span id="__span-1-7"><a href="#__codelineno-1-7" id="__codelineno-1-7" name="__codelineno-1-7"></a>../resources/tsv/output/d0_0hr4.tsv:57:16       ENST00000313949    58909804        58909950        chr20   +       Spl     0       69      291
+</span><span id="__span-1-8"><a href="#__codelineno-1-8" id="__codelineno-1-8" name="__codelineno-1-8"></a>../resources/tsv/output/d0_0hr4.tsv:86:27       ENST00000313949    58910401        58910682        chr20   +       Spl     1       87      299
+</span><span id="__span-1-9"><a href="#__codelineno-1-9" id="__codelineno-1-9" name="__codelineno-1-9"></a>../resources/tsv/output/d0_12hr4.tsv:69:19      ENST00000313949    58909216        58909349        chr20   +       Spl     0       66      300
+</span><span id="__span-1-10"><a href="#__codelineno-1-10" id="__codelineno-1-10" name="__codelineno-1-10"></a><span class="hll">../resources/tsv/output/d0_12hr4.tsv:75:19      ENST00000313949    58903791        58905382        chr20   +       Spl     0       66      300
+</span></span><span id="__span-1-11"><a href="#__codelineno-1-11" id="__codelineno-1-11" name="__codelineno-1-11"></a>../resources/tsv/output/d0_12hr4.tsv:77:19      ENST00000313949    58909423        58909520        chr20   +       Spl     0       66      300
+</span><span id="__span-1-12"><a href="#__codelineno-1-12" id="__codelineno-1-12" name="__codelineno-1-12"></a><span class="hll">../resources/tsv/output/d0_3hr1.tsv:12:7        ENST00000313949    58903791        58905382        chr20   +       Spl     0       65      232
+</span></span><span id="__span-1-13"><a href="#__codelineno-1-13" id="__codelineno-1-13" name="__codelineno-1-13"></a>../resources/tsv/output/d0_3hr1.tsv:16:7        ENST00000313949    58905480        58909161        chr20   +       Spl     0       65      232
+</span><span id="__span-1-14"><a href="#__codelineno-1-14" id="__codelineno-1-14" name="__codelineno-1-14"></a>../resources/tsv/output/d0_3hr2.tsv:140:20      ENST00000313949    58909804        58909950        chr20   +       Spl     1       70      218
+</span><span id="__span-1-15"><a href="#__codelineno-1-15" id="__codelineno-1-15" name="__codelineno-1-15"></a>../resources/tsv/output/d16_0hr1.tsv:47:11      ENST00000313949    58909579        58909683        chr20   +       Spl     0       68      297
+</span><span id="__span-1-16"><a href="#__codelineno-1-16" id="__codelineno-1-16" name="__codelineno-1-16"></a>../resources/tsv/output/d16_0hr1.tsv:54:11      ENST00000313949    58909804        58909950        chr20   +       Spl     0       68      297
+</span><span id="__span-1-17"><a href="#__codelineno-1-17" id="__codelineno-1-17" name="__codelineno-1-17"></a><span class="hll">../resources/tsv/output/d16_0hr1.tsv:55:11      ENST00000313949    58909423        58909520        chr20   +       Spl     0       68      297
+</span></span><span id="__span-1-18"><a href="#__codelineno-1-18" id="__codelineno-1-18" name="__codelineno-1-18"></a>../resources/tsv/output/d16_0hr2.tsv:31:12      ENST00000313949    58903791        58905382        chr20   +       Spl     1       68      197
+</span><span id="__span-1-19"><a href="#__codelineno-1-19" id="__codelineno-1-19" name="__codelineno-1-19"></a>../resources/tsv/output/d16_0hr2.tsv:33:12      ENST00000313949    58905480        58909161        chr20   +       Spl     1       68      197
+</span><span id="__span-1-20"><a href="#__codelineno-1-20" id="__codelineno-1-20" name="__codelineno-1-20"></a>../resources/tsv/output/d16_0hr3.tsv:85:26      ENST00000313949    58910081        58910333        chr20   +       Spl     0       70      300
+</span><span id="__span-1-21"><a href="#__codelineno-1-21" id="__codelineno-1-21" name="__codelineno-1-21"></a>../resources/tsv/output/d16_0hr3.tsv:86:26      ENST00000313949    58909423        58909520        chr20   +       Spl     0       70      300
+</span><span id="__span-1-22"><a href="#__codelineno-1-22" id="__codelineno-1-22" name="__codelineno-1-22"></a>../resources/tsv/output/d16_0hr3.tsv:91:26      ENST00000313949    58909579        58909683        chr20   +       Spl     0       70      300
+</span><span id="__span-1-23"><a href="#__codelineno-1-23" id="__codelineno-1-23" name="__codelineno-1-23"></a>../resources/tsv/output/d16_0hr3.tsv:98:28      ENST00000313949    58909804        58909950        chr20   +       Spl     0       72      300
+</span><span id="__span-1-24"><a href="#__codelineno-1-24" id="__codelineno-1-24" name="__codelineno-1-24"></a>../resources/tsv/output/d16_0hr3.tsv:99:28      ENST00000313949    58909423        58909520        chr20   +       Spl     0       72      300
+</span><span id="__span-1-25"><a href="#__codelineno-1-25" id="__codelineno-1-25" name="__codelineno-1-25"></a>../resources/tsv/output/d16_0hr3.tsv:104:28     ENST00000313949    58909579        58909683        chr20   +       Spl     0       72      300
+</span><span id="__span-1-26"><a href="#__codelineno-1-26" id="__codelineno-1-26" name="__codelineno-1-26"></a>../resources/tsv/output/d16_3hr1.tsv:165:56     ENST00000313949    58909579        58909683        chr20   +       Spl     0       68      300
+</span><span id="__span-1-27"><a href="#__codelineno-1-27" id="__codelineno-1-27" name="__codelineno-1-27"></a>../resources/tsv/output/d16_3hr1.tsv:166:56     ENST00000313949    58909423        58909520        chr20   +       Spl     0       68      300
+</span><span id="__span-1-28"><a href="#__codelineno-1-28" id="__codelineno-1-28" name="__codelineno-1-28"></a>../resources/tsv/output/d16_3hr1.tsv:169:56     ENST00000313949    58909804        58909950        chr20   +       Spl     0       68      300
+</span><span id="__span-1-29"><a href="#__codelineno-1-29" id="__codelineno-1-29" name="__codelineno-1-29"></a>../resources/tsv/output/d16_3hr3.tsv:11:4       ENST00000313949    58910401        58910682        chr20   +       Spl     1       65      289
+</span><span id="__span-1-30"><a href="#__codelineno-1-30" id="__codelineno-1-30" name="__codelineno-1-30"></a><span class="hll">../resources/tsv/output/d16_3hr3.tsv:16:4       ENST00000313949    58910081        58910333        chr20   +       Spl     1       65      289
+</span></span><span id="__span-1-31"><a href="#__codelineno-1-31" id="__codelineno-1-31" name="__codelineno-1-31"></a>../resources/tsv/output/d16_3hr3.tsv:69:22      ENST00000313949    58903791        58905382        chr20   +       Spl     0       57      266
+</span><span id="__span-1-32"><a href="#__codelineno-1-32" id="__codelineno-1-32" name="__codelineno-1-32"></a>../resources/tsv/output/d16_3hr3.tsv:71:22      ENST00000313949    58903585        58903671        chr20   +       Spl     0       57      266
+</span><span id="__span-1-33"><a href="#__codelineno-1-33" id="__codelineno-1-33" name="__codelineno-1-33"></a>../resources/tsv/output/d16_no4sU.tsv:56:19     ENST00000313949    58910401        58910682        chr20   +       Spl     0       64      235
+</span><span id="__span-1-34"><a href="#__codelineno-1-34" id="__codelineno-1-34" name="__codelineno-1-34"></a>../resources/tsv/output/d16_no4sU.tsv:57:19     ENST00000313949    58910081        58910333        chr20   +       Spl     0       64      235
+</span><span id="__span-1-35"><a href="#__codelineno-1-35" id="__codelineno-1-35" name="__codelineno-1-35"></a>../resources/tsv/output/d2_12hr1.tsv:119:41     ENST00000313949    58905480        58909161        chr20   +       Spl     1       65      249
+</span><span id="__span-1-36"><a href="#__codelineno-1-36" id="__codelineno-1-36" name="__codelineno-1-36"></a>../resources/tsv/output/d2_12hr1.tsv:121:41     ENST00000313949    58909216        58909349        chr20   +       Spl     1       65      249
+</span><span id="__span-1-37"><a href="#__codelineno-1-37" id="__codelineno-1-37" name="__codelineno-1-37"></a>../resources/tsv/output/d2_12hr1.tsv:122:41     ENST00000313949    58909423        58909520        chr20   +       Spl     1       65      249
+</span></code></pre></div>
+<h4 id="summarise-counts">Summarise Counts</h4>
+<p>Having processed multiple files the data is aggregated into a single large dataframe by the <code>summary.summary_counts()</code>
+function. The <code>Chr</code> column has been dropped as it is consistent with the <code>Transcript_id</code>, it is not lost however and is
+retained and added back in at the end, it just removes a level of indexing when performing <code>group_by()</code> operations. Note
+also after this aggregation process the data is <em>not</em> sorted by <code>day</code> or <code>hour</code>.</p>
+<p>We can see that for transcript <code>ENST00000313949</code> (on Chromosome 20) starting at <code>58903791</code> and ending at <code>58905382</code>
+there are observed events at day 0, hours 3 and 12 and day 16 at hours 0 and 3, but only one had an observed conversion.</p>
+<p><strong>TODO</strong> Check why <code>conversion_count</code> is `1** for these events, surely it should be zero?</p>
+<p><strong>TODO</strong> Possibly remove other lines to make it easier to read, but leave a few around it in place.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a>Transcript_id,Strand,Start,End,Assignment,filename,one_or_more_conversion,conversion_count,conversion_total,conversion_percent,day,hour,replicate
+</span><span id="__span-2-2"><a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a>ENST00000313949,+,58903585,58903671,Spl,d16_3hr3,false,1,1,1.0,16,3,3
+</span><span id="__span-2-3"><a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="hll">ENST00000313949,+,58903791,58905382,Spl,d0_12hr4,false,1,1,1.0,0,12,4
+</span></span><span id="__span-2-4"><a href="#__codelineno-2-4" id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="hll">ENST00000313949,+,58903791,58905382,Spl,d0_3hr1,false,1,1,1.0,0,3,1
+</span></span><span id="__span-2-5"><a href="#__codelineno-2-5" id="__codelineno-2-5" name="__codelineno-2-5"></a><span class="hll">ENST00000313949,+,58903791,58905382,Spl,d16_0hr2,true,1,1,1.0,16,0,2
+</span></span><span id="__span-2-6"><a href="#__codelineno-2-6" id="__codelineno-2-6" name="__codelineno-2-6"></a><span class="hll">ENST00000313949,+,58903791,58905382,Spl,d16_3hr3,false,1,1,1.0,16,3,3
+</span></span><span id="__span-2-7"><a href="#__codelineno-2-7" id="__codelineno-2-7" name="__codelineno-2-7"></a>ENST00000313949,+,58905480,58909161,Spl,d0_3hr1,false,1,1,1.0,0,3,1
+</span><span id="__span-2-8"><a href="#__codelineno-2-8" id="__codelineno-2-8" name="__codelineno-2-8"></a>ENST00000313949,+,58905480,58909161,Spl,d16_0hr2,true,1,1,1.0,16,0,2
+</span><span id="__span-2-9"><a href="#__codelineno-2-9" id="__codelineno-2-9" name="__codelineno-2-9"></a>ENST00000313949,+,58905480,58909161,Spl,d2_12hr1,true,1,1,1.0,2,12,1
+</span><span id="__span-2-10"><a href="#__codelineno-2-10" id="__codelineno-2-10" name="__codelineno-2-10"></a>ENST00000313949,+,58909216,58909349,Spl,d0_12hr4,false,1,1,1.0,0,12,4
+</span><span id="__span-2-11"><a href="#__codelineno-2-11" id="__codelineno-2-11" name="__codelineno-2-11"></a>ENST00000313949,+,58909216,58909349,Spl,d2_12hr1,true,1,1,1.0,2,12,1
+</span><span id="__span-2-12"><a href="#__codelineno-2-12" id="__codelineno-2-12" name="__codelineno-2-12"></a>ENST00000313949,+,58909423,58909520,Spl,d0_12hr4,false,1,1,1.0,0,12,4
+</span><span id="__span-2-13"><a href="#__codelineno-2-13" id="__codelineno-2-13" name="__codelineno-2-13"></a>ENST00000313949,+,58909423,58909520,Spl,d16_0hr1,false,1,1,1.0,16,0,1
+</span><span id="__span-2-14"><a href="#__codelineno-2-14" id="__codelineno-2-14" name="__codelineno-2-14"></a>ENST00000313949,+,58909423,58909520,Spl,d16_0hr3,false,2,2,1.0,16,0,3
+</span><span id="__span-2-15"><a href="#__codelineno-2-15" id="__codelineno-2-15" name="__codelineno-2-15"></a>ENST00000313949,+,58909423,58909520,Spl,d16_3hr1,false,1,1,1.0,16,3,1
+</span><span id="__span-2-16"><a href="#__codelineno-2-16" id="__codelineno-2-16" name="__codelineno-2-16"></a>ENST00000313949,+,58909423,58909520,Spl,d2_12hr1,true,1,1,1.0,2,12,1
+</span><span id="__span-2-17"><a href="#__codelineno-2-17" id="__codelineno-2-17" name="__codelineno-2-17"></a>ENST00000313949,+,58909579,58909683,Spl,d0_0hr1,false,1,1,1.0,0,0,1
+</span><span id="__span-2-18"><a href="#__codelineno-2-18" id="__codelineno-2-18" name="__codelineno-2-18"></a>ENST00000313949,+,58909579,58909683,Spl,d16_0hr1,false,1,1,1.0,16,0,1
+</span><span id="__span-2-19"><a href="#__codelineno-2-19" id="__codelineno-2-19" name="__codelineno-2-19"></a>ENST00000313949,+,58909579,58909683,Spl,d16_0hr3,false,2,2,1.0,16,0,3
+</span><span id="__span-2-20"><a href="#__codelineno-2-20" id="__codelineno-2-20" name="__codelineno-2-20"></a>ENST00000313949,+,58909579,58909683,Spl,d16_3hr1,false,1,1,1.0,16,3,1
+</span><span id="__span-2-21"><a href="#__codelineno-2-21" id="__codelineno-2-21" name="__codelineno-2-21"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,d0_0hr1,false,1,1,1.0,0,0,1
+</span></span><span id="__span-2-22"><a href="#__codelineno-2-22" id="__codelineno-2-22" name="__codelineno-2-22"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,d0_0hr4,false,1,1,1.0,0,0,4
+</span></span><span id="__span-2-23"><a href="#__codelineno-2-23" id="__codelineno-2-23" name="__codelineno-2-23"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,d0_3hr2,true,1,1,1.0,0,3,2
+</span></span><span id="__span-2-24"><a href="#__codelineno-2-24" id="__codelineno-2-24" name="__codelineno-2-24"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,d16_0hr1,false,1,1,1.0,16,0,1
+</span></span><span id="__span-2-25"><a href="#__codelineno-2-25" id="__codelineno-2-25" name="__codelineno-2-25"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,d16_0hr3,false,1,1,1.0,16,0,3
+</span></span><span id="__span-2-26"><a href="#__codelineno-2-26" id="__codelineno-2-26" name="__codelineno-2-26"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,d16_3hr1,false,1,1,1.0,16,3,1
+</span></span><span id="__span-2-27"><a href="#__codelineno-2-27" id="__codelineno-2-27" name="__codelineno-2-27"></a>ENST00000313949,+,58910081,58910333,Spl,d0_0hr1,false,1,1,1.0,0,0,1
+</span><span id="__span-2-28"><a href="#__codelineno-2-28" id="__codelineno-2-28" name="__codelineno-2-28"></a>ENST00000313949,+,58910081,58910333,Spl,d0_0hr4,false,1,1,1.0,0,0,4
+</span><span id="__span-2-29"><a href="#__codelineno-2-29" id="__codelineno-2-29" name="__codelineno-2-29"></a>ENST00000313949,+,58910081,58910333,Spl,d16_0hr3,false,1,1,1.0,16,0,3
+</span><span id="__span-2-30"><a href="#__codelineno-2-30" id="__codelineno-2-30" name="__codelineno-2-30"></a>ENST00000313949,+,58910081,58910333,Spl,d16_3hr3,true,1,1,1.0,16,3,3
+</span><span id="__span-2-31"><a href="#__codelineno-2-31" id="__codelineno-2-31" name="__codelineno-2-31"></a>ENST00000313949,+,58910401,58910682,Spl,d0_0hr4,false,1,2,0.5,0,0,4
+</span><span id="__span-2-32"><a href="#__codelineno-2-32" id="__codelineno-2-32" name="__codelineno-2-32"></a>ENST00000313949,+,58910401,58910682,Spl,d0_0hr4,true,1,2,0.5,0,0,4
+</span><span id="__span-2-33"><a href="#__codelineno-2-33" id="__codelineno-2-33" name="__codelineno-2-33"></a>ENST00000313949,+,58910401,58910682,Spl,d16_3hr3,true,1,1,1.0,16,3,3
+</span></code></pre></div>
+<h4 id="aggregate-counts">Aggregate Counts</h4>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a>Transcript_id,Strand,Start,End,Assignment,day,hour,replicate,len,one_or_more_conversion
+</span><span id="__span-3-2"><a href="#__codelineno-3-2" id="__codelineno-3-2" name="__codelineno-3-2"></a>ENST00000313949,+,58903585,58903671,Spl,16,3,3,1,false
+</span><span id="__span-3-3"><a href="#__codelineno-3-3" id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="hll">ENST00000313949,+,58903791,58905382,Spl,0,3,1,1,false
+</span></span><span id="__span-3-4"><a href="#__codelineno-3-4" id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="hll">ENST00000313949,+,58903791,58905382,Spl,0,12,4,1,false
+</span></span><span id="__span-3-5"><a href="#__codelineno-3-5" id="__codelineno-3-5" name="__codelineno-3-5"></a><span class="hll">ENST00000313949,+,58903791,58905382,Spl,16,0,2,1,true
+</span></span><span id="__span-3-6"><a href="#__codelineno-3-6" id="__codelineno-3-6" name="__codelineno-3-6"></a><span class="hll">ENST00000313949,+,58903791,58905382,Spl,16,3,3,1,false
+</span></span><span id="__span-3-7"><a href="#__codelineno-3-7" id="__codelineno-3-7" name="__codelineno-3-7"></a>ENST00000313949,+,58905480,58909161,Spl,0,3,1,1,false
+</span><span id="__span-3-8"><a href="#__codelineno-3-8" id="__codelineno-3-8" name="__codelineno-3-8"></a>ENST00000313949,+,58905480,58909161,Spl,2,12,1,1,true
+</span><span id="__span-3-9"><a href="#__codelineno-3-9" id="__codelineno-3-9" name="__codelineno-3-9"></a>ENST00000313949,+,58905480,58909161,Spl,16,0,2,1,true
+</span><span id="__span-3-10"><a href="#__codelineno-3-10" id="__codelineno-3-10" name="__codelineno-3-10"></a>ENST00000313949,+,58909216,58909349,Spl,0,12,4,1,false
+</span><span id="__span-3-11"><a href="#__codelineno-3-11" id="__codelineno-3-11" name="__codelineno-3-11"></a>ENST00000313949,+,58909216,58909349,Spl,2,12,1,1,true
+</span><span id="__span-3-12"><a href="#__codelineno-3-12" id="__codelineno-3-12" name="__codelineno-3-12"></a>ENST00000313949,+,58909423,58909520,Spl,0,12,4,1,false
+</span><span id="__span-3-13"><a href="#__codelineno-3-13" id="__codelineno-3-13" name="__codelineno-3-13"></a>ENST00000313949,+,58909423,58909520,Spl,2,12,1,1,true
+</span><span id="__span-3-14"><a href="#__codelineno-3-14" id="__codelineno-3-14" name="__codelineno-3-14"></a>ENST00000313949,+,58909423,58909520,Spl,16,0,1,1,false
+</span><span id="__span-3-15"><a href="#__codelineno-3-15" id="__codelineno-3-15" name="__codelineno-3-15"></a>ENST00000313949,+,58909423,58909520,Spl,16,0,3,1,false
+</span><span id="__span-3-16"><a href="#__codelineno-3-16" id="__codelineno-3-16" name="__codelineno-3-16"></a>ENST00000313949,+,58909423,58909520,Spl,16,3,1,1,false
+</span><span id="__span-3-17"><a href="#__codelineno-3-17" id="__codelineno-3-17" name="__codelineno-3-17"></a>ENST00000313949,+,58909579,58909683,Spl,0,0,1,1,false
+</span><span id="__span-3-18"><a href="#__codelineno-3-18" id="__codelineno-3-18" name="__codelineno-3-18"></a>ENST00000313949,+,58909579,58909683,Spl,16,0,1,1,false
+</span><span id="__span-3-19"><a href="#__codelineno-3-19" id="__codelineno-3-19" name="__codelineno-3-19"></a>ENST00000313949,+,58909579,58909683,Spl,16,0,3,1,false
+</span><span id="__span-3-20"><a href="#__codelineno-3-20" id="__codelineno-3-20" name="__codelineno-3-20"></a>ENST00000313949,+,58909579,58909683,Spl,16,3,1,1,false
+</span><span id="__span-3-21"><a href="#__codelineno-3-21" id="__codelineno-3-21" name="__codelineno-3-21"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,0,0,1,1,false
+</span></span><span id="__span-3-22"><a href="#__codelineno-3-22" id="__codelineno-3-22" name="__codelineno-3-22"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,0,0,4,1,false
+</span></span><span id="__span-3-23"><a href="#__codelineno-3-23" id="__codelineno-3-23" name="__codelineno-3-23"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,0,3,2,1,true
+</span></span><span id="__span-3-24"><a href="#__codelineno-3-24" id="__codelineno-3-24" name="__codelineno-3-24"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,16,0,1,1,false
+</span></span><span id="__span-3-25"><a href="#__codelineno-3-25" id="__codelineno-3-25" name="__codelineno-3-25"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,16,0,3,1,false
+</span></span><span id="__span-3-26"><a href="#__codelineno-3-26" id="__codelineno-3-26" name="__codelineno-3-26"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,16,3,1,1,false
+</span></span><span id="__span-3-27"><a href="#__codelineno-3-27" id="__codelineno-3-27" name="__codelineno-3-27"></a>ENST00000313949,+,58910081,58910333,Spl,0,0,1,1,false
+</span><span id="__span-3-28"><a href="#__codelineno-3-28" id="__codelineno-3-28" name="__codelineno-3-28"></a>ENST00000313949,+,58910081,58910333,Spl,0,0,4,1,false
+</span><span id="__span-3-29"><a href="#__codelineno-3-29" id="__codelineno-3-29" name="__codelineno-3-29"></a>ENST00000313949,+,58910081,58910333,Spl,16,0,3,1,false
+</span><span id="__span-3-30"><a href="#__codelineno-3-30" id="__codelineno-3-30" name="__codelineno-3-30"></a>ENST00000313949,+,58910081,58910333,Spl,16,3,3,1,true
+</span><span id="__span-3-31"><a href="#__codelineno-3-31" id="__codelineno-3-31" name="__codelineno-3-31"></a>ENST00000313949,+,58910401,58910682,Spl,0,0,4,2,false
+</span><span id="__span-3-32"><a href="#__codelineno-3-32" id="__codelineno-3-32" name="__codelineno-3-32"></a>ENST00000313949,+,58910401,58910682,Spl,16,3,3,1,true
+</span></code></pre></div>
+<h4 id="filter-no-conversions">Filter No Conversions</h4>
+<p>The aggregation process can result in some missing observations where there have been observed reads but no conversions
+observed. Such data points need including and so we derive a subset of instances and make dummies.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a>Transcript_id,Strand,Start,End,Assignment,day,hour,replicate,one_or_more_conversion
+</span><span id="__span-4-2"><a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a>ENST00000313949,+,58903585,58903671,Spl,16,3,3,false
+</span><span id="__span-4-3"><a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="hll">ENST00000313949,+,58903791,58905382,Spl,0,3,1,false
+</span></span><span id="__span-4-4"><a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="hll">ENST00000313949,+,58903791,58905382,Spl,0,12,4,false
+</span></span><span id="__span-4-5"><a href="#__codelineno-4-5" id="__codelineno-4-5" name="__codelineno-4-5"></a><span class="hll">ENST00000313949,+,58903791,58905382,Spl,16,3,3,false
+</span></span><span id="__span-4-6"><a href="#__codelineno-4-6" id="__codelineno-4-6" name="__codelineno-4-6"></a>ENST00000313949,+,58905480,58909161,Spl,0,3,1,false
+</span><span id="__span-4-7"><a href="#__codelineno-4-7" id="__codelineno-4-7" name="__codelineno-4-7"></a>ENST00000313949,+,58909216,58909349,Spl,0,12,4,false
+</span><span id="__span-4-8"><a href="#__codelineno-4-8" id="__codelineno-4-8" name="__codelineno-4-8"></a>ENST00000313949,+,58909423,58909520,Spl,0,12,4,false
+</span><span id="__span-4-9"><a href="#__codelineno-4-9" id="__codelineno-4-9" name="__codelineno-4-9"></a>ENST00000313949,+,58909423,58909520,Spl,16,0,1,false
+</span><span id="__span-4-10"><a href="#__codelineno-4-10" id="__codelineno-4-10" name="__codelineno-4-10"></a>ENST00000313949,+,58909423,58909520,Spl,16,0,3,false
+</span><span id="__span-4-11"><a href="#__codelineno-4-11" id="__codelineno-4-11" name="__codelineno-4-11"></a>ENST00000313949,+,58909423,58909520,Spl,16,3,1,false
+</span><span id="__span-4-12"><a href="#__codelineno-4-12" id="__codelineno-4-12" name="__codelineno-4-12"></a>ENST00000313949,+,58909579,58909683,Spl,0,0,1,false
+</span><span id="__span-4-13"><a href="#__codelineno-4-13" id="__codelineno-4-13" name="__codelineno-4-13"></a>ENST00000313949,+,58909579,58909683,Spl,16,0,1,false
+</span><span id="__span-4-14"><a href="#__codelineno-4-14" id="__codelineno-4-14" name="__codelineno-4-14"></a>ENST00000313949,+,58909579,58909683,Spl,16,0,3,false
+</span><span id="__span-4-15"><a href="#__codelineno-4-15" id="__codelineno-4-15" name="__codelineno-4-15"></a>ENST00000313949,+,58909579,58909683,Spl,16,3,1,false
+</span><span id="__span-4-16"><a href="#__codelineno-4-16" id="__codelineno-4-16" name="__codelineno-4-16"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,0,0,1,false
+</span></span><span id="__span-4-17"><a href="#__codelineno-4-17" id="__codelineno-4-17" name="__codelineno-4-17"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,0,0,4,false
+</span></span><span id="__span-4-18"><a href="#__codelineno-4-18" id="__codelineno-4-18" name="__codelineno-4-18"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,16,0,1,false
+</span></span><span id="__span-4-19"><a href="#__codelineno-4-19" id="__codelineno-4-19" name="__codelineno-4-19"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,16,0,3,false
+</span></span><span id="__span-4-20"><a href="#__codelineno-4-20" id="__codelineno-4-20" name="__codelineno-4-20"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,16,3,1,false
+</span></span><span id="__span-4-21"><a href="#__codelineno-4-21" id="__codelineno-4-21" name="__codelineno-4-21"></a>ENST00000313949,+,58910081,58910333,Spl,0,0,1,false
+</span><span id="__span-4-22"><a href="#__codelineno-4-22" id="__codelineno-4-22" name="__codelineno-4-22"></a>ENST00000313949,+,58910081,58910333,Spl,0,0,4,false
+</span><span id="__span-4-23"><a href="#__codelineno-4-23" id="__codelineno-4-23" name="__codelineno-4-23"></a>ENST00000313949,+,58910081,58910333,Spl,16,0,3,false
+</span></code></pre></div>
+<h4 id="extract-one-or-more-conversions">Extract One or More Conversions</h4>
+<p>We flip the <code>one_or_more_conversion</code> to be <code>true</code> here and the <code>conversion_count</code> and <code>convesrion_percent</code> is set to <code>0</code>
+and <code>0.0</code> for the day/hour/replicates we observed zero conversions and the data is combined with those that did have
+conversions so that we have a complete data set.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a>Transcript_id,Strand,Start,End,Assignment,day,hour,replicate,one_or_more_conversion,conversion_count,conversion_total,conversion_percent
+</span><span id="__span-5-2"><a href="#__codelineno-5-2" id="__codelineno-5-2" name="__codelineno-5-2"></a>ENST00000313949,+,58903585,58903671,Spl,16,3,3,true,0,1,0.0
+</span><span id="__span-5-3"><a href="#__codelineno-5-3" id="__codelineno-5-3" name="__codelineno-5-3"></a><span class="hll">ENST00000313949,+,58903791,58905382,Spl,0,3,1,true,0,1,0.0
+</span></span><span id="__span-5-4"><a href="#__codelineno-5-4" id="__codelineno-5-4" name="__codelineno-5-4"></a><span class="hll">ENST00000313949,+,58903791,58905382,Spl,0,12,4,true,0,1,0.0
+</span></span><span id="__span-5-5"><a href="#__codelineno-5-5" id="__codelineno-5-5" name="__codelineno-5-5"></a><span class="hll">ENST00000313949,+,58903791,58905382,Spl,16,0,2,true,1,1,1.0
+</span></span><span id="__span-5-6"><a href="#__codelineno-5-6" id="__codelineno-5-6" name="__codelineno-5-6"></a><span class="hll">ENST00000313949,+,58903791,58905382,Spl,16,3,3,true,0,1,0.0
+</span></span><span id="__span-5-7"><a href="#__codelineno-5-7" id="__codelineno-5-7" name="__codelineno-5-7"></a>ENST00000313949,+,58905480,58909161,Spl,0,3,1,true,0,1,0.0
+</span><span id="__span-5-8"><a href="#__codelineno-5-8" id="__codelineno-5-8" name="__codelineno-5-8"></a>ENST00000313949,+,58905480,58909161,Spl,2,12,1,true,1,1,1.0
+</span><span id="__span-5-9"><a href="#__codelineno-5-9" id="__codelineno-5-9" name="__codelineno-5-9"></a>ENST00000313949,+,58905480,58909161,Spl,16,0,2,true,1,1,1.0
+</span><span id="__span-5-10"><a href="#__codelineno-5-10" id="__codelineno-5-10" name="__codelineno-5-10"></a>ENST00000313949,+,58909216,58909349,Spl,0,12,4,true,0,1,0.0
+</span><span id="__span-5-11"><a href="#__codelineno-5-11" id="__codelineno-5-11" name="__codelineno-5-11"></a>ENST00000313949,+,58909216,58909349,Spl,2,12,1,true,1,1,1.0
+</span><span id="__span-5-12"><a href="#__codelineno-5-12" id="__codelineno-5-12" name="__codelineno-5-12"></a>ENST00000313949,+,58909423,58909520,Spl,0,12,4,true,0,1,0.0
+</span><span id="__span-5-13"><a href="#__codelineno-5-13" id="__codelineno-5-13" name="__codelineno-5-13"></a>ENST00000313949,+,58909423,58909520,Spl,2,12,1,true,1,1,1.0
+</span><span id="__span-5-14"><a href="#__codelineno-5-14" id="__codelineno-5-14" name="__codelineno-5-14"></a>ENST00000313949,+,58909423,58909520,Spl,16,0,1,true,0,1,0.0
+</span><span id="__span-5-15"><a href="#__codelineno-5-15" id="__codelineno-5-15" name="__codelineno-5-15"></a>ENST00000313949,+,58909423,58909520,Spl,16,0,3,true,0,2,0.0
+</span><span id="__span-5-16"><a href="#__codelineno-5-16" id="__codelineno-5-16" name="__codelineno-5-16"></a>ENST00000313949,+,58909423,58909520,Spl,16,3,1,true,0,1,0.0
+</span><span id="__span-5-17"><a href="#__codelineno-5-17" id="__codelineno-5-17" name="__codelineno-5-17"></a>ENST00000313949,+,58909579,58909683,Spl,0,0,1,true,0,1,0.0
+</span><span id="__span-5-18"><a href="#__codelineno-5-18" id="__codelineno-5-18" name="__codelineno-5-18"></a>ENST00000313949,+,58909579,58909683,Spl,16,0,1,true,0,1,0.0
+</span><span id="__span-5-19"><a href="#__codelineno-5-19" id="__codelineno-5-19" name="__codelineno-5-19"></a>ENST00000313949,+,58909579,58909683,Spl,16,0,3,true,0,2,0.0
+</span><span id="__span-5-20"><a href="#__codelineno-5-20" id="__codelineno-5-20" name="__codelineno-5-20"></a>ENST00000313949,+,58909579,58909683,Spl,16,3,1,true,0,1,0.0
+</span><span id="__span-5-21"><a href="#__codelineno-5-21" id="__codelineno-5-21" name="__codelineno-5-21"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,0,0,1,true,0,1,0.0
+</span></span><span id="__span-5-22"><a href="#__codelineno-5-22" id="__codelineno-5-22" name="__codelineno-5-22"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,0,0,4,true,0,1,0.0
+</span></span><span id="__span-5-23"><a href="#__codelineno-5-23" id="__codelineno-5-23" name="__codelineno-5-23"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,0,3,2,true,1,1,1.0
+</span></span><span id="__span-5-24"><a href="#__codelineno-5-24" id="__codelineno-5-24" name="__codelineno-5-24"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,16,0,1,true,0,1,0.0
+</span></span><span id="__span-5-25"><a href="#__codelineno-5-25" id="__codelineno-5-25" name="__codelineno-5-25"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,16,0,3,true,0,1,0.0
+</span></span><span id="__span-5-26"><a href="#__codelineno-5-26" id="__codelineno-5-26" name="__codelineno-5-26"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,16,3,1,true,0,1,0.0
+</span></span><span id="__span-5-27"><a href="#__codelineno-5-27" id="__codelineno-5-27" name="__codelineno-5-27"></a>ENST00000313949,+,58910081,58910333,Spl,0,0,1,true,0,1,0.0
+</span><span id="__span-5-28"><a href="#__codelineno-5-28" id="__codelineno-5-28" name="__codelineno-5-28"></a>ENST00000313949,+,58910081,58910333,Spl,0,0,4,true,0,1,0.0
+</span><span id="__span-5-29"><a href="#__codelineno-5-29" id="__codelineno-5-29" name="__codelineno-5-29"></a>ENST00000313949,+,58910081,58910333,Spl,16,0,3,true,0,1,0.0
+</span><span id="__span-5-30"><a href="#__codelineno-5-30" id="__codelineno-5-30" name="__codelineno-5-30"></a>ENST00000313949,+,58910081,58910333,Spl,16,3,3,true,1,1,1.0
+</span><span id="__span-5-31"><a href="#__codelineno-5-31" id="__codelineno-5-31" name="__codelineno-5-31"></a>ENST00000313949,+,58910401,58910682,Spl,0,0,4,true,1,2,0.5
+</span><span id="__span-5-32"><a href="#__codelineno-5-32" id="__codelineno-5-32" name="__codelineno-5-32"></a>ENST00000313949,+,58910401,58910682,Spl,16,3,3,true,1,1,1.0
+</span></code></pre></div>
+<h4 id="calculate-percentage-of-conversions-across-replicates">Calculate Percentage of Conversions Across Replicates</h4>
+<p>Note that for the transcript with start/end <code>58909804</code>/<code>58909950</code> we have four rows as there was a replicated
+observation on day <code>0</code> at hour <code>0</code>.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a href="#__codelineno-6-1" id="__codelineno-6-1" name="__codelineno-6-1"></a>Transcript_id,Strand,Start,End,Assignment,day,hour,conversion_count,conversion_total,conversion_percent
+</span><span id="__span-6-2"><a href="#__codelineno-6-2" id="__codelineno-6-2" name="__codelineno-6-2"></a>ENST00000313949,+,58903585,58903671,Spl,16,3,0,1,0.0
+</span><span id="__span-6-3"><a href="#__codelineno-6-3" id="__codelineno-6-3" name="__codelineno-6-3"></a><span class="hll">ENST00000313949,+,58903791,58905382,Spl,0,3,0,1,0.0
+</span></span><span id="__span-6-4"><a href="#__codelineno-6-4" id="__codelineno-6-4" name="__codelineno-6-4"></a><span class="hll">ENST00000313949,+,58903791,58905382,Spl,0,12,0,1,0.0
+</span></span><span id="__span-6-5"><a href="#__codelineno-6-5" id="__codelineno-6-5" name="__codelineno-6-5"></a><span class="hll">ENST00000313949,+,58903791,58905382,Spl,16,0,1,1,100.0
+</span></span><span id="__span-6-6"><a href="#__codelineno-6-6" id="__codelineno-6-6" name="__codelineno-6-6"></a><span class="hll">ENST00000313949,+,58903791,58905382,Spl,16,3,0,1,0.0
+</span></span><span id="__span-6-7"><a href="#__codelineno-6-7" id="__codelineno-6-7" name="__codelineno-6-7"></a>ENST00000313949,+,58905480,58909161,Spl,0,3,0,1,0.0
+</span><span id="__span-6-8"><a href="#__codelineno-6-8" id="__codelineno-6-8" name="__codelineno-6-8"></a>ENST00000313949,+,58905480,58909161,Spl,2,12,1,1,100.0
+</span><span id="__span-6-9"><a href="#__codelineno-6-9" id="__codelineno-6-9" name="__codelineno-6-9"></a>ENST00000313949,+,58905480,58909161,Spl,16,0,1,1,100.0
+</span><span id="__span-6-10"><a href="#__codelineno-6-10" id="__codelineno-6-10" name="__codelineno-6-10"></a>ENST00000313949,+,58909216,58909349,Spl,0,12,0,1,0.0
+</span><span id="__span-6-11"><a href="#__codelineno-6-11" id="__codelineno-6-11" name="__codelineno-6-11"></a>ENST00000313949,+,58909216,58909349,Spl,2,12,1,1,100.0
+</span><span id="__span-6-12"><a href="#__codelineno-6-12" id="__codelineno-6-12" name="__codelineno-6-12"></a>ENST00000313949,+,58909423,58909520,Spl,0,12,0,1,0.0
+</span><span id="__span-6-13"><a href="#__codelineno-6-13" id="__codelineno-6-13" name="__codelineno-6-13"></a>ENST00000313949,+,58909423,58909520,Spl,2,12,1,1,100.0
+</span><span id="__span-6-14"><a href="#__codelineno-6-14" id="__codelineno-6-14" name="__codelineno-6-14"></a>ENST00000313949,+,58909423,58909520,Spl,16,0,0,3,0.0
+</span><span id="__span-6-15"><a href="#__codelineno-6-15" id="__codelineno-6-15" name="__codelineno-6-15"></a>ENST00000313949,+,58909423,58909520,Spl,16,3,0,1,0.0
+</span><span id="__span-6-16"><a href="#__codelineno-6-16" id="__codelineno-6-16" name="__codelineno-6-16"></a>ENST00000313949,+,58909579,58909683,Spl,0,0,0,1,0.0
+</span><span id="__span-6-17"><a href="#__codelineno-6-17" id="__codelineno-6-17" name="__codelineno-6-17"></a>ENST00000313949,+,58909579,58909683,Spl,16,0,0,3,0.0
+</span><span id="__span-6-18"><a href="#__codelineno-6-18" id="__codelineno-6-18" name="__codelineno-6-18"></a><span class="hll">ENST00000313949,+,58909579,58909683,Spl,16,3,0,1,0.0
+</span></span><span id="__span-6-19"><a href="#__codelineno-6-19" id="__codelineno-6-19" name="__codelineno-6-19"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,0,0,0,2,0.0
+</span></span><span id="__span-6-20"><a href="#__codelineno-6-20" id="__codelineno-6-20" name="__codelineno-6-20"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,0,3,1,1,100.0
+</span></span><span id="__span-6-21"><a href="#__codelineno-6-21" id="__codelineno-6-21" name="__codelineno-6-21"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,16,0,0,2,0.0
+</span></span><span id="__span-6-22"><a href="#__codelineno-6-22" id="__codelineno-6-22" name="__codelineno-6-22"></a>ENST00000313949,+,58909804,58909950,Spl,16,3,0,1,0.0
+</span><span id="__span-6-23"><a href="#__codelineno-6-23" id="__codelineno-6-23" name="__codelineno-6-23"></a>ENST00000313949,+,58910081,58910333,Spl,0,0,0,2,0.0
+</span><span id="__span-6-24"><a href="#__codelineno-6-24" id="__codelineno-6-24" name="__codelineno-6-24"></a>ENST00000313949,+,58910081,58910333,Spl,16,0,0,1,0.0
+</span><span id="__span-6-25"><a href="#__codelineno-6-25" id="__codelineno-6-25" name="__codelineno-6-25"></a>ENST00000313949,+,58910081,58910333,Spl,16,3,1,1,100.0
+</span><span id="__span-6-26"><a href="#__codelineno-6-26" id="__codelineno-6-26" name="__codelineno-6-26"></a>ENST00000313949,+,58910401,58910682,Spl,0,0,1,2,50.0
+</span><span id="__span-6-27"><a href="#__codelineno-6-27" id="__codelineno-6-27" name="__codelineno-6-27"></a>ENST00000313949,+,58910401,58910682,Spl,16,3,1,1,100.0
+</span></code></pre></div>
+<h4 id="select-base-levels">Select Base Levels</h4>
+<p>We want to normalise the data and scale the percentage of changes relative to those at baseline (<code>t = 0</code>)</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a href="#__codelineno-7-1" id="__codelineno-7-1" name="__codelineno-7-1"></a>Transcript_id,Strand,Start,End,Assignment,baseline_count,baseline_total,baseline_percent
+</span><span id="__span-7-2"><a href="#__codelineno-7-2" id="__codelineno-7-2" name="__codelineno-7-2"></a><span class="hll">ENST00000313949,+,58909579,58909683,Spl,0,1,0.0
+</span></span><span id="__span-7-3"><a href="#__codelineno-7-3" id="__codelineno-7-3" name="__codelineno-7-3"></a>ENST00000313949,+,58909804,58909950,Spl,0,2,0.0
+</span><span id="__span-7-4"><a href="#__codelineno-7-4" id="__codelineno-7-4" name="__codelineno-7-4"></a><span class="hll">ENST00000313949,+,58910081,58910333,Spl,0,2,0.0
+</span></span><span id="__span-7-5"><a href="#__codelineno-7-5" id="__codelineno-7-5" name="__codelineno-7-5"></a>ENST00000313949,+,58910401,58910682,Spl,1,2,50.0
+</span></code></pre></div>
+<h4 id="merge-baseline-with-all-averages">Merge baseline with all averages</h4>
+<p>Prior to normalising the data we can merge the baseline parameters (<code>summary._merge_average_with_baseline()</code>)</p>
+<p>At this stage we can also remove instances where the percentage change at baseline is zero using the
+<code>remove_zero_baseline</code> which we would typically want to do because in the next step of normalising the data a division
+by zero leads to <code>NaN</code> in the dataframe and models can not be fitted to such data.</p>
+<p>In this example the <code>remove_zero_baseline = False</code> and we can see there are a number of locations where the
+<code>baseline_percent</code> (final column) is <code>0.0</code>.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a href="#__codelineno-8-1" id="__codelineno-8-1" name="__codelineno-8-1"></a>Transcript_id,Strand,Start,End,Assignment,day,hour,conversion_count,conversion_total,conversion_percent,baseline_count,baseline_total,baseline_percent
+</span><span id="__span-8-2"><a href="#__codelineno-8-2" id="__codelineno-8-2" name="__codelineno-8-2"></a>ENST00000313949,+,58909579,58909683,Spl,0,0,0,1,0.0,0,1,0.0
+</span><span id="__span-8-3"><a href="#__codelineno-8-3" id="__codelineno-8-3" name="__codelineno-8-3"></a>ENST00000313949,+,58909579,58909683,Spl,16,0,0,3,0.0,0,1,0.0
+</span><span id="__span-8-4"><a href="#__codelineno-8-4" id="__codelineno-8-4" name="__codelineno-8-4"></a>ENST00000313949,+,58909579,58909683,Spl,16,3,0,1,0.0,0,1,0.0
+</span><span id="__span-8-5"><a href="#__codelineno-8-5" id="__codelineno-8-5" name="__codelineno-8-5"></a>ENST00000313949,+,58909804,58909950,Spl,0,0,0,2,0.0,0,2,0.0
+</span><span id="__span-8-6"><a href="#__codelineno-8-6" id="__codelineno-8-6" name="__codelineno-8-6"></a>ENST00000313949,+,58909804,58909950,Spl,0,3,1,1,100.0,0,2,0.0
+</span><span id="__span-8-7"><a href="#__codelineno-8-7" id="__codelineno-8-7" name="__codelineno-8-7"></a>ENST00000313949,+,58909804,58909950,Spl,16,0,0,2,0.0,0,2,0.0
+</span><span id="__span-8-8"><a href="#__codelineno-8-8" id="__codelineno-8-8" name="__codelineno-8-8"></a>ENST00000313949,+,58909804,58909950,Spl,16,3,0,1,0.0,0,2,0.0
+</span><span id="__span-8-9"><a href="#__codelineno-8-9" id="__codelineno-8-9" name="__codelineno-8-9"></a>ENST00000313949,+,58910081,58910333,Spl,0,0,0,2,0.0,0,2,0.0
+</span><span id="__span-8-10"><a href="#__codelineno-8-10" id="__codelineno-8-10" name="__codelineno-8-10"></a>ENST00000313949,+,58910081,58910333,Spl,16,0,0,1,0.0,0,2,0.0
+</span><span id="__span-8-11"><a href="#__codelineno-8-11" id="__codelineno-8-11" name="__codelineno-8-11"></a>ENST00000313949,+,58910081,58910333,Spl,16,3,1,1,100.0,0,2,0.0
+</span><span id="__span-8-12"><a href="#__codelineno-8-12" id="__codelineno-8-12" name="__codelineno-8-12"></a>ENST00000313949,+,58910401,58910682,Spl,0,0,1,2,50.0,1,2,50.0
+</span><span id="__span-8-13"><a href="#__codelineno-8-13" id="__codelineno-8-13" name="__codelineno-8-13"></a>ENST00000313949,+,58910401,58910682,Spl,16,3,1,1,100.0,1,2,50.0
+</span></code></pre></div>
+<p>If we set <code>remove_zero_baseline = True</code> we get just the last instance where the percentage of conversions at baseline
+was <code>50.0</code>.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a href="#__codelineno-9-1" id="__codelineno-9-1" name="__codelineno-9-1"></a>Transcript_id,Strand,Start,End,Assignment,day,hour,conversion_count,conversion_total,conversion_percent,baseline_count,baseline_total,baseline_percent
+</span><span id="__span-9-2"><a href="#__codelineno-9-2" id="__codelineno-9-2" name="__codelineno-9-2"></a>ENST00000313949,+,58910401,58910682,Spl,0,0,1,2,50.0,1,2,50.0
+</span><span id="__span-9-3"><a href="#__codelineno-9-3" id="__codelineno-9-3" name="__codelineno-9-3"></a>ENST00000313949,+,58910401,58910682,Spl,16,3,1,1,100.0,1,2,50.0
+</span></code></pre></div>
+<h4 id="normalise-mean-percentages">Normalise mean percentages</h4>
+<p>We can now and normalise the data (<code>summary._normalise()</code>) by dividing the percentage change the baseline value that we
+merged in.</p>
+<p>If we don't remove the instances where the percentage change at baseline was <code>0.0</code> then the <code>normalised_percent</code> is
+<code>NaN</code> if a given time point is also <code>0.0</code> and <code>Inf</code> if any other.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a href="#__codelineno-10-1" id="__codelineno-10-1" name="__codelineno-10-1"></a>Transcript_id,Strand,Start,End,Assignment,day,hour,conversion_count,conversion_total,conversion_percent,baseline_count,baseline_total,baseline_percent,normalised_percent
+</span><span id="__span-10-2"><a href="#__codelineno-10-2" id="__codelineno-10-2" name="__codelineno-10-2"></a>ENST00000313949,+,58909579,58909683,Spl,0,0,0,1,0.0,0,1,0.0,NaN
+</span><span id="__span-10-3"><a href="#__codelineno-10-3" id="__codelineno-10-3" name="__codelineno-10-3"></a>ENST00000313949,+,58909579,58909683,Spl,16,0,0,3,0.0,0,1,0.0,NaN
+</span><span id="__span-10-4"><a href="#__codelineno-10-4" id="__codelineno-10-4" name="__codelineno-10-4"></a>ENST00000313949,+,58909579,58909683,Spl,16,3,0,1,0.0,0,1,0.0,NaN
+</span><span id="__span-10-5"><a href="#__codelineno-10-5" id="__codelineno-10-5" name="__codelineno-10-5"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,0,0,0,2,0.0,0,2,0.0,NaN
+</span></span><span id="__span-10-6"><a href="#__codelineno-10-6" id="__codelineno-10-6" name="__codelineno-10-6"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,0,3,1,1,100.0,0,2,0.0,inf
+</span></span><span id="__span-10-7"><a href="#__codelineno-10-7" id="__codelineno-10-7" name="__codelineno-10-7"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,16,0,0,2,0.0,0,2,0.0,NaN
+</span></span><span id="__span-10-8"><a href="#__codelineno-10-8" id="__codelineno-10-8" name="__codelineno-10-8"></a><span class="hll">ENST00000313949,+,58909804,58909950,Spl,16,3,0,1,0.0,0,2,0.0,NaN
+</span></span><span id="__span-10-9"><a href="#__codelineno-10-9" id="__codelineno-10-9" name="__codelineno-10-9"></a><span class="hll">ENST00000313949,+,58910081,58910333,Spl,0,0,0,2,0.0,0,2,0.0,NaN
+</span></span><span id="__span-10-10"><a href="#__codelineno-10-10" id="__codelineno-10-10" name="__codelineno-10-10"></a><span class="hll">ENST00000313949,+,58910081,58910333,Spl,16,0,0,1,0.0,0,2,0.0,NaN
+</span></span><span id="__span-10-11"><a href="#__codelineno-10-11" id="__codelineno-10-11" name="__codelineno-10-11"></a><span class="hll">ENST00000313949,+,58910081,58910333,Spl,16,3,1,1,100.0,0,2,0.0,inf
+</span></span><span id="__span-10-12"><a href="#__codelineno-10-12" id="__codelineno-10-12" name="__codelineno-10-12"></a><span class="hll">ENST00000313949,+,58910401,58910682,Spl,0,0,1,2,50.0,1,2,50.0,1.0
+</span></span><span id="__span-10-13"><a href="#__codelineno-10-13" id="__codelineno-10-13" name="__codelineno-10-13"></a>ENST00000313949,+,58910401,58910682,Spl,16,3,1,1,100.0,1,2,50.0,2.0
+</span></code></pre></div>
+<p>If we have already filtered out instances where the percentage change at baseline was <code>0.0</code> then we only have genuine
+normalised values.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a href="#__codelineno-11-1" id="__codelineno-11-1" name="__codelineno-11-1"></a>Transcript_id,Strand,Start,End,Assignment,day,hour,conversion_count,conversion_total,conversion_percent,baseline_count,baseline_total,baseline_percent,normalised_percent
+</span><span id="__span-11-2"><a href="#__codelineno-11-2" id="__codelineno-11-2" name="__codelineno-11-2"></a><span class="hll">ENST00000313949,+,58910401,58910682,Spl,0,0,1,2,50.0,1,2,50.0,1.0
+</span></span><span id="__span-11-3"><a href="#__codelineno-11-3" id="__codelineno-11-3" name="__codelineno-11-3"></a><span class="hll">ENST00000313949,+,58910401,58910682,Spl,16,3,1,1,100.0,1,2,50.0,2.0
+</span></span></code></pre></div>
+<h4 id="derive-weights">Derive Weights</h4>
+<p>If more reads have been observed then we have greater confidence in the percentage of conversions across replicates. We
+therefore use the total number of conversions across all time points to work out the proportion (/percentage) that are
+derived from a given time point within the grouping and set this as the <code>conversion_weight</code>.</p>
+<p>In the example below we have already filtered out instances where there were no conversions observed at baseline.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a href="#__codelineno-12-1" id="__codelineno-12-1" name="__codelineno-12-1"></a>Transcript_id,Strand,Start,End,Assignment,day,hour,conversion_count,conversion_total,conversion_percent,baseline_count,baseline_total,baseline_percent,normalised_percent,conversion_total_all_time_points,conversion_weight
+</span><span id="__span-12-2"><a href="#__codelineno-12-2" id="__codelineno-12-2" name="__codelineno-12-2"></a><span class="hll">ENST00000313949,+,58910401,58910682,Spl,0,0,1,2,50.0,1,2,50.0,1.0,3,0.6666666666666666
+</span></span><span id="__span-12-3"><a href="#__codelineno-12-3" id="__codelineno-12-3" name="__codelineno-12-3"></a><span class="hll">ENST00000313949,+,58910401,58910682,Spl,16,3,1,1,100.0,1,2,50.0,2.0,3,0.3333333333333333
+</span></span></code></pre></div>
+<p>For convenience the above is shown in tabular format below. It may seem counter intuitive that the <code>conversion_total</code>
+exceed that of the <code>conversion_count</code> at baseline but it should be remembered that these are actually the total counts
+across replicates at each time point and so in one replicate there was a conversion, in another there wasn't.</p>
+<table>
+<thead>
+<tr>
+<th>Transcript_id</th>
+<th>Strand</th>
+<th>Start</th>
+<th>End</th>
+<th>Assignment</th>
+<th>day</th>
+<th>hour</th>
+<th>conversion_count</th>
+<th>conversion_total</th>
+<th>conversion_percent</th>
+<th>baseline_count</th>
+<th>baseline_total</th>
+<th>baseline_percent</th>
+<th>normalised_percent</th>
+<th>conversion_total_all_time_points</th>
+<th>conversion_weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ENST00000313949</td>
+<td>+</td>
+<td>58910401</td>
+<td>58910682</td>
+<td>Spl</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>50.0</td>
+<td>1</td>
+<td>2</td>
+<td>50.0</td>
+<td>1.0</td>
+<td>3</td>
+<td>0.6666666666666666</td>
+</tr>
+<tr>
+<td>ENST00000313949</td>
+<td>+</td>
+<td>58910401</td>
+<td>58910682</td>
+<td>Spl</td>
+<td>16</td>
+<td>3</td>
+<td>1</td>
+<td>1</td>
+<td>100.0</td>
+<td>1</td>
+<td>2</td>
+<td>50.0</td>
+<td>2.0</td>
+<td>3</td>
+<td>0.3333333333333333</td>
+</tr>
+</tbody>
+</table>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
@@ -591,7 +1144,7 @@ h3:before {
 <div class="md-dialog" data-md-component="dialog">
 <div class="md-dialog__inner md-typeset"></div>
 </div>
-<script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+<script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
 <script src="../assets/javascripts/bundle.c8b220af.min.js"></script>
 <script type="module">import mermaid from "https://unpkg.com/mermaid@10.4.0/dist/mermaid.esm.min.mjs";
 mermaid.initialize({});</script></body>
