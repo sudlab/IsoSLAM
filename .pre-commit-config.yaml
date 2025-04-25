@@ -96,6 +96,11 @@ repos:
             "--exclude='^pipeline_slam_3UIs\\.py$'",
           ]
 
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.24.3
+    hooks:
+      - id: gitleaks
+
   # - repo: https://codeberg.org/lig/todo-md.git
   #   rev: v2.0.1
   #   hooks:
