@@ -13,7 +13,7 @@ jobs:
       id-token: write
     runs-on: ubuntu-latest
     environment: testpypi
-    name: Publish package to PyPi
+    name: Publish package to Test PyPi
     steps:
       - uses: actions/checkout@v4
         with:
