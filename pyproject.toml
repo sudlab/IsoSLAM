@@ -235,7 +235,7 @@ convention = "numpy"
 fixture-parentheses = true
 
 [tool.codespell]
-skip = '*.bed*,*.gtf,*.fasta,*.fas,*.fa,*.fna,*.ffn,*.faa,*.mpfa,*.frn,*pipeline_slam_3UIs.py,*all_introns_counts_and_info.py'
+skip ='*.bed*,*.gtf,*.fasta,*.fas,*.fa,*.fna,*.ffn,*.faa,*.mpfa,*.frn,*pipeline_slam_3UIs.py,*all_introns_counts_and_info.py,uv.lock'
 count = ''
 quiet-level = 3
 
