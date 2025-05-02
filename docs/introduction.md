@@ -6,6 +6,8 @@ be used in processing pipelines such as [ruffus][ruffus] or [NextFlow][nextflow]
 It is developed by the [Sudlab][sudlab] at the University of Sheffield with support from the the [Research Software
 Engineering][rse] group.
 
+**To be written** - expand on what is being done.
+
 [nextflow]: https://www.nextflow.io/docs/latest/index.html
 [python]: https://www.python.org/
 [rse]: https://rse.shef.ac.uk/

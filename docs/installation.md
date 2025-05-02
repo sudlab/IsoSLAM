@@ -231,6 +231,10 @@ mamba install -c conda-forge -c bioconda subread
 mamba install -c conda-forge -c bioconda varscan
 ```
 
+### HPC
+
+**To be written** at some point.
+
 [arch]: https://archlinux.org/
 [aur]: https://aur.archlinux.org/
 [bedtools]: https://bedtools.readthedocs.io/en/latest/

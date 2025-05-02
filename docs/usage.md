@@ -171,7 +171,7 @@ isoslam process --bam-file d0_0hr1_file2_sorted_assigned_sorted.bam --bed test_c
 
 ## Ruffus/CGAT pipeline
 
-Typically `isoslam` is part of a workflow pipeline that processes a large number of files. The example below uses the
+Typically `isoslam` is part of a workflow pipeline that processes a multiple files. The example below uses the
 [ruffus][ruffus] package to control the pipeline but workflow software could be used such as [Nextflow][nextflow].
 
 Ruffus uses [decorators][python_decorators] that control the input and output of functions at each step. Several are
@@ -186,7 +186,7 @@ used in this example pipeline.
 This allows multiple files to be processed in parallel on HPC systems using the [Slurm][slurm] workload manager without
 having to explicitly specify any Slurm jobs or calls.
 
-EXPAND THIS SECTION WITH WORKED EXAMPLES BASED ON EXISTING SCRIPTS.
+**To be written** EXPAND THIS SECTION WITH WORKED EXAMPLES.
 
 [nextflow]: https://www.nextflow.io/docs/latest/index.html
 [parquet]: https://parquet.apache.org/docs/file-format/
