@@ -744,7 +744,7 @@ def test_unique_conversions(
 )
 def test_remove_common_reads(set1: set[str], set2: set[str], expected_set1: set[str], expected_set2: set[str]) -> None:
     """Test common elements are removed from two sets."""
-    set1, set2 = isoslam.remove_common_reads(set1, set2)  # type: ignore[arg-type, assignment]
+    set1, set2 = isoslam.remove_common_reads(set1, set2)  # type: ignore[assignment]
     assert set1 == expected_set1
     assert set2 == expected_set2
 

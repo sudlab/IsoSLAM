@@ -476,7 +476,7 @@ ENST00000313949,+,58910401,58910682,Spl,16,3,1,1,100.0,1,2,50.0
 
 #### Normalise mean percentages
 
-We can now and normalise the data (`summary._normalise()`) by dividing the percentage change the baseline value that we
+We can now normalise the data (`summary._normalise()`) by dividing the percentage change the baseline value that we
 merged in.
 
 If we don't remove the instances where the percentage change at baseline was `0.0` then the `normalised_percent` is
