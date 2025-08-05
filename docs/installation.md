@@ -225,6 +225,7 @@ environment.
 conda create -n isoslam python==3.12
 conda activate isoslam
 conda install mamba
+mamba install -c conda-forge -c bioconda bedtools
 mamba install -c conda-forge -c bioconda cgat-apps
 mamba install -c conda-forge -c bioconda samtools bcftools
 mamba install -c conda-forge -c bioconda subread
