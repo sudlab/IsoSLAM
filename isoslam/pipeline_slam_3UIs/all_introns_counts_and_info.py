@@ -61,7 +61,7 @@ def main(argv=None):
     parser.add_argument("-vcf", "--vcf", dest="vcf_path", type=str, help="""Supply a path to the VCF.gz file""")
 
     # add common options (-h/--help, ...) and parse command line
-    (args) = E.start(parser, argv=argv)
+    args = E.start(parser, argv=argv)
 
     bamfile = pysam.AlignmentFile(args.infile_bam)
     # bamfile = pysam.AlignmentFile("../STAR-custom/read_assignments/D2_65uM_EKRN230032564-1A_HGK2CDSX7_L3/D2_65uM_EKRN230032564-1A_HGK2CDSX7_L3.sorted.assigned.bam")

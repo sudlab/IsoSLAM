@@ -12,7 +12,6 @@ import sys
 import ruffus
 from cgatcore import pipeline as P
 
-
 # Read in pipeline.yml
 PARAMS = P.get_parameters(
     [
